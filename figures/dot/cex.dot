@@ -1,0 +1,15 @@
+digraph {
+    graph [ranksep=0.3];
+    node [fontname="CMU Typewriter Text", label="\N", fontsize=12];
+    edge [arrowhead=vee];
+
+    u [ style=dotted]
+    pK [ penwidth=2  ]
+    p [ penwidth=2 ]
+
+    init -> b -> p
+    init -> pK
+    b -> u
+    pK -> u [arrowhead=tee, color=red]
+    u -> p [arrowhead=tee, color=red]
+}

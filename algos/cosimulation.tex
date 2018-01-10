@@ -1,0 +1,33 @@
+\begin{algorithm}
+\caption{Counterfactual simulation loop}\label{alg:cosimulation}
+\begin{spacing}{1.2}
+\begin{algorithmic}
+  \STATE 
+  \STATE \COMMENT { $t$ is the current time, $M$ the current state mixture and
+    % $M_0$ the state of the reference mixture at time $t$ }
+    $M_0$ the intermediate state of $\tau$ at time $t$ }
+  \STATE
+  \STATE $\alpha' \gets \sum_r {\lambda_r |\DEMBS{r}{M, M_0}|}$
+  \STATE draw $\delta \sim \textsc{Exp}(\alpha') $
+  \STATE $t_{\text{c}} \gets t + \delta$
+  \STATE $t_{\text{f}} \gets $ time of the next event in $\tau$
+  \STATE $t' \gets \min \{ t_{\text{c}}, \, t_{\text{f}} \}$
+  % \STATE
+  \IF { $t' =  t_{\text{c}}$ }
+      \STATE draw a rule $r$ with prob.
+      $\propto \, \lambda_r |\DEMBS{r}{M, M_0}|$
+      \STATE  draw a divergent embedding $\xi \in \DEMBS{r}{M, M_0}$
+      \STATE {$e \gets (r, \xi)$}
+  \ELSE
+      \STATE $e \gets $ next event in $\tau$
+  \ENDIF
+  % \STATE
+  \IF {$ \neg \, \BLOCKED{\iota}{t', e} \ \wedge\ e $ triggerable in $M$ }
+      \STATE update $M$ by triggering event $e$
+  \ENDIF
+
+  \STATE $t \gets t'$
+  \STATE
+\end{algorithmic}
+\end{spacing}
+\end{algorithm}

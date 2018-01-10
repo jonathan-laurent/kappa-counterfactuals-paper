@@ -1,0 +1,50 @@
+\section{Motivating Example}
+
+We illustrate the need for counterfactual reasoning on a toy example in Kappa. 
+\TODO{Say something about what Kappa is?} 
+\TODO{Say some more sentences about how this section is going to go.}
+
+\subsection{A Kappa Model with Inhibition}
+Consider a model with two types of agents, kinases $K$ and substrates $S$, 
+interacting according to the rules depicted in Figure~\ref{fig:model}.
+
+\TODO{Explain how the rules work.}
+\TODO{Explain the dynamic simulation and the static analysis.}
+
+\subsection{Where Existing Causal Analysis Falls Short}
+For the sake of simplicity, consider an initial mixture $I$ with only a 
+single kinase and a single substrate whose sites are free and unphosphorylated. 
+We then ask: Starting from $I$, \textbf{how} is $p$ triggered ? 
+We are not merely looking for an account of reachability but rather for 
+causal narratives, that is, collections of necessary events connected by 
+causal influences.
+
+A stochastic simulation \cite{DanosEtAl-APLAS07} might produce
+the following trace (events are labelled by the rules that induced them):
+\[b,\ \  u,\ \  pK,\ \  b,\ \  p,\ \  u^{*},\ \  \cdots\]
+
+Figure~\ref{fig:dumb-story} depicts the causal narrative explaining 
+the occurrence of $p$ according to existing techniques
+\cite{DBLP:conf/fsttcs/DanosFFHH12,DanosEtAl-CONCUR07}. 
+The arrow between $b$ and $p$ is called an \textit{activation arrow}, 
+meaning that $b$ modifies an aspect of state (by creating a link) that 
+enables $p$ to happen.
+
+
+This narrative, however, is blind to the critical role of $pK$ in the original 
+trace. Looking at the rules in Figure~\ref{fig:model} one notes that:
+\begin{inparaenum}[(i)]
+\item the phosphorylation rule $p$ is slow
+\item the average time $K$ and $S$ remain bound
+depends on whether $K$ is phosphorylated, as manifest
+in the two unbinding rules $u$ (fast, if $K$ is not phosphorylated) 
+and $u^{*}$ (slow, if $K$ is phosphorylated).
+\end{inparaenum}
+It seems reasonable to assert that $p$ would probably not have happened had 
+$pK$ not happened, as the opportunity for $p$ would have been cut short by a 
+fast unbinding event. We therefore argue that $pK$, although it does not 
+activate $b$ or $p$ directly, should be part of a causal narrative for $p$. 
+Reasoning of this kind is \textit{counterfactual} and can be deployed 
+to define causality \cite{lewis1974causation, lewis2000causation}.
+
+\TODO{Talk at a high level about the challenges involved in doing this.}

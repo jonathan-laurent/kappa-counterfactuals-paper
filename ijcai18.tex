@@ -1,0 +1,83 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+% The file ijcai18.sty is the style file for IJCAI-18 (same as ijcai08.sty).
+\usepackage{ijcai18}
+
+% Use the postscript times font!
+\usepackage{times}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{paralist}
+\usepackage{flushend}
+\usepackage{hyperref}
+\usepackage{setspace}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{proposition}{Proposition}
+\newtheorem*{definition}{Definition}
+
+
+\title{
+  \setstretch{1.15}
+  Counterfactual Simulation for Pathway Analysis of
+  Rule-Based Models of Signalling Networks
+}
+
+\author{
+  Jonathan Laurent$^1$,
+  Jean Yang$^1$,
+  Walter Fontana$^2$, \\
+  %
+  $^1$ Carnegie Mellon University \\
+  $^2$ Harvard Medical School \\
+  % 
+  \{jonathan.laurent,\ jyang2+\}@cs.cmu.edu, \ 
+  % jonathan.laurent@cs.cmu.edu, \ 
+  % jyang2+@cs.cmu.edu, \ 
+  walter\_fontana@hms.harvard.edu
+}
+% \setlength\titlebox{2.5in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{macros}
+
+\begin{document}
+
+\maketitle
+
+\input{abstract}
+\input{sasb_revised}
+\input{algos/gillespie}
+\input{algos/cosimulation}
+
+%\input{introduction}
+%\input{motivating_example}
+%\input{counterfactual}
+%\input{related_work}
+%\input{conclusions}
+%\input{acknowledgments}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \appendix
+
+%% The file named.bst is a bibliography style file for BibTeX 0.99c
+\nocite{*}
+\bibliographystyle{named}
+\bibliography{ijcai18}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
