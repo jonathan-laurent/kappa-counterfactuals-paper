@@ -1,0 +1,33 @@
+\section*{Other stuff}
+
+Suppose you are simulating a counterfactual trace for intervention
+$\iota$ and reference trace $\tau$, that is, you are drawing an
+instance of $\CTRAJ{}$. Suppose you have already simulated the first
+$t$ seconds of this counterfactual trace and you want to know the time
+of the next event. Because both $T$, $\ATRAJ{}$ and $\Sigma$ are
+markovian, the only only relevant information about what has already
+been simulated is the current state of the counterfactual world
+$s := \TSTATE{t}{\ATRAJ{}}$.
+
+At some point, we have to define
+\[\EMBS{r}{m} = \{ \xi \,:\, m \vdash (r, \xi) \}\]
+and notice that
+\[\DEMBS{r}{m, m_0} = \EMBS{r}{m} \setminus \EMBS{r}{m_0}.\]
+
+
+\begin{definition}[Divergent embedding]
+  Let $m$ a mixture and $m_0$ a reference mixture. A site $s$ is said
+  to be \emph{divergent} if it is in a different state in $m$ and in
+  $m_0$.  Then, an embedding $\xi$ of a rule $r$ into $m$ is said to
+  be \emph{divergent} if it features a divergent site. We write
+  $\DEMBS{r}{m, m_0}$ the set of such embeddings.
+\end{definition}
+
+\begin{definition}[Divergent activity]
+  The \emph{divergent activity} of a rule $r$ is defined as the
+  product of its reaction rate $\lambda_r$ by the cardinal of
+  $\DEMBS{r}{m, m_0}$.  The total divergent activity of the system
+  $\alpha'(m, m_0)$ is defined as the sum of the divergent activity of
+  every rule:
+  \[\alpha'(m, m_0) = \sum_r \lambda_r |\DEMBS{r}{m, m_0}| \]
+\end{definition}

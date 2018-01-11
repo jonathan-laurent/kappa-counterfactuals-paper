@@ -1,0 +1,86 @@
+\message{ !name(cosimulation.tex)}
+\message{ !name(cosimulation.tex) !offset(-2) }
+\begin{definition}[Divergent embedding]
+  Let $M$ a mixture and $M_0$ a reference mixture.
+\end{definition}
+
+\begin{definition}[Divergent activity]
+  
+\end{definition}
+
+\begin{theorem} Let $\tau$ a trace and $\iota$ an intervention. Let
+  $I$ a time interval of width $\delta$ such that
+  $\tau \cap I = \emptyset$. Then,
+  \[\CProb{ \hat T_\iota \cap I = \emptyset }{ T=\tau,\
+      \TSTATE{t}{\hat T_\iota} = s\ }
+    \ =\ e^{-\alpha'(s, s_0) \cdot \delta}
+  \]
+  where $s_0 = \mathcal{S}_t(\tau)$ and
+  \[\alpha'(s, s_0) = \sum_r \lambda_r |\DEMBS{r}{s, s_0}| \]
+  is the total divergent activity of $s$ with respect to $s_0$.
+\end{theorem}
+
+Suppose you are simulating a counterfactual trace for intervention
+$\iota$ and reference trace $\tau$, that is, you are drawing an
+instance of $\hat T_\iota \,|\, \{T=\tau\}$. Suppose you have already
+simulated the first $t$ seconds of this counterfactual trace and you
+want to know the time of the next event. Because both $T$,
+$\hat T_\iota$ and $\Sigma$ are markovian, the only only relevant
+information about what has already been simulated is the current state
+of the counterfactual world $s := \TSTATE{t}{\hat T_\iota}$.
+
+
+If we write $\delta$ the time difference between $t$ and the next
+event after $t$ in $\tau$, we are interested in the following
+probability:
+\begin{equation}
+  \CProb{ \hat T_\iota \cap [t, t+\delta) = \emptyset  }
+  % { \underbrace{T=\tau, M = \mathcal{S}_t(\hat T_\iota)}_{\Delta} }
+  { T=\tau,\, s = \TSTATE{t}{\hat T_\iota} }
+\end{equation}
+Writing $I = [t, t+\delta)$, this quantity can be rewritten as
+follows:
+\begin{align}
+  \ & \ \CProb{ \hat T_\iota \cap I = \emptyset }
+      { T=\tau,\, s = \TSTATE{t}{\hat T_\iota} } \\[0.5em]
+  = & \ \CProb{ \bigwedge_{s \vdash e} (\,e \notin \Sigma \cap I \,)  }{ T=\tau } \\[1em]
+  = & \ \prod_{s \vdash e}\, \CProb{e \notin \Sigma \cap I }{ T=\tau }
+\end{align}
+Indeed, given that $s = \TSTATE{t}{\hat T_\iota}$, no counterfactual
+event happens in time interval $I$ if and only if no potential event
+that is triggerable from state $s$ is scheduled in $I$.  Besides,
+potential events are scheduled independently and so we can decompose
+the resulting probability as a product.
+
+Let $e$ a potential event such that $s \vdash e$. The probability that
+$e$ has not been scheduled in $I$ given that $T=\tau$ depends on
+whether or not $e$ is triggerable from state $s_0 :=
+\TSTATE{t}{T}$. Indeed, we assumed that $\tau$ contains no event in
+time interval $I$. Therefore, if $s_0 \vdash e$, then $e$ cannot be
+scheduled in $I$, without which it would have been observed in $\tau$.
+Thus,
+\[ s_0 \vdash e \ \Rightarrow\ \CProb{e \notin \Sigma \cap I}{ T=\tau
+  } = 1 \] Besides, if $s_0 \not\vdash e$, then the observation
+$\{ T=\tau \}$ gives absolutely no information on whether or not $e$
+has been scheduled in $I$ and so
+\[ s_0 \not\vdash e \ \Rightarrow\ \CProb{e \notin \Sigma \cap I}{
+    T=\tau } = e^{-\lambda_e \cdot \delta} \] as the scheduling
+process of a potential event is a Poisson process. Combining these two
+results with (4), we have:
+\begin{align}
+  \CProb{ \hat T_\iota \cap I = \emptyset }{ \Delta }
+  =\ \prod_{s \vdash e, \, s_0 \not\vdash e} e^{-\lambda_e} = e^{-\alpha'(s, s_0)\cdot\delta}
+\end{align}
+where
+\[\alpha'(s, s_0) := \sum_{s \vdash e, \, s_0 \not\vdash e}
+  \lambda_e \] This quantity can be rewritten as follows:
+\begin{align}
+  \alpha'(s, s_0) &= 
+                    \sum_{(r, \xi)} \textbf{1}\{ s \vdash (r, \xi),\ s_o \not\vdash (r, \xi) \}\cdot\lambda_r \\
+                  &= \sum_r \lambda_r\sum_\xi \textbf{1}\{ s \vdash (r, \xi),\ s_o \not\vdash (r, \xi) \} \\
+                  &= \sum_r \lambda_r |\DEMBS{r}{s, s_0}|
+\end{align}
+which gives us the definition of divergent activity. This result can
+be summarized in the following theorem:
+
+\message{ !name(cosimulation.tex) !offset(-86) }

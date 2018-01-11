@@ -20,12 +20,17 @@
 \usepackage{flushend}
 \usepackage{hyperref}
 \usepackage{setspace}
+\usepackage{enumitem}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
-\newtheorem*{theorem}{Theorem}
-\newtheorem*{proposition}{Proposition}
-\newtheorem*{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem*{definition*}{Definition}
+
 
 
 \title{
@@ -58,9 +63,15 @@
 \maketitle
 
 \input{abstract}
-\input{sasb_revised}
+\input{sasb_template}
 \input{algos/gillespie}
 \input{algos/cosimulation}
+
+\newpage
+
+\input{misc}
+
+\newpage
 
 %\input{introduction}
 %\input{motivating_example}

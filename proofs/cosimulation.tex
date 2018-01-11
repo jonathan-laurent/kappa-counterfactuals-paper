@@ -1,0 +1,86 @@
+% Counterfactual state, reference state
+
+
+\begin{theorem} Let $\tau$ a trace and $\iota$ an intervention. Let
+  $I$ a time interval of width $\delta$ such that
+  $\tau \cap I = \emptyset$. Then,
+  \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
+      \TSTATE{t}{\ATRAJ{}} = m\ }
+    \ =\ e^{-\alpha'(m, m_0) \cdot \delta}
+  \]
+  where $m_0 = \TSTATE{t}{\tau}$.
+\end{theorem}
+\begin{proof}
+
+  Given that $\TSTATE{t}{\ATRAJ{}} = m$, no counterfactual event
+  happens in time interval $I$ if and only if no potential event that
+  is triggerable from mixture $m$ is scheduled in $I$. Therefore,
+  \vskip 0.0cm
+  \begin{equation}\label{eqn:scheduled-decomposition}
+    \begin{aligned}
+      &\CProb{ \ATRAJ{} \cap I = \emptyset } { T=\tau,\,
+        \TSTATE{t}{\ATRAJ{}} = m }
+      \\[0.4em]
+      &= \quad \CProb{ \bigwedge_{s \vdash e} (\,e \notin \Sigma \cap
+        I \,) }{ T=\tau }
+      \\[0.4em]
+      &= \quad \prod_{s \vdash e}\, \CProb{e \notin \Sigma \cap I }{
+        T=\tau }.
+    \end{aligned}
+  \end{equation}
+  \vskip 0.2cm Let $e$ a potential event such that $m \vdash e$. The
+  probability that $e$ has not been scheduled in $I$ given that
+  $T=\tau$ depends on whether or not $e$ is triggerable from mixture
+  $m_0 = \TSTATE{t}{\tau}$. Indeed, we assumed that $\tau$ contains no
+  event in time interval $I$. Therefore, if $m_0 \vdash e$, then $e$
+  cannot be scheduled in $I$, without which it would have been
+  observed in $\tau$.  Thus,
+  \begin{equation}\label{eqn:pscheduled1}
+    m_0 \vdash e \ \ \Longrightarrow\ \ \CProb{e \notin \Sigma \cap I}{T=\tau } = 1.
+  \end{equation}
+  Besides, if $m_0 \not\vdash e$, then the observation $\{ T=\tau \}$
+  gives no information on whether or not $e$ has been scheduled in
+  $I$. Because potential events are scheduled according Poisson
+  processes, we have:
+  \begin{equation}\label{eqn:pscheduled2}
+    m_0 \not\vdash e \ \ \Longrightarrow\ \ \CProb{e \notin \Sigma \cap I}{
+      T=\tau } = e^{-\lambda_e \delta}.
+  \end{equation}
+  Combining (\ref{eqn:pscheduled1}) and (\ref{eqn:pscheduled2}) with
+  equation (\ref{eqn:scheduled-decomposition}),
+ \begin{equation*}
+       \CProb{ \ATRAJ{} \cap I = \emptyset }
+       { T=\tau,\,\TSTATE{t}{\ATRAJ{}} = m }
+       = \ 
+      \exp{ \! \Big ( \!- \hspace{-1em} \sum_{s \vdash e, \, m_0 \not\vdash
+      e} \hspace{-0.9em} \lambda_e \cdot \delta \Big ) }
+  \end{equation*}
+  % \begin{equation*}
+  %   \begin{aligned}
+  %      & \CProb{ \ATRAJ{} \cap I = \emptyset } { T=\tau,\,
+  %       \TSTATE{t}{\ATRAJ{}} = m }
+  %     \\[-0cm]
+  %     &= \
+  %     \hspace{-0.5em} \prod_{s \vdash e, \,
+  %       m_0 \not\vdash e} \!\!\! e^{-\lambda_e \delta}
+  %     \ = \ 
+  %     \exp{ \Big ( - \!\!\! \sum_{s \vdash e, \, m_0 \not\vdash
+  %     e} \hspace{-0.8em} \lambda_e \ \cdot \ \delta \Big ) }
+  %   \end{aligned}
+  % \end{equation*}
+  Finally, we can recognize the divergent activity in the exponential
+  above:
+  \vskip 0.0cm
+  \begin{equation*}
+    \begin{aligned}
+      \sum_{s \vdash e, \, m_0 \not\vdash e} \hspace{-0.8em} \lambda_e \ 
+      &= \ \sum_{(r, \xi)} \lambda_r \cdot \textbf{1}\{ m \vdash (r, \xi),\ s_o \not\vdash (r, \xi) \} \\
+      &= \ \sum_r \lambda_r\sum_\xi \textbf{1}\{ m \vdash (r, \xi),\ s_o \not\vdash (r, \xi) \} \\
+      &= \ \sum_r \lambda_r |\DEMBS{r}{s, m_0}|
+      \ = \ \alpha'(m, m_0).
+      %\\ &= \ \alpha'(m, m_0).
+    \end{aligned}
+  \end{equation*}
+  \vskip 0.2cm
+  \noindent This concludes the proof.
+\end{proof}

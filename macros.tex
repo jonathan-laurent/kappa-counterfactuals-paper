@@ -8,12 +8,21 @@
 \newcommand{\TODO}[1]{[\textsl{#1}]}
 \newcommand{\Prob}[1]{\mathbf{P} \left\{\, #1 \,\right\}}
 \newcommand{\CProb}[2]{\Prob{#1 \ |\  #2}}
-\newcommand{\TSTATE}[2]{\m{state}_{#1}(#2)}
-\newcommand{\EMBS}[2]{\m{Emb}_{#1}(#2)}
+%\newcommand{\TSTATE}[2]{\m{State}_{#1}(#2)}
+%\newcommand{\TSTATE}[2]{\mathcal{S}_{#1}(#2)}
+%\newcommand{\TSTATE}[2]{\left[#2\right]^{#1}}
+\newcommand{\TSTATE}[2]{#2^{[#1]}}
+%newcommand{\TSTATE}[2]{\left<#2\right>^{#1}}
 
-%\newcommand{\DEMBS}[2]{\Delta\textsf{Emb}_{#1}(#2)}
-%\newcommand{\DEMBS}[2]{\m{DEmb}_{#1}(#2)}
+
+\newcommand{\EMBS}[2]{\m{Emb}_{#1}(#2)}
 \newcommand{\DEMBS}[2]{\m{Emb}'_{#1}(#2)}
+%\newcommand{\EMBS}[2]{\mathcal{E}'_{#1}(#2)}
+%\newcommand{\DEMBS}[2]{\mathcal{E}'_{#1}(#2)}
+
+\newcommand{\TIME}[1]{\textsc{time}(#1)}
+
+
 
 \newcommand{\ATRAJ}[0]{{T_\iota}}
 \newcommand{\CTRAJ}[0]{{T_\iota\,|\,\{T=\tau\}}}
