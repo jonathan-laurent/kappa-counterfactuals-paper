@@ -31,3 +31,24 @@ and notice that
   every rule:
   \[\alpha'(m, m_0) = \sum_r \lambda_r |\DEMBS{r}{m, m_0}| \]
 \end{definition}
+
+\subsection*{On co-simulation}
+
+Indeed, suppose we are simulating a counterfactual trace and the
+current mixture at time $t$ is $m$. Let $m_0$ the state of the
+reference trace at time $t$. We say that a site is divergent if it has
+different states in $m$ and $m_0$.  Besides, an embedding of the left
+hand side of a rule $r$ into $m$ that features at least one divergent
+site is said to be divergent. We write $\DEMBS{r}{m, m_0}$ the set of
+all such embeddings.  Finally, we define the divergent activity of a
+rule as the product of its rate by the number of divergent embeddings
+of its left hand side into $m$ and write $\alpha'(m, m_0)$ the total
+divergent activity:
+\[\alpha'(m, m_0) = \sum_r \lambda_r |\DEMBS{r}{m, m_0}|. \]
+
+
+During normal simulation of a Kappa model, the activity of the
+reaction mixture can be interpreted as its propensity to change. In
+contrast, during counterfactual simulation, the divergent activity can
+be interpreted as the propensity of the counterfactual mixture to
+diverge from the reference mixture.

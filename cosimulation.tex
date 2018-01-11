@@ -1,0 +1,84 @@
+\section{Counterfactual simulation}\label{sec:counterfactual}
+
+Counterfactual statements are tricky because their truth is
+context-dependent. The statement ``Had it not rained, the driver might
+have arrived earlier" can fail to be true in many ways. Intuitively,
+how easily the driver could have arrived earlier depends on how great
+a departure from actuality is required for it to be case
+\cite{Lewis1973}. This is why counterfactual reasoning is tied to
+modal logic. The standard approach is to require that the consequent
+in a counterfactual be true in some of those possible worlds (in which
+the antecedent holds) that \textit{are most similar to the actual
+  world}. If the counterfactual statement is true in all of these
+worlds, we can replace ``might" with ``would".  We now operationalize
+this approach in the context of Kappa traces and interpolate between
+``might" and ``would" using probabilities.
+
+\subsection{A semantics for counterfactuals}
+
+We start by formalizing the notion of an intervention. An intervention
+$\iota$ (``blocking $pk$" in our example) is a predicate
+$\BLOCKED{\iota}{t, e}$ that determines whether or not event $e$ is
+blocked at time $t$. Given a predicate $\varphi$ over traces, we write
+the proposition \textit{``Had intervention $\iota$ happened in trace
+  $\tau$, $\varphi$ would have been true with probability greater than
+  $p \in [0,1]$''} as:
+\[ \tau \models_p [\iota] \, \varphi.
+\]
+
+To give an operational meaning to this statement, we invoke the
+continuous time Markov chain (CTMC) semantics of a Kappa model as
+defined and implemented in
+\cite{DanosEtAl-APLAS07,BoutillierEK17}. For the present purpose it is
+conceptually useful to think of a CTMC abstractly in terms of the
+random realization of ``potential events". A potential event is a pair
+$(r, \xi)$ where $r$ is a rule and $\xi$ an injective mapping from
+local agents involved in $r$ to global agents in a huge virtual
+mixture of many instances of all possible molecular
+species.\footnote{For the sake of simplicity, we assume that no agent
+  is created or deleted by a rule.} For every such potential event, we
+imagine a bell that rings at a time $t$ drawn from an exponential
+distribution $\lambda_r\exp(-\lambda_r t)$, where $\lambda_r$ is the
+stochastic rate constant of $r$. A simulation trace can be viewed as
+the realization of a random variable $T$ determined by the set
+$\omega$ of ring times: Starting with an initial mixture, when a bell
+rings at $t$, its associated potential event $(r, \xi)$ transforms the
+mixture according to $r$ if $\xi$ yields a valid embedding of the left
+hand side of $r$ in the current mixture and time advances by
+$t$. Otherwise, time advances and nothing happens---a null
+event. Repeat on the resulting mixture.
+
+We can extend this viewpoint to include interventions. For an
+intervention $\iota$, we define the random variable $\ATRAJ{}$ much in
+the same way as $T$, except that each time the bell rings, we require
+$\BLOCKED{\iota}{t, e}$ to be false for the potential event
+$e=(r, \xi)$ to be considered.  Counterfactual traces that are closest
+to the actual trace $\tau$ are then sampled by generating realizations
+of $\ATRAJ{}$ that inherit, whenever possible, the subset of $\omega$
+that made up $\tau$. 
+% An efficient implementation of this specification
+% for sampling the conditional random variable $\CTRAJ{}$ is available at
+% \begin{center}
+%   \url{https://github.com/jonathan-laurent/kappa-counterfactuals}.
+% \end{center} 
+We refer to this natural extension of CTMC semantics as
+\textit{counterfactual re-simulation} or \textit{co-simulation} for
+short. Using co-simulation, we can operationalize the counterfactual
+statements as follows.
+
+\begin{definition}[Semantics of counterfactual statements] We write
+  $\tau \models_p [\iota] \, \varphi$ the counterfactual statement
+  \textit{``had intervention $\iota$ happened in trace $\tau$,
+    predicate $\varphi$ would have been true with probability greater
+    than $p$''}.  It is defined as follows:
+  \[ \tau \models_p [\iota] \, \varphi \quad \Longleftrightarrow \quad
+    \mathbf{P}( \varphi(\ATRAJ{}) \ |\ T = \tau) \,\geq\, p \]
+\end{definition}
+
+\subsection{Sampling counterfactual traces}
+
+Counterfactual traces can be sampled using the algorithm described in
+Listing~\ref{alg:cosimulation}.
+
+\input{algos/cosimulation}
+\input{proofs/cosimulation}
