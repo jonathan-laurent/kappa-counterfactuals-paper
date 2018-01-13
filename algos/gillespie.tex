@@ -4,16 +4,16 @@
 \begin{algorithmic}
 \vspace{0.2cm}
   \STATE $t \gets 0$
-  \STATE $M \gets\ $ initial mixture
+  \STATE $m \gets\ $ initial mixture
   \WHILE{ $t < t_\text{\,end}$ }
-      \STATE $\alpha \gets \sum_r {\lambda_r |\EMBS{r}{M}|}$
+      \STATE $\alpha \gets \sum_r {\lambda_r |\EMBS{r}{m}|}$
       \STATE draw $\delta \sim \textsc{Exp}(\alpha) $
       \STATE $t \gets t + \delta$
       \STATE draw a rule $r$ with probability
-      $\propto \ \lambda_r |\EMBS{r}{M}|$
+      $\propto \ \lambda_r |\EMBS{r}{m}|$
 
-      \STATE draw an embedding $\xi$ uniformly in $\EMBS{r}{M}$
-      \STATE update $M$ by triggering event $(r, \xi)$
+      \STATE draw an embedding $\xi$ uniformly in $\EMBS{r}{m}$
+      \STATE update $m$ by triggering event $((r, \xi), t)$
   \ENDWHILE
 \vspace{0.1cm}
 \end{algorithmic}

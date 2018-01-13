@@ -16,6 +16,7 @@ product $\lambda_r|\EMBS{r}{M}|$ of its reaction rate by the number of
 embeddings of its left hand side in the current reaction mixture.
 Then, simulating a trace works by repeating the following steps:
 \begin{inparaenum}[1)]
+
 \item draw the time before the next simulation event from an
   exponential distribution of parameter the total activity $\alpha$ of
   the rules and increment the current time by this amount
@@ -58,6 +59,7 @@ between $b$ and $p$ is called an \textit{activation arrow}, meaning
 that $b$ modifies an aspect of state (by creating a link) that enables
 $p$ to happen.
 
+\input{figures/dumb-story}
 
 This narrative, however, is blind to the critical role of $pk$ in the
 original trace. Looking at the rules in Figure~\ref{fig:model} one
