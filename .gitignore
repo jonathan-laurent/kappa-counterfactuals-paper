@@ -9,3 +9,5 @@
 
 archives
 figures/dot/*.pdf
+diagrams/cabal.sandbox.config
+diagrams/fonts/

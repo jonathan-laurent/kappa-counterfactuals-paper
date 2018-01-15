@@ -5,6 +5,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BACKGROUND ON KAPPA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MISSING
+% Rules cannot create or delete agents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this section, we give some background information on the Kappa
 modelling language and introduce a toy example that motivates the need
@@ -17,13 +20,15 @@ simulationt traces.
 In Kappa, proteins and other organic molecules are modelled by
 abstract \emph{agents} with distinguishable \emph{sites}. Agents can
 bind to each other through these sites and some sites also hold an
-internal state. A site can only be engaged in at most one bond. The
-number and the nature of the sites featured by an agent depend on its
-\emph{type}, each type of agent being described in the model's
-\emph{signature}. In our running example, there are two types of
-agents: substrates $S$ and kinases $K$. Agents of both type feature a
-binding site $b$ and a phosphorylation site $x$ with two possible
-internal states: \emph{default} and \emph{phosphorylated}.
+internal state. A site can only be engaged in at most one bond at a
+time. The number and the nature of the sites featured by an agent
+depend on its \emph{type}.
+% , each type of agent being described in the model's
+% \emph{signature}.
+In our running example, there are two types
+of agents: substrates $S$ and kinases $K$. Agents of both type feature
+a binding site and a phosphorylation site with two possible
+internal states: \emph{unphosphorylated} and \emph{phosphorylated}.
 
 We call \emph{mixture} a multiset of agents for which the internal
 state and binding state of every site is fully specified.  Individual
@@ -31,28 +36,88 @@ agents are given global identifiers so that we can refer to them
 unambiguously. \input{figures/mixture}
 \noindent
 Chemical interactions between agents are modelled by local
-mixture-rewriting \emph{rules} with stochastic firing rates.
-Together, the rules of a model denote a continuous-time Markov chain.
-
-Agents in our example model are subject to the set of rules depicted
-in Figure~\ref{fig:model}. As expressed by these rules, kinases and
-substrates can bind to each other provided that their respective
-binding sites are free (rule ``$b$''). owever, the resulting complex is very
-unstable unless the kinase involved is phosphorylated. This is
-modelled by introducing two unbind rules (``$u$'' and ``$u^{*}$'') with
-different rates. Also, a substrate can get phosphorylated when it is
-bound to a kinase (rule ``$p$''). Finally, for the sake of simplicity, we
-model the phosphorylation process of kinases as a spontaneous process
-(rule ``$pk$'').
+mixture-rewriting \emph{rules}.  A rule $r$ consists in a left-hand
+side $(\RLHS{r})$, a right-hand-side $(\RRHS{r})$ and a firing rate
+$(\lambda_r)$.  Together, the rules of a model denote a continuous-time
+Markov chain where
+\begin{inparaenum}[i)]
+\item states are mixtures and
+\item for every rule $r$,
+any instance of $L_r$ is rewritten into $\RRHS{r}$ at rate
+$\lambda_r$.
+\end{inparaenum}
+Agents in our example model are subject to the set of
+rules depicted in Figure~\ref{fig:model}. As expressed by these rules,
+kinases and substrates can bind to each other provided that their
+respective binding sites are free (rule ``$b$''). However, the
+resulting complex is very unstable unless the kinase involved is
+phosphorylated, which we model by introducing two unbind rules
+(``$u$'' and ``$u^{*}$'') with different rates. Also, a substrate can
+get phosphorylated when it is bound to a kinase (rule
+``$p$''). Finally, for the sake of simplicity, we model the
+phosphorylation process of kinases as a spontaneous process (rule
+``$pk$''). 
 
 \input{figures/model}
 
+Importantly, not every site of an agent has to be mentioned in a rule.
+Following the \textit{``don't care, don't write"} principle, sites not
+mentioned in a rule are left unchanged by it. Although it may appear
+trivial, this is a defining feature of rule-based models, contrasting
+with other modelling frameworks %that are frequently used in biology
+like Petri-nets and differential equations where the chemical species
+involved in a reaction have to be fully specified. The most obvious
+benefit of the rule-based approach is that it enables a concise and
+scalable representation of complex chemical systems that can generate
+a combinatorial number of distinct species. More significantly for our
+purposes though, it is especially suitable for causal analysis as it
+does not obfuscate the causal structure of a system with irrelevant
+context information, ideally enabling a one-to-one correspondence
+between rules and elementary physical mechanisms.
+
+A \emph{rule instance}, also called \emph{abstract event}, is a pair
+$(r, \xi)$ where $r$ is a rule and $\xi$ is a map from the agents
+featured in $\RLHS{r}$ to global agent identifiers.  We say
+that $(r, \xi)$ is \emph{triggerable} in mixture $m$, which we write
+$\TRIGGERABLE{m}{(r, \xi)}$, if $\xi$ describes an embedding of $L_r$ into $m$. 
+We write
+\[\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}\] the set
+of all such embeddings. If $m \vdash (r, \xi)$, we write $\UPDATE{m}{(r, \xi)}$
+the new mixture we get from $m$ after applying rule instance $(r, \xi)$
+by rewriting the codomain of $\xi$ into $\RRHS{r}$.
+Finally, in a given mixture $m$, the \emph{activity} of a rule
+$r$ is defined as the product $\lambda_r|\EMBS{r}{M}|$ of its reaction rate 
+by the number of embeddings of $L_r$ into $m$. For example, 
+in Figure~\ref{fig:mixture}, rule $b$ has activity $2\lambda_b$ and rule
+$u$ has activity $0$. The \emph{total activity} of a mixture is defined
+as the sum of the activities of every rule.
+
+Given an initial mixture, the continuous Markov chain underlying
+a model can be simulated using the so-called \emph{Gillespie algorithm}
+that is depicted Algorithm~\ref{alg:gillespie} and which consists
+in repeating the following steps:
+\begin{inparaenum}[1)]
+\item draw the time before the next simulation event from an
+  exponential distribution of parameter the total activity of
+  the rules and increment the current time by this amount
+\item draw a rule $r$ with probability proportional to its activity
+\item pick an instance of the left hand side of $r$ uniformly in the
+  current mixture and rewrite it.
+\end{inparaenum}
+The Gillespie algorithm outputs a sequence of \emph{events}, an event
+being formally defined as a pair $(e, t)$ where $e$ is an abstract event
+and $t$ its time of happening.
 
 
-\paragraph{Other concepts and notations}
+\input{algos/gillespie}
 
-An \emph{embedding} of the left hand side $L_r$ of a rule $r$ to a mixture $m$
-is a map $\xi$ from agents of $L_r$ to global agent identifiers such that
+
+% Remaining: embeddings, triggerable, events, Gillespie
+% Unclear: update notation ? No need.
+
+
+
+
 
 
 
@@ -67,15 +132,7 @@ is a map $\xi$ from agents of $L_r$ to global agent identifiers such that
 % In Gillespie's algorithm, the activity of a rule $r$ is defined as the
 % product $\lambda_r|\EMBS{r}{M}|$ of its reaction rate by the number of
 % embeddings of its left hand side in the current reaction mixture.
-% Then, simulating a trace works by repeating the following steps:
-% \begin{inparaenum}[1)]
-% \item draw the time before the next simulation event from an
-%   exponential distribution of parameter the total activity $\alpha$ of
-%   the rules and increment the current time by this amount
-% \item draw a rule $r$ with probability proportional to its activity
-% \item pick an instance of the left hand side of $r$ uniformly in the
-%   current mixture and rewrite it.
-% \end{inparaenum}
+% Then, 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

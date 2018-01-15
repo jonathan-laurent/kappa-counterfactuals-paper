@@ -13,7 +13,9 @@
       $\propto \ \lambda_r |\EMBS{r}{m}|$
 
       \STATE draw an embedding $\xi$ uniformly in $\EMBS{r}{m}$
-      \STATE update $m$ by triggering event $((r, \xi), t)$
+      %\STATE update $m$ by triggering event $((r, \xi), t)$
+      \STATE $m \gets \UPDATE{m}{(r, \xi)}$
+      \STATE log event $((r, \xi), t)$
   \ENDWHILE
 \vspace{0.1cm}
 \end{algorithmic}
