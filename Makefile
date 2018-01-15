@@ -23,5 +23,10 @@ diagrams :
 .PHONY: clean
 clean:
 	rm -f *.aux *.pdf *.out *.log *~ *.bbl *.blg
-	rm -rf figures/dot/*.pdf
+	rm -f _region_.tex
+	rm -f figures/dot/*.pdf
 	rm -rf _minted-$(MAIN)
+
+.PHONY: full-clean
+full-clean: | clean
+	cd diagrams ; make full-clean

@@ -66,3 +66,15 @@ diverge from the reference mixture.
   a mixture $m$ is a map $\xi$ from agents of $L_r$ to global agent
   identifiers such that\dots
 \end{itemize}
+
+Here, the result was simply $(b, p)$. Then, we computed activation
+arrows within this sub-trace using the following rule: there is an
+arrow between event $e$ and event $e'$ if
+% \begin{inparaenum}[i)]
+% \item $e$ happens before $e'$ and
+% \item $e'$ tests a site $s$ such that $e$ is the last event before
+%   $e'$ to modify $s$.
+% \end{inparaenum}
+$e$ is the last event before $e'$ that modifies some site to the state
+it is tested for by $e'$. In general, this results in a \textsc{dag}
+where nodes are events and edges are activation arrows.
