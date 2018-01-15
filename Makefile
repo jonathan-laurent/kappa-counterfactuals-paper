@@ -14,6 +14,13 @@ $(MAIN).pdf : $(MAIN).tex $(TEX) $(DOT)
 	$(LATEX) $<
 	$(LATEX) $<
 
+.PHONY: diagrams
+diagrams :
+	cd diagrams ; make
+	cp diagrams/model.pdf figures/model.pdf
+	cp diagrams/mixture.pdf figures/mixture.pdf
+
+.PHONY: clean
 clean:
 	rm -f *.aux *.pdf *.out *.log *~ *.bbl *.blg
 	rm -rf figures/dot/*.pdf

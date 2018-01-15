@@ -1,29 +1,81 @@
+\pagebreak
+
 \section{Motivating example}\label{sec:example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BACKGROUND ON KAPPA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+In this section, we give some background information on the Kappa
+modelling language and introduce a toy example that motivates the need
+for counterfactual reasoning in analyzing the causal structure of
+simulationt traces.
+
+
 \subsection{Some background on Kappa}
 
-Stochastic simulations of Kappa models can be run using the Gillespie
-algorithm, which is summarized Listing~\ref{alg:gillespie}.
+In Kappa, proteins and other organic molecules are modelled by
+abstract \emph{agents} with distinguishable \emph{sites}. Agents can
+bind to each other through these sites and some sites also hold an
+internal state. A site can only be engaged in at most one bond. The
+number and the nature of the sites featured by an agent depend on its
+\emph{type}, each type of agent being described in the model's
+\emph{signature}. In our running example, there are two types of
+agents: substrates $S$ and kinases $K$. Agents of both type feature a
+binding site $b$ and a phosphorylation site $x$ with two possible
+internal states: \emph{default} and \emph{phosphorylated}.
 
-\input{algos/gillespie}
+We call \emph{mixture} a multiset of agents for which the internal
+state and binding state of every site is fully specified.  Individual
+agents are given global identifiers so that we can refer to them
+unambiguously. \input{figures/mixture}
+\noindent
+Chemical interactions between agents are modelled by local
+mixture-rewriting \emph{rules} with stochastic firing rates.
+Together, the rules of a model denote a continuous-time Markov chain.
 
-In Gillespie's algorithm, the activity of a rule $r$ is defined as the
-product $\lambda_r|\EMBS{r}{M}|$ of its reaction rate by the number of
-embeddings of its left hand side in the current reaction mixture.
-Then, simulating a trace works by repeating the following steps:
-\begin{inparaenum}[1)]
+Agents in our example model are subject to the set of rules depicted
+in Figure~\ref{fig:model}. As expressed by these rules, kinases and
+substrates can bind to each other provided that their respective
+binding sites are free (rule ``$b$''). owever, the resulting complex is very
+unstable unless the kinase involved is phosphorylated. This is
+modelled by introducing two unbind rules (``$u$'' and ``$u^{*}$'') with
+different rates. Also, a substrate can get phosphorylated when it is
+bound to a kinase (rule ``$p$''). Finally, for the sake of simplicity, we
+model the phosphorylation process of kinases as a spontaneous process
+(rule ``$pk$'').
 
-\item draw the time before the next simulation event from an
-  exponential distribution of parameter the total activity $\alpha$ of
-  the rules and increment the current time by this amount
-\item draw a rule $r$ with probability proportional to its activity
-\item pick an instance of the left hand side of $r$ uniformly in the
-  current mixture and rewrite it.
-\end{inparaenum}
+\input{figures/model}
+
+
+
+\paragraph{Other concepts and notations}
+
+An \emph{embedding} of the left hand side $L_r$ of a rule $r$ to a mixture $m$
+is a map $\xi$ from agents of $L_r$ to global agent identifiers such that
+
+
+
+
+
+
+%Stochastic simulations of Kappa models can be run using the Gillespie
+%algorithm, which is summarized Listing~\ref{alg:gillespie}.
+
+%\input{algos/gillespie}
+
+% In Gillespie's algorithm, the activity of a rule $r$ is defined as the
+% product $\lambda_r|\EMBS{r}{M}|$ of its reaction rate by the number of
+% embeddings of its left hand side in the current reaction mixture.
+% Then, simulating a trace works by repeating the following steps:
+% \begin{inparaenum}[1)]
+% \item draw the time before the next simulation event from an
+%   exponential distribution of parameter the total activity $\alpha$ of
+%   the rules and increment the current time by this amount
+% \item draw a rule $r$ with probability proportional to its activity
+% \item pick an instance of the left hand side of $r$ uniformly in the
+%   current mixture and rewrite it.
+% \end{inparaenum}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,21 +84,14 @@ Then, simulating a trace works by repeating the following steps:
 
 \subsection{Where traditional pathway analysis falls short}
 
-% Much more to say about Kappa
 
-We illustrate the need for counterfactual reasoning on a toy example
-in Kappa. Consider a model with two types of agents, kinases $K$ and
-substrates $S$, interacting according to the rules depicted in
-Figure~\ref{fig:model}.
-
-\input{figures/model}
 
 For the sake of simplicity, consider an initial mixture $I$ with only
 a single kinase and a single substrate whose sites are free and
 unphosphorylated. We then ask: Starting from $I$, \textbf{how} is $p$
 triggered ? We are not merely looking for an account of reachability
 but rather for causal narratives, that is, collections of necessary
-events connected by causal influences.
+events connected by causal influences. 
 
 A stochastic simulation \cite{DanosEtAl-APLAS07} might produce the
 following trace (events are labelled by the rules that induced them):
