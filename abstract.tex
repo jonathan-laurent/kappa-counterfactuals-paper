@@ -1,22 +1,17 @@
+% -*- TeX-master: "ijcai18.tex" -*-
+
 \begin{abstract}
   Rule-based modeling languages can be used to write mechanistic
-  models of complex biochemical systems. Some techniques have been
-  proposed to analyze the causal structure of such models, ideally
-  providing a way to uncover signalling pathways from networks of low
-  level protein-protein interactions. These methods basically take
-  advantage of the structure of the rules to
-  \begin{inparaenum}[(i)]
-  \item slice simulation traces into minimal subsets of events that
-    are sufficient to replicate a phenomenon of interest
-  \item highlight direct causal influences between non-concurrent
-    events.
-  \end{inparaenum}
-
-  We propose a different but complementary approach that is based on
-  counterfactual reasoning and claim that it can provide better causal
-  explanations by 
-  \begin{inparaenum}[(i)]
-  \item being more sensitive to kinetics
-  \item providing a proper account of inhibition between molecular events.
-  \end{inparaenum}  
+  models of complex reaction systems. Some techniques have been
+  proposed to analyze the causal structure of the event series that
+  are produced by simulating such models, ideally providing means for
+  revealing the emergence of pathways from low-level interactions.
+  Unfortunately, these techniques are mostly blind to stochastic rates
+  and fail at giving a proper account of inhibition between events. In
+  response to those issues, we propose a complementary approach that
+  is based on counterfactual reasoning. In particular, we introduce an
+  algorithm to uncover the causal structure of simulation traces by
+  exploring counterfactual scenarios that account for various external
+  interventions. Then, we show how such scenarios can be analyzed in
+  term of inhibition between factual and counterfactual events.
 \end{abstract}

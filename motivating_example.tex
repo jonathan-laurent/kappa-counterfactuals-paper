@@ -1,9 +1,6 @@
+% -*- TeX-master: "ijcai18.tex" -*-
+
 \section{Motivating example}\label{sec:example}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% BACKGROUND ON KAPPA
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 In this section, we give some background information on the Kappa
 modelling language and introduce a toy example that motivates the need
@@ -41,14 +38,13 @@ unambiguously. \input{figures/mixture}
 \noindent
 Chemical interactions between agents are modelled by local
 mixture-rewriting \emph{rules}.  A rule $r$ is defined by a triple
-$(\RLHS{r}, \RRHS{r}, \lambda_r)$ that consists in a left-hand side,
-                 a right-hand side and a firing rate.
-Together, the rules of a model denote a
-continuous-time Markov chain where
+$(\RLHS{r}, \RRHS{r}, \lambda_r)$ that consists in a left-hand side, a
+right-hand side and a firing rate.  Together, the rules of a model
+denote a continuous-time Markov chain where
 \begin{inparaenum}[(i)]
 \item states are mixtures and
-\item for every rule $r$, any part of the current mixture that
-  matches $L_r$ is rewritten into $\RRHS{r}$ at rate $\lambda_r$.
+\item for every rule $r$, any part of the current mixture that matches
+  $L_r$ is rewritten into $\RRHS{r}$ at rate $\lambda_r$.
 \end{inparaenum}
 Agents in our example model are subject to the set of rules depicted
 in Figure~\ref{fig:model}. As expressed by these rules, kinases and
@@ -104,9 +100,10 @@ following steps:
 \item draw the timespan before the next simulation event from an
   exponential distribution of parameter the total activity of the
   mixture and increment the current time by this amount,
-\item draw a rule $r$ with probability proportional to its activity and
-\item pick uniformly an embedding $\xi$ of the left-hand side of $r$ in $m$
-and trigger abstract event $(r, \xi)$.
+\item draw a rule $r$ with probability proportional to its activity
+  and
+\item pick uniformly an embedding $\xi$ of the left-hand side of $r$
+  in $m$ and trigger abstract event $(r, \xi)$.
 \end{inparaenum}
 The Gillespie algorithm outputs a sequence of \emph{events}, an event
 being formally defined as a pair $(e, t)$ where $e$ is an abstract
@@ -120,15 +117,10 @@ the reader to \cite{}.
 
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% TRADITIONAL PATHWAY ANALYSIS FALLS SHORT
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Where existing techniques fall short}
 
 % What about asking the question for the specific trace to make it
-% clearer we are talking about actual causality.
+% clearer we are talking about actual causality ?
 
 Let's consider again our example model that is displayed
 Figure~\ref{fig:model}.  For the sake of simplicity, consider an

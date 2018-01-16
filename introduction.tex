@@ -2,11 +2,6 @@
 
 \section*{Introduction}\label{sec:intro}
 
-% Introduction rule-based Why uncovering pathways is important What's
-% wrong with previous techniques and how they work Overview of the
-% solution in a few sentences State contributions precisely Outline of
-% the article
-
 Rule-based modeling languages for molecular biology, such as Kappa
 \cite{DanosEtAl-CONCUR07} and BioNetGen \cite{bngl}, or organic
 chemistry, such as M{\o}d \cite{moll}, can be used to write
@@ -36,14 +31,14 @@ interactions. These methods take advantage of rule structure to
 \item \label{step:highlight} highlight causal influences between
   remaining events, exposing the extent of concurrency.
 \end{inparaenum}
-Such methods suffer from two major issues though. 
+Such methods suffer from two major issues though.
 
 First, step (\ref{step:compress}) as currently implemented is blind to
 the kinetics aspect of a model (i.e. the stochastic rates of its
 rules).  As a consequence, compressed simulation traces may fail to
 include important simulation events that dramatically increase the
-probability of observing the phenomenon of interest, although not
-structurally necessary in achieving it. Second, step
+probability of observing the phenomenon of interest despite not being
+structurally necessary for achieving it. Second, step
 (\ref{step:highlight}) is limited to a very narrow notion of causal
 influence that we call \emph{activation}. Put simply, an event is said
 to activate another one if it modifies an aspect of the world that
@@ -61,24 +56,24 @@ In response to those issues, we propose a complementary approach to
 causal analysis of event series generated from rule-based models,
 which rely on {counterfactual reasoning}. In the tradition of Lewis,
 Pearl and Halpern, we investigate possible causal influences by
-answering questions of the kind: \textit{``would event $b$ have
-  happened had event $a$ not happened ?''}
-%\cite{lewis1974causation,pearl2009causality,halpern2016actual},
-In this spirit, we claim the following contributions.
+answering questions of the kind: \textit{would event $b$ have happened
+  had event $a$ not happened ?}
+% \cite{lewis1974causation,pearl2009causality,halpern2016actual},
+Concretely, we claim the following contributions.
 \begin{enumerate}
 \item We give a semantics account of counterfactual statements in the
   context of rule-based models, where the standard definition of
   counterfactuals based on structural equations
-  \cite{pearl2009causality} does not apply. 
+  \cite{pearl2009causality} does not apply.
 \item We show how such statements can be evaluated by sampling
-  \emph{counterfactual traces}, which represent how an event series
-  may have been different had some external intervention happened. We
-  introduce an algorithm to explore such scenarios and
-  provide an efficient implementation for the Kappa modelling
+  \emph{counterfactual traces} which give an account of how an event
+  series may have been different had some external intervention
+  happened. We introduce an algorithm to generate counterfactual
+  traces and provide an efficient implementation for the Kappa
   language.
 \item We show how counterfactual dependencies between events, once
   discovered, can be explained using a combination of activation and
-  inhibition arrows. This results in causal diagrams that come closer
-  to the biological intuition of a pathway, where inhibition generally
-  plays an important role.
+  inhibition arrows. This results in causal diagrams that are more
+  faithful to the biological intuition of a pathway, where inhibition
+  is ubiquituous.
 \end{enumerate}
