@@ -17,13 +17,14 @@
       \STATE draw a rule $r$ with prob.
       $\propto \, \lambda_r |\DEMBS{r}{M, M_0}|$
       \STATE  draw a divergent embedding $\xi \in \DEMBS{r}{M, M_0}$
-      \STATE {$e \gets (r, \xi)$}
+      \STATE {$e \gets ((r, \xi), t')$}
   \ELSE
       \STATE $e \gets $ next event in $\tau$
   \ENDIF
   % \STATE
-  \IF {$ \neg \, \BLOCKED{\iota}{t', e} \ \wedge\ e $ triggerable in $M$ }
+  \IF {$ \neg \, \BLOCKED{\iota}{e} \ \wedge\ e $ triggerable in $M$ }
       \STATE update $M$ by triggering event $e$
+      \STATE log event $e$
   \ENDIF
 
   \STATE $t \gets t'$
