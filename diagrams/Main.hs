@@ -157,7 +157,7 @@ mixture =
                  (agK True (Just True)  `labelBy` "2")
              # bondSK
     block2 = atPoints (triangle 4.7 # rotateBy (-1/4)) elts2
-    elts2 = [ agS True (Just True) `labelBy` "3",
+    elts2 = [ rotateBy (1/8) (agS True (Just True) `labelBy` "3"),
               agK True (Just False) `labelBy` "4",
               agS True (Just False) `labelBy` "5" ]
 

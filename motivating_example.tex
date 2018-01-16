@@ -5,13 +5,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BACKGROUND ON KAPPA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% MISSING Rules cannot create or delete agents
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 In this section, we give some background information on the Kappa
 modelling language and introduce a toy example that motivates the need
 for counterfactual reasoning in analyzing the causal structure of
 simulationt traces.
+
+% Maybe we should say a few eords here about what the model is about
+% so that the reader is not shocked by the use of the word
+% phosphorylation"
 
 
 \subsection{Some background on Kappa}
@@ -27,7 +30,11 @@ depend on its \emph{type}.
 In our running example, there are two types of agents: substrates $S$
 and kinases $K$. Agents of both type feature a binding site and a
 phosphorylation site with two possible internal states:
-\emph{unphosphorylated} and \emph{phosphorylated}.
+\emph{unphosphorylated} and \emph{phosphorylated}.\footnote{Many
+  proteins can be turned on and off by attaching or removing phosphate
+  groups to some of their residues. The action of attaching a
+  phosphate group to a protein is called phosphorylation and an enzyme
+  catalyzing a phosphorylation reaction is called a kinase.}
 
 We call \emph{mixture} a multiset of agents for which the internal
 state and binding state of every site is fully specified.  Individual
@@ -35,14 +42,15 @@ agents are given global identifiers so that we can refer to them
 unambiguously. \input{figures/mixture}
 \noindent
 Chemical interactions between agents are modelled by local
-mixture-rewriting \emph{rules}.  A rule $r$ consists in a left-hand
-side $(\RLHS{r})$, a right-hand-side $(\RRHS{r})$ and a firing rate
-$(\lambda_r)$.  Together, the rules of a model denote a
+mixture-rewriting \emph{rules}.  A rule $r$ is defined by a triple
+$(\RLHS{r}, \RRHS{r}, \lambda_r)$ that consists in a left-hand side,
+                 a right-hand side and a firing rate.
+Together, the rules of a model denote a
 continuous-time Markov chain where
-\begin{inparaenum}[i)]
+\begin{inparaenum}[(i)]
 \item states are mixtures and
-\item for every rule $r$, any instance of $L_r$ is rewritten into
-  $\RRHS{r}$ at rate $\lambda_r$.
+\item for every rule $r$, any part of the current mixture that
+  matches $L_r$ is rewritten into $\RRHS{r}$ at rate $\lambda_r$.
 \end{inparaenum}
 Agents in our example model are subject to the set of rules depicted
 in Figure~\ref{fig:model}. As expressed by these rules, kinases and
@@ -59,7 +67,7 @@ spontaneous process (rule ``$pk$'').
 
 Importantly, not every site of an agent has to be mentioned in a rule.
 Following the \textit{``don't care, don't write"} principle, sites not
-mentioned in a rule are left unchanged by it. Although it may appear
+mentioned in a rule are left unchanged by it. Although this may appear
 trivial, this is a defining feature of rule-based models, contrasting
 with other modelling frameworks %that are frequently used in biology
 like Petri-nets and differential equations where the chemical species
@@ -73,34 +81,34 @@ context information, ideally enabling a one-to-one correspondence
 between rules and elementary physical mechanisms.
 
 A \emph{rule instance}, also called \emph{abstract event}, is a pair
-$(r, \xi)$ where $r$ is a rule and $\xi$ is a map from the agents
-featured in $\RLHS{r}$ to global agent identifiers.  We say that
-$(r, \xi)$ is \emph{triggerable} in mixture $m$, which we write
-$\TRIGGERABLE{m}{(r, \xi)}$, if $\xi$ describes an embedding of $L_r$
-into $m$.  We write
-\[\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}\] the
-set of all such embeddings. If $m \vdash (r, \xi)$, we write
-$\UPDATE{m}{(r, \xi)}$ the new mixture we get from $m$ after applying
-rule instance $(r, \xi)$ by rewriting the codomain of $\xi$ into
-$\RRHS{r}$.  Finally, in a given mixture $m$, the \emph{activity} of a
-rule $r$ is defined as the product $\lambda_r|\EMBS{r}{M}|$ of its
-reaction rate by the number of embeddings of $L_r$ into $m$. For
-example, in Figure~\ref{fig:mixture}, rule $b$ has activity
-$2\lambda_b$ and rule $u$ has activity $0$. The \emph{total activity}
-of a mixture is defined as the sum of the activities of every rule.
+$(r, \xi)$ where $r$ is a rule and $\xi$ maps the agents featured in
+$\RLHS{r}$ to global agent identifiers. We say that $(r, \xi)$ is
+\emph{triggerable} in mixture $m$ if the codomain of $\xi$ in $m$
+matches $L_r$. In this case, we write $\TRIGGERABLE{m}{(r, \xi)}$ and
+$\xi$ is called an \emph{embedding} of $L_r$ into $m$:
+\[\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}.\]
+Whenever $m \vdash (r, \xi)$, we write $\UPDATE{m}{(r, \xi)}$ the
+mixture we get from $m$ by triggering rule instance $(r, \xi)$, which
+is done by rewriting the codomain of $\xi$ into $\RRHS{r}$.  Finally,
+in a given mixture $m$, the \emph{activity} of a rule $r$ is defined
+as the product $\lambda_r|\EMBS{r}{M}|$ of its reaction rate by the
+number of embeddings of $L_r$ into $m$. For example, in
+Figure~\ref{fig:mixture}, rule $b$ has activity $2\lambda_b$ and rule
+$u$ has activity $0$. The \emph{total activity} of a mixture is
+defined as the sum of the activities of every rule.
 
 Given an initial mixture, the continuous Markov chain underlying a
-model can be simulated using the so-called \emph{Gillespie algorithm}
-\cite{DanosEtAl-APLAS07} that is depicted
+Kappa model can be simulated using the so-called \emph{Gillespie
+  algorithm} \cite{DanosEtAl-APLAS07} that is depicted
 Algorithm~\ref{alg:gillespie} and which consists in repeating the
 following steps:
-\begin{inparaenum}[1)]
-\item draw the time before the next simulation event from an
+\begin{inparaenum}[(1)]
+\item draw the timespan before the next simulation event from an
   exponential distribution of parameter the total activity of the
-  rules and increment the current time by this amount
-\item draw a rule $r$ with probability proportional to its activity
-\item pick an instance of the left hand side of $r$ uniformly in the
-  current mixture and rewrite it.
+  mixture and increment the current time by this amount,
+\item draw a rule $r$ with probability proportional to its activity and
+\item pick uniformly an embedding $\xi$ of the left-hand side of $r$ in $m$
+and trigger abstract event $(r, \xi)$.
 \end{inparaenum}
 The Gillespie algorithm outputs a sequence of \emph{events}, an event
 being formally defined as a pair $(e, t)$ where $e$ is an abstract
@@ -108,6 +116,9 @@ event and $t$ its time of happening. Such a sequence of events is
 called a \emph{trace}.
 
 \input{algos/gillespie}
+
+\noindent For a more rigorous account of Kappa's semantics, we refer
+the reader to \cite{}.
 
 
 
@@ -141,7 +152,7 @@ between $b$ and $p$ is called an \textit{activation arrow}, meaning
 that $b$ modifies an aspect of state (by creating a link) that enables
 $p$ to happen.\footnote{A more precise definition is given in section~\ref{sec:inhibition}.} In order to generate such a causal account, we first compute
 a \emph{sub-trace} of (\ref{example-trace}) that is 
-\begin{inparaenum}[i)]
+\begin{inparaenum}[(i)]
 \item \emph{valid} in the sense that each of its events can be
   triggered in turn from the initial mixture and
 \item \emph{minimal} in the sense that none of its strict valid
@@ -156,7 +167,7 @@ edges are activation arrows.
 The narrative presented Figure~\ref{fig:dumb-story}, however, is blind
 to the critical role of $pk$ in the original trace. Looking at the
 rules in Figure~\ref{fig:model} one notes that:
-\begin{inparaenum}[i)]
+\begin{inparaenum}[(i)]
 \item the phosphorylation rule $p$ is slow
 \item the average time $K$ and $S$ remain bound depends on whether $K$
   is phosphorylated, as manifest in the two unbinding rules $u$ (fast,
