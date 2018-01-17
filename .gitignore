@@ -5,9 +5,9 @@
 **.blg
 **.log
 **.out
-*.pdf
 
-archives
-figures/dot/*.pdf
-diagrams/cabal.sandbox.config
-diagrams/fonts/
+/*.pdf
+/archives
+/figures/dot/*.pdf
+/diagrams/cabal.sandbox.config
+/diagrams/fonts/
