@@ -1,34 +1,40 @@
 \begin{algorithm}
-\caption{Counterfactual resimulation loop}\label{alg:cosimulation}
-\begin{spacing}{1.2}
-\begin{algorithmic}
-  \STATE 
-  \STATE \COMMENT { $t$ is the current time, $M$ the current state mixture and
-    % $M_0$ the state of the reference mixture at time $t$ }
-    $M_0$ the intermediate state of $\tau$ at time $t$ }
-  \STATE
-  \STATE $\alpha' \gets \sum_r {\lambda_r |\DEMBS{r}{M, M_0}|}$
+\caption{Counterfactual resimulation}\label{alg:cosimulation}
+\begin{spacing}{1.3}
+\algsetup{indent=1.5em}
+\begin{algorithmic}[1]
+\vspace{0.2cm}
+\STATE $t \gets 0$
+\STATE $m \gets\ $ initial mixture
+\WHILE{ $t < t_\text{\,end}$ }
+  \STATE $m_0 \gets \TSTATE{t}{\tau}$
+  \STATE $(e_{\text{f}}, t_{\text{f}}) \gets $ first event of $\tau$ in time interval $(t, \infty)$
+  \vspace{0.1cm}
+  \STATE $\alpha' \gets \sum_r {\lambda_r |\DEMBS{r}{m, m_0}|}$
+  \vspace{0.1cm}
   \STATE draw $\delta \sim \textsc{Exp}(\alpha') $
   \STATE $t_{\text{c}} \gets t + \delta$
-  \STATE $t_{\text{f}} \gets $ time of the next event in $\tau$
-  \STATE $t' \gets \min \{ t_{\text{c}}, \, t_{\text{f}} \}$
   % \STATE
-  \IF { $t' =  t_{\text{c}}$ }
+  \IF { $t_{\text{c}} < t_{\text{f}}$ }
       \STATE draw a rule $r$ with prob.
-      $\propto \, \lambda_r |\DEMBS{r}{M, M_0}|$
-      \STATE  draw a divergent embedding $\xi \in \DEMBS{r}{M, M_0}$
-      \STATE {$e \gets ((r, \xi), t')$}
+      $\propto \, \lambda_r |\DEMBS{r}{m, m_0}|$
+      \STATE  draw a divergent embedding $\xi \in \DEMBS{r}{m, m_0}$
+      \STATE {$e \gets (r, \xi)$}
+      \IF {$ \neg \, \BLOCKED{\iota}{e, t_{\text{c}}} $ }
+          \STATE $t \gets t_{\text{c}}$
+          \STATE $m \gets \UPDATE{m}{e}$
+          \STATE log event $(e, t)$
+      \ENDIF
   \ELSE
-      \STATE $e \gets $ next event in $\tau$
+      \STATE $t \gets t_{\text{f}}$
+      \IF {$ \neg \, \BLOCKED{\iota}{e, t} $ \AND $ \TRIGGERABLE{m}{e} $ }
+          \STATE $m \gets \UPDATE{m}{e}$
+          \STATE log event $(e, t)$
+      
+      \ENDIF 
   \ENDIF
-  % \STATE
-  \IF {$ \neg \, \BLOCKED{\iota}{e} \ \wedge\ e $ triggerable in $M$ }
-      \STATE update $M$ by triggering event $e$
-      \STATE log event $e$
-  \ENDIF
-
-  \STATE $t \gets t'$
-  \STATE
+\ENDWHILE
+\vspace{0.1cm}
 \end{algorithmic}
 \end{spacing}
 \end{algorithm}

@@ -1,4 +1,4 @@
-\section{Counterfactual simulation}\label{sec:counterfactual}
+\section{Counterfactual resimulation}\label{sec:counterfactual}
 
 Counterfactual statements are tricky because their truth is
 context-dependent. The statement ``Had it not rained, the driver might
@@ -18,12 +18,12 @@ this approach in the context of Kappa traces and interpolate between
 
 We start by formalizing the notion of an intervention. An intervention
 $\iota$ (``blocking $pk$" in our example) is a predicate
-$\BLOCKED{\iota}{t, e}$ that determines whether or not event $e$ is
-blocked at time $t$. Given a predicate $\varphi$ over traces, we write
+$\BLOCKED{\iota}{e}$ that determines whether or not event $e$ is
+blocked. Given a predicate $\psi$ over traces, we write
 the proposition \textit{``Had intervention $\iota$ happened in trace
-  $\tau$, $\varphi$ would have been true with probability greater than
+  $\tau$, $\psi$ would have been true with probability greater than
   $p \in [0,1]$''} as:
-\[ \tau \models_p [\iota] \, \varphi.
+\[ \tau \models_p [\iota] \, \psi.
 \]
 
 To give an operational meaning to this statement, we invoke the
@@ -31,27 +31,22 @@ continuous time Markov chain (CTMC) semantics of a Kappa model as
 defined and implemented in
 \cite{DanosEtAl-APLAS07,BoutillierEK17}. For the present purpose it is
 conceptually useful to think of a CTMC abstractly in terms of the
-random realization of ``potential events". A potential event is a pair
-$(r, \xi)$ where $r$ is a rule and $\xi$ an injective mapping from
-local agents involved in $r$ to global agents in a huge virtual
-mixture of many instances of all possible molecular
-species.\footnote{For the sake of simplicity, we assume that no agent
-  is created or deleted by a rule.} For every such potential event, we
-imagine a bell that rings at a time $t$ drawn from an exponential
-distribution $\lambda_r\exp(-\lambda_r t)$, where $\lambda_r$ is the
-stochastic rate constant of $r$. A simulation trace can be viewed as
-the realization of a random variable $T$ determined by the set
-$\omega$ of ring times: Starting with an initial mixture, when a bell
-rings at $t$, its associated potential event $(r, \xi)$ transforms the
-mixture according to $r$ if $\xi$ yields a valid embedding of the left
-hand side of $r$ in the current mixture and time advances by
-$t$. Otherwise, time advances and nothing happens---a null
+random repeated realization of abstract event. For every possible
+abstract event, we imagine a bell that rings at a time $t$ drawn from
+an exponential distribution $\lambda_r\exp(-\lambda_r t)$, where
+$\lambda_r$ is the stochastic rate constant of $r$. A simulation trace
+can be viewed as the realization of a random variable $T$ determined
+by the set $\omega$ of ring times: Starting with an initial mixture,
+when a bell rings at $t$, its associated potential event $(r, \xi)$
+transforms the mixture according to $r$ if $\xi$ yields a valid
+embedding of the left hand side of $r$ in the current mixture and time
+advances by $t$. Otherwise, time advances and nothing happens---a null
 event. Repeat on the resulting mixture.
 
 We can extend this viewpoint to include interventions. For an
 intervention $\iota$, we define the random variable $\ATRAJ{}$ much in
 the same way as $T$, except that each time the bell rings, we require
-$\BLOCKED{\iota}{t, e}$ to be false for the potential event
+$\BLOCKED{\iota}{e, t}$ to be false for the potential event
 $e=(r, \xi)$ to be considered.  Counterfactual traces that are closest
 to the actual trace $\tau$ are then sampled by generating realizations
 of $\ATRAJ{}$ that inherit, whenever possible, the subset of $\omega$
@@ -67,12 +62,12 @@ short. Using co-simulation, we can operationalize the counterfactual
 statements as follows.
 
 \begin{definition}[Semantics of counterfactual statements] We write
-  $\tau \models_p [\iota] \, \varphi$ the counterfactual statement
+  $\tau \models_p [\iota] \, \psi$ the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
-    predicate $\varphi$ would have been true with probability greater
+    predicate $\psi$ would have been true with probability greater
     than $p$''}.  It is defined as follows:
-  \[ \tau \models_p [\iota] \, \varphi \quad \Longleftrightarrow \quad
-    \mathbf{P}( \varphi(\ATRAJ{}) \ |\ T = \tau) \,\geq\, p \]
+  \[ \tau \models_p [\iota] \, \psi \quad \Longleftrightarrow \quad
+    \mathbf{P}( \psi(\ATRAJ{}) \ |\ T = \tau) \,\geq\, p \]
 \end{definition}
 
 \subsection{Sampling counterfactual traces}

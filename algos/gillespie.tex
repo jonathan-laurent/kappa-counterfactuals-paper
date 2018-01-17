@@ -5,13 +5,15 @@
 \vspace{0.2cm}
   \STATE $t \gets 0$
   \STATE $m \gets\ $ initial mixture
+  \vspace{0.1cm}
   \WHILE{ $t < t_\text{\,end}$ }
+      \vspace{0.1cm}
       \STATE $\alpha \gets \sum_r {\lambda_r |\EMBS{r}{m}|}$
+      \vspace{0.1cm}
       \STATE draw $\delta \sim \textsc{Exp}(\alpha) $
       \STATE $t \gets t + \delta$
       \STATE draw a rule $r$ with probability
       $\propto \ \lambda_r |\EMBS{r}{m}|$
-
       \STATE draw an embedding $\xi$ uniformly in $\EMBS{r}{m}$
       %\STATE update $m$ by triggering event $((r, \xi), t)$
       \STATE $m \gets \UPDATE{m}{(r, \xi)}$
