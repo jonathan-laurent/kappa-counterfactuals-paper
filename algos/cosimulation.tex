@@ -1,12 +1,17 @@
 \newcommand{\EVF}[0]{e_{\text{f}}}
 \newcommand{\EVCF}[0]{e_{\text{c}}}
 
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
 \begin{algorithm}
 \caption{Counterfactual resimulation}\label{alg:cosimulation}
 \begin{spacing}{1.3}
 \algsetup{indent=1.5em}
 \begin{algorithmic}[1]
 \vspace{0.2cm}
+\REQUIRE {a model, a reference trace $\tau$ and an intervention $\iota$ }
+\ENSURE {an instance of $\CTRAJ$\ \ (counterfactual trace)}
 \STATE $t \gets 0$
 \STATE $m \gets\ $ initial mixture
 \WHILE{ $t < t_\text{\,end}$ }
@@ -18,22 +23,20 @@
   \STATE draw $\delta \sim \textsc{Exp}(\alpha') $
   \STATE $t_{\text{c}} \gets t + \delta$
   % \STATE
-  \IF { $t_{\text{c}} < t_{\text{f}}$ }
+  \IF { $t_{\text{c}} < t_{\text{f}}$ } \label{cosim:cev}
       \STATE draw a rule $r$ with prob.
       $\propto \, \lambda_r |\DEMBS{r}{m, m_0}|$
       \STATE  draw a divergent embedding $\xi \in \DEMBS{r}{m, m_0}$
       \STATE {$e \gets (r, \xi)$}
       \IF {$ \neg \, \BLOCKED{\iota}{e, t_{\text{c}}} $ }
           \STATE $t \gets t_{\text{c}}$
-          \STATE $m \gets \UPDATE{m}{e}$
-          \STATE log event $(e, t)$
+          \STATE update $m$ to $\UPDATE{m}{e}$ and log event $(e, t)$
       \ENDIF
   \ELSE
       \STATE {$e \gets \EVF{}$}
       \STATE $t \gets t_{\text{f}}$
-      \IF {$ \neg \, \BLOCKED{\iota}{e, t} $ \AND $ \TRIGGERABLE{m}{e} $ }
-          \STATE $m \gets \UPDATE{m}{e}$
-          \STATE log event $(e, t)$
+      \IF {$ \neg \, \BLOCKED{\iota}{e, t} $ and $ \TRIGGERABLE{m}{e} $ }
+          \STATE update $m$ to $\UPDATE{m}{e}$ and log event $(e, t)$
       
       \ENDIF 
   \ENDIF

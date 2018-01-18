@@ -92,12 +92,14 @@ have been be true'' can be evaluated following a three-steps process:
 \end{inparaenum}
 Because rule-based models do not have a natural encoding in term of
 structural equations, Pearl's construction does not apply
-straightforwardly in our case. The semantics we propose is
-very close in spirit though.
+straightforwardly in our case. The semantics we propose in
+section~\ref{sec:counterfactuals-semantics} is very close in spirit
+though.
 
 
 
 \subsection{A semantics for counterfactuals}
+\label{sec:counterfactuals-semantics}
 We think of an intervention as the product of an external force with
 the ability of preventing events that are about to happen. Precisely,
 an intervention $\iota$ is defined by a predicate
@@ -110,8 +112,8 @@ over traces, we write the proposition \textit{``Had
 
 
 In order to assign a probability to this proposition, it is
-conceptually useful to think of the CTMC defined by a model
-in terms of the random repeated realization of abstract events.  For
+conceptually useful to think of the CTMC induced by a model
+in terms of the repeated random realization of abstract events.  For
 every possible abstract event $(r, \xi)$, one has to imagine a bell
 that rings randomly according to a Poisson process of parameter
 $\lambda_r$.\footnote{In other words, the time intervals between
@@ -124,7 +126,7 @@ with the initial mixture and advancing in time, every time a bell
 rings, its associated abstract event $e$ transforms the current
 mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the bell labeled
 \textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings on
-the mixture of Figure~\ref{fig:mixture}, thend a bond is created
+the mixture of Figure~\ref{fig:mixture}, then a bond is created
 between these two agents. However, if the bell labeled \textit{``apply
   rule $b$ on substrate $1$ and kinase $2$'}' rings on the same
 mixture, nothing happens.
@@ -134,14 +136,14 @@ intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
 the same way as $T$, except that each time the bell associated to $e$
 rings at time $t$, we also require $\BLOCKED{\iota}{(e, t)}$ to be
 false for $e$ to trigger. Then, given an observed trace $\tau$, an
-intervention $\iota$ and a predicate $\psi$, we estimate $\PCFST{}$
-following Pearl's three-steps procedure: \ItAbduction{} we condition
+intervention $\iota$ and a predicate $\psi$, we compute $\PCFST{}$
+according to Pearl's three-steps procedure: \ItAbduction{} we condition
 the distribution of $\Sigma$ on the observation that $T=\tau$, then
 \ItAction{} alter the behavior of simulation with intervention $\iota$
 and \ItPrediction{} compute the probability of $\psi$ in the resulting
 setting. This results in the following definition.
 
-\begin{definition}[Semantics of counterfactual statements] 
+\begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
   For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
@@ -152,8 +154,57 @@ setting. This results in the following definition.
 
 \subsection{The counterfactual resimulation algorithm}
 
-Counterfactual traces can be sampled using the algorithm described in
-Listing~\ref{alg:cosimulation}.
+Following Definition~\ref{def:counterfactuals}, we can estimate the
+probability of the counterfactual statement
+$\tau \models [\iota] \, \psi$ by sampling instances of the random
+variable $\CTRAJ{}$. Such instances are called \emph{counterfactual
+  traces}. Intuitively, they give an account of what else trace
+$\tau$ could have been had intervention $\iota$ happened.  We
+introduce Algorithm~\ref{alg:cosimulation} a variation of Gillespie's
+algorithm to sample a counterfactual trace efficiently given a
+reference trace $\tau$ and an intervention $\iota$.  We call it
+\emph{counterfactual resimulation} algorithm, as it works by going
+through every event of $\tau$, only resimulating parts of $\tau$ that are
+affected by $\iota$. In particular, when $\iota$ is the trivial
+intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it outputs
+$\tau$ with no modification.
+
+This algorithm relies on a modified notion of activity we call
+\emph{divergent activity}. We define the set of \emph{divergent
+  embeddings} of the left-hand side of a rule $r$ into mixture $m$
+and relative to $m_0$ as
+\[\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.\]
+Equivalently, a divergent embedding is an embedding whose codomain
+features a \emph{divergent site}, that is a site whose binding or
+internal state is different in $m$ and $m_0$. The {divergent activity}
+of a rule $r$ in mixture $m$ and relative to $m_0$ is then defined as
+the product $\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent
+  activity} $\alpha'(m, m_0)$ of $m$ relative to $m_0$ is defined as
+the sum of the divergent activities of every rule. Finally,
+Algorithm~\ref{alg:cosimulation} uses the notation $\TSTATE{t}{\tau}$
+to refer to the state of trace $\tau$ at time $t$, which is what we
+get from the initial mixture after triggering every event that is
+prior to $t$ in $\tau$ in turn.
 
 \input{algos/cosimulation}
-\input{proofs/cosimulation}
+
+The role and relevance of the concept of divergent activity in the
+counterfactual resimulation algorithm can be summarized by the
+following theorem, where we write $\tau \cap I = \emptyset$ as a
+shortcut for the proposition ``no event of trace $\tau$ triggers in
+the time interval $I$''.
+\begin{theorem}[Property of the divergent activity] Let $\tau$ a trace
+  and $\iota$ an intervention. Let $I = (t, t+\delta)$ a time interval
+  such that $\tau \cap I = \emptyset$ and $m_0 =
+  \TSTATE{t}{\tau}$. Then, we have
+  \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
+      \TSTATE{t}{\ATRAJ{}} = m\ }
+    \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
+  \]
+\end{theorem}
+\noindent Indeed, at every iteration of
+Algorithm~\ref{alg:cosimulation}, the divergent activity $\alpha'$
+determines the probability that a ``counterfactual event'' triggers
+before the time of the next event in $\tau$ (test of line \ref{cosim:cev}).
+
+%\input{proofs/cosimulation}
