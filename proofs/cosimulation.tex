@@ -1,12 +1,13 @@
-\begin{theorem} Let $\tau$ a trace and $\iota$ an intervention. Let
-  $I = (t, t+\delta)$ a time interval such that
-  $\tau \cap I = \emptyset$. Then,
+\begin{theorem*}
+  Let $\tau$ a trace
+  and $\iota$ an intervention. Let $I = (t, t+\delta)$ a time interval
+  such that $\tau \cap I = \emptyset$ and $m_0 =
+  \TSTATE{t}{\tau}$. Then, we have
   \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
       \TSTATE{t}{\ATRAJ{}} = m\ }
-    \ =\ e^{-\alpha'(m, m_0) \cdot \delta}
+    \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
   \]
-  where $m_0 = \TSTATE{t}{\tau}$.
-\end{theorem}
+\end{theorem*}
 \begin{proof}
 
   Given that $\TSTATE{t}{\ATRAJ{}} = m$, no counterfactual event

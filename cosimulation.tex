@@ -92,9 +92,7 @@ have been be true'' can be evaluated following a three-steps process:
 \end{inparaenum}
 Because rule-based models do not have a natural encoding in term of
 structural equations, Pearl's construction does not apply
-straightforwardly in our case. The semantics we propose in
-section~\ref{sec:counterfactuals-semantics} is very close in spirit
-though.
+straightforwardly in our case. Our proposal is very close in spirit though.
 
 
 
@@ -112,24 +110,24 @@ over traces, we write the proposition \textit{``Had
 
 
 In order to assign a probability to this proposition, it is
-conceptually useful to think of the CTMC induced by a model
-in terms of the repeated random realization of abstract events.  For
-every possible abstract event $(r, \xi)$, one has to imagine a bell
-that rings randomly according to a Poisson process of parameter
+conceptually useful to think of the CTMC induced by a model in terms
+of the repeated random realization of abstract events.  For every
+possible abstract event $(r, \xi)$, one has to imagine a bell that
+rings randomly according to a Poisson process of parameter
 $\lambda_r$.\footnote{In other words, the time intervals between
   consecutive ringings are drawn from exponential distributions of
   parameter $\lambda_r$.}  A simulation trace can be viewed as a
-deterministic function $T$ of the
-the random set $\Sigma$ of ring times (also called \emph{schedule},
-and which corresponds to $\vec{u}$ in Pearl's construction): starting
-with the initial mixture and advancing in time, every time a bell
-rings, its associated abstract event $e$ transforms the current
-mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the bell labeled
-\textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings on
-the mixture of Figure~\ref{fig:mixture}, then a bond is created
-between these two agents. However, if the bell labeled \textit{``apply
-  rule $b$ on substrate $1$ and kinase $2$'}' rings on the same
-mixture, nothing happens.
+deterministic function $T$ of the random variable $\Sigma$ that
+features the set of ring times for every abstract event (we call it
+\emph{schedule} and it corresponds to $\vec{u}$ in Pearl's
+construction): starting with the initial mixture and advancing in
+time, every time a bell rings, its associated abstract event $e$
+transforms the current mixture $m$ if $\TRIGGERABLE{m}{e}$. For
+example, if the bell labeled \textit{``apply rule $b$ on substrate $3$
+  and kinase $4$''} rings on the mixture of Figure~\ref{fig:mixture},
+then a bond is created between these two agents. However, if the bell
+labeled \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}'
+rings on the same mixture, nothing happens.
 
 We can extend this viewpoint to include interventions. For an
 intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
@@ -139,8 +137,8 @@ false for $e$ to trigger. Then, given an observed trace $\tau$, an
 intervention $\iota$ and a predicate $\psi$, we compute $\PCFST{}$
 according to Pearl's three-steps procedure: \ItAbduction{} we condition
 the distribution of $\Sigma$ on the observation that $T=\tau$, then
-\ItAction{} alter the behavior of simulation with intervention $\iota$
-and \ItPrediction{} compute the probability of $\psi$ in the resulting
+\ItAction{} we alter the behavior of simulation with intervention $\iota$
+and \ItPrediction{} we compute the probability of $\psi$ in the resulting
 setting. This results in the following definition.
 
 \begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
@@ -179,7 +177,7 @@ features a \emph{divergent site}, that is a site whose binding or
 internal state is different in $m$ and $m_0$. The {divergent activity}
 of a rule $r$ in mixture $m$ and relative to $m_0$ is then defined as
 the product $\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent
-  activity} $\alpha'(m, m_0)$ of $m$ relative to $m_0$ is defined as
+  activity} $\alpha'(m, m_0)$ is defined as
 the sum of the divergent activities of every rule. Finally,
 Algorithm~\ref{alg:cosimulation} uses the notation $\TSTATE{t}{\tau}$
 to refer to the state of trace $\tau$ at time $t$, which is what we
@@ -193,7 +191,8 @@ counterfactual resimulation algorithm can be summarized by the
 following theorem, where we write $\tau \cap I = \emptyset$ as a
 shortcut for the proposition ``no event of trace $\tau$ triggers in
 the time interval $I$''.
-\begin{theorem}[Property of the divergent activity] Let $\tau$ a trace
+\begin{theorem}[Property of the divergent activity]\label{thm:div-activity}
+  Let $\tau$ a trace
   and $\iota$ an intervention. Let $I = (t, t+\delta)$ a time interval
   such that $\tau \cap I = \emptyset$ and $m_0 =
   \TSTATE{t}{\tau}$. Then, we have
@@ -205,6 +204,8 @@ the time interval $I$''.
 \noindent Indeed, at every iteration of
 Algorithm~\ref{alg:cosimulation}, the divergent activity $\alpha'$
 determines the probability that a ``counterfactual event'' triggers
-before the time of the next event in $\tau$ (test of line \ref{cosim:cev}).
+before the time of the next event in $\tau$ (test of line
+\ref{cosim:cev}).  A proof of Theorem~\ref{thm:div-activity} is
+available Appendix~\ref{ap:div-activity}.
 
 %\input{proofs/cosimulation}

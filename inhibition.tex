@@ -1,4 +1,6 @@
-\section{Inhibition arrows}\label{sec:inhibition}
+% -*- TeX-master: "ijcai18.tex" -*-
+
+\section{Counterfactuals and inhibition}\label{sec:inhibition}
 
 Returning to our example, we can use co-simulation to quantify the
 influence of $pk$ on $p$ by estimating the probability of $p$
@@ -73,13 +75,9 @@ a sequence of intermediate events connected by activation and
 inhibitio%n %arrows to relate an event that is proper to the factual
 trace to another %one that is blocked by the intervention $\iota$.
 
-\begin{theorem} Let $(\tau, \iota, \tau')$ be a counterfactual
+\begin{theorem}\label{thm:completeness} Let $(\tau, \iota, \tau')$ be a counterfactual
   experiment and $e$ an event that belongs only to $\tau$. Then there
   exists an event $e_0 \in \tau$ that is blocked by $\iota$ and there
   is a path from $e_0$ to $e$ with an even number of inhibition
   arrows.
 \end{theorem}
-
-\subsection*{Proof of completeness}
-
-\input{proofs/completeness}
