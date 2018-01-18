@@ -1,20 +1,107 @@
+% -*- TeX-master: "ijcai18.tex" -*-
+
 \section{Counterfactual resimulation}\label{sec:counterfactual}
 
-Counterfactual statements are tricky because their truth is
-context-dependent. The statement ``Had it not rained, the driver might
-have arrived earlier" can fail to be true in many ways. Intuitively,
-how easily the driver could have arrived earlier depends on how great
-a departure from actuality is required for it to be case
-\cite{Lewis1973}. This is why counterfactual reasoning is tied to
-modal logic. The standard approach is to require that the consequent
-in a counterfactual be true in some of those possible worlds (in which
-the antecedent holds) that \textit{are most similar to the actual
-  world}. If the counterfactual statement is true in all of these
-worlds, we can replace ``might" with ``would".  We now operationalize
-this approach in the context of Kappa traces and interpolate between
-``might" and ``would" using probabilities.
+% Causality defined in terms of counterfactual dependency 
+% Counterfactuals rely on an idea of intervention
+% Lewis (closest-world semantics) and then Pearl's account of causality
+% Structural equations model and Pearl's solution
+% Why we cannot use Pearl's solution directly
+% abduction, action, prediction
+
+% knowing the joint distribution does not help, we need additional information
+% markovian hypothesis
+
+% make a hypothesis of strong independence about the latent processes leading
+% to rule triggering.
+
+
+% our framework supports a much wider range of interventions but we keep
+% things simple for ease of exposition.
+
+% counterfactual statements are not reducible to conditioning
+
+% This may be a better case !!
+
+% This makes for a much better argument in fact.
+
+% Causality and counterfactual statements cannot be dissociated from 
+% the idea of intervention.
+
+% Give a high level example
+% leading to the modern conception that causality cannot be understood
+
+% SMALL SURVEY ON CAUSALITY
+
+% We should rather talk about causal necessity
+
+
+Let's suppose that we have observed a trace $\tau$ in which a kinase
+$k$ gets phosphorylated ($pk$) at time $t$ and then binds ($b$) to a
+substrate $s$, which gets phosphorylated in turn ($p$). One may wonder
+what causal influence event $pk$ had on event $p$ in this specific
+scenario. According to a counterfactual account of causality,
+this translates into the question of how likely it is that {``$p$
+  would have happened had $pk$ not happened''}.\footnote{We
+  are being oversimple here for ease of exposition. In
+  reality, how to best express such a statement of actual causality in
+  terms of counterfactuals is still a matter of endless debate
+  \cite{halpern2016actual}. }
+
+A naive attempt to answer this question may go as follows: one may
+sample many simulation traces starting from the state of $\tau$ a few
+seconds before time $t$ and reject every trace in which rule $pk$
+triggers on $k$ in some time window around $t$.  Among the remaining
+traces, we would measure the frequency of those for which $s$ gets
+phosphorylated by $k$ in some defined time frame and take it as an
+estimate of the likelihood of our counterfactual of interest.
+
+The line of reasoning above is flawed in two major ways. First, $k$
+and $s$ may never bind to each other in most of the sampled
+traces,\footnote{For example, this would be the case if $s$ was
+  competing with many other substrates for binding to $k$.} in which
+case whether or not $k$ got phosphorylated is
+irrelevant. Worst, the consequent of the more precise counterfactual
+statement \textit{``had $pk$ not happened, the opportunity for $p$
+  would have been cut short by an early unbinding event between $k$
+  and $s$''} would not even make sense in the context of those traces.
+%One may suggest to make the same sampling experiment, this time also
+%conditioning by $k$ binding to $s$. However, it is unclear how many
+%other such things we may have to condition by.
+The key lesson here is that counterfactual statements are undetachable
+from the context in which they are formulated (in our example the
+trace $\tau$). Quoting Lewis, they refer to worlds ``\textbf{closest} to
+the actual one in which something went different''
+\cite{lewis1974causation}.
+
+The second problem comes from a more fundamental impossibility of
+evaluating counterfactual statements through observation alone. As a
+way to illustrate this, let's imagine that every kinase has a second
+phosphorylation site $x$, which state has no impact on the kinase
+behavior but is almost perfectly correlated with the state of the
+first phosphorylation site (which determines how strongly the kinase
+can bind to a substrate). Then, conditioned on $k$ getting
+phosphorylated at $x$, it is indeed much more likely that the first
+substrate it binds to will get phosphorylated in turn. However, we
+would not say that these two events are counterfactually dependent (or
+even causally related). The key lesson here is that causality and
+counterfactuals are not about conditioning but about
+\emph{interventions}. This is a fundamental idea in modern causal
+inference, which is well illustrated by a famous example: observing
+repeatedly that your pavement gets wet whenever it rains gives you no
+information about whether you live in a universe in which rain causes
+wet pavements or in which wet pavements cause rain. In order to find
+out, you need to intervene and spill water on your pavement yourself
+to see whether or not it starts raining as a result.
+
+
+
+
+
 
 \subsection{A semantics for counterfactuals}
+
+
 
 We start by formalizing the notion of an intervention. An intervention
 $\iota$ (``blocking $pk$" in our example) is a predicate
