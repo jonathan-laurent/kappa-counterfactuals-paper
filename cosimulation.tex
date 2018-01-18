@@ -1,78 +1,48 @@
 % -*- TeX-master: "ijcai18.tex" -*-
 
-\section{Counterfactual resimulation}\label{sec:counterfactual}
+\section{Evaluating counterfactual statements}\label{sec:counterfactual}
 
-% Causality defined in terms of counterfactual dependency 
-% Counterfactuals rely on an idea of intervention
-% Lewis (closest-world semantics) and then Pearl's account of causality
-% Structural equations model and Pearl's solution
-% Why we cannot use Pearl's solution directly
-% abduction, action, prediction
-
-% knowing the joint distribution does not help, we need additional information
-% markovian hypothesis
-
-% make a hypothesis of strong independence about the latent processes leading
-% to rule triggering.
-
-
-% our framework supports a much wider range of interventions but we keep
-% things simple for ease of exposition.
-
-% counterfactual statements are not reducible to conditioning
-
-% This may be a better case !!
-
-% This makes for a much better argument in fact.
-
-% Causality and counterfactual statements cannot be dissociated from 
-% the idea of intervention.
-
-% Give a high level example
-% leading to the modern conception that causality cannot be understood
-
-% SMALL SURVEY ON CAUSALITY
-
-% We should rather talk about causal necessity
-
+%\subsection{On the nature of  counterfactual statements}
 
 Let's suppose that we have observed a trace $\tau$ in which a kinase
 $k$ gets phosphorylated ($pk$) at time $t$ and then binds ($b$) to a
 substrate $s$, which gets phosphorylated in turn ($p$). One may wonder
 what causal influence event $pk$ had on event $p$ in this specific
-scenario. According to a counterfactual account of causality,
-this translates into the question of how likely it is that {``$p$
-  would have happened had $pk$ not happened''}.\footnote{We
-  are being oversimple here for ease of exposition. In
-  reality, how to best express such a statement of actual causality in
-  terms of counterfactuals is still a matter of endless debate
+scenario. According to a counterfactual account of causality, this
+translates into the question of how likely it is that {``$p$ would
+  have happened had $pk$ not happened''}.\footnote{We are being
+  oversimple here for ease of exposition. In reality, how to best
+  express such a statement of actual causality in terms of
+  counterfactuals is still a matter of endless debate
   \cite{halpern2016actual}. }
 
 A naive attempt to answer this question may go as follows: one may
-sample many simulation traces starting from the state of $\tau$ a few
-seconds before time $t$ and reject every trace in which rule $pk$
+sample many simulation traces starting from the state of $\tau$ one
+moment before time $t$ and reject every trace in which rule $pk$
 triggers on $k$ in some time window around $t$.  Among the remaining
 traces, we would measure the frequency of those for which $s$ gets
 phosphorylated by $k$ in some defined time frame and take it as an
-estimate of the likelihood of our counterfactual of interest.
+estimate of the likelihood of our counterfactual statement.
 
 The line of reasoning above is flawed in two major ways. First, $k$
-and $s$ may never bind to each other in most of the sampled
-traces,\footnote{For example, this would be the case if $s$ was
-  competing with many other substrates for binding to $k$.} in which
-case whether or not $k$ got phosphorylated is
-irrelevant. Worst, the consequent of the more precise counterfactual
-statement \textit{``had $pk$ not happened, the opportunity for $p$
-  would have been cut short by an early unbinding event between $k$
-  and $s$''} would not even make sense in the context of those traces.
+and $s$ may never bind to each other in the first place in most of the
+sampled traces,\footnote{For example, this would be the case if $s$
+  was competing with many other substrates for binding to $k$.} in
+which case whether or not $k$ got phosphorylated is irrelevant. Worst,
+the consequent of the more precise counterfactual statement
+\textit{``had $pk$ not happened, the opportunity for $p$ would have
+  been cut short by an early unbinding event between $k$ and $s$''}
+would not even make sense on those traces.
 %One may suggest to make the same sampling experiment, this time also
 %conditioning by $k$ binding to $s$. However, it is unclear how many
 %other such things we may have to condition by.
 The key lesson here is that counterfactual statements are undetachable
 from the context in which they are formulated (in our example the
-trace $\tau$). Quoting Lewis, they refer to worlds ``\textbf{closest} to
-the actual one in which something went different''
-\cite{lewis1974causation}.
+trace $\tau$). Quoting Lewis, they refer to worlds ``\textbf{closest}
+to the actual one in which something went different''
+\cite{lewis1974causation}. In our example, all those closest worlds
+must feature $s$ and $k$ binding together as they do in $\tau$,
+among other things.
 
 The second problem comes from a more fundamental impossibility of
 evaluating counterfactual statements through observation alone. As a
@@ -94,12 +64,35 @@ wet pavements or in which wet pavements cause rain. In order to find
 out, you need to intervene and spill water on your pavement yourself
 to see whether or not it starts raining as a result.
 
-
-
+Pearl's standard account of counterfactual statements is based on
+applying \textit{``surgical interventions''} on structural equation
+models. Such a model features a finite sequence $(x_1, \dots, x_n)$ of
+variables. Each variable $x_i$ is associated a \emph{functional
+  equation} of the form $x_i = f_i(x_1, \dots, x_{i-1}, u_i)$, where
+$f_i$ is a deterministic function and $u_i$ is a random
+variable. Ideally, each $f_i$ defines an independent and autonomous
+physical mechanism. This is partially enforced by the requirement that
+the $(u_i)_i$ must be mutually independent (Markovian
+hypothesis). Then, given some observation $e$, the probability of the
+counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
+have been be true'' can be evaluated following a three-steps process:
+\begin{inparaenum}[]
+\item (\textbf{abduction}) compute the distribution $p_e$ of possible values for
+  $\vec u$ given observation $e$, then
+\item (\textbf{action}) intervene in the model by replacing the
+  defining equation for $x_j$ by ``$x_j = a$'' and finally
+\item (\textbf{prediction}) compute the probability that $\psi$ is true in this
+  new model when $\vec{u}$ is distributed along $p_e$.
+\end{inparaenum}
+Because rule-based models do not have a natural encoding in term of
+structural equations, Pearl's construction does not apply
+straightforwardly in our case. The semantics we propose is
+very close in spirit though.
 
 
 
 \subsection{A semantics for counterfactuals}
+
 
 
 
@@ -157,7 +150,7 @@ statements as follows.
     \mathbf{P}( \psi(\ATRAJ{}) \ |\ T = \tau) \,\geq\, p \]
 \end{definition}
 
-\subsection{Sampling counterfactual traces}
+\subsection{The counterfactual resimulation algorithm}
 
 Counterfactual traces can be sampled using the algorithm described in
 Listing~\ref{alg:cosimulation}.
