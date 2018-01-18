@@ -1,5 +1,11 @@
 % -*- TeX-master: "ijcai18.tex" -*-
 
+\newcommand{\PCFST}[0]{\mathbf{P}\left( \,\tau \models [\iota] \, \psi \,\right)}
+\newcommand{\ItAbduction}[0]{(\textbf{abduction})}
+\newcommand{\ItAction}[0]{(\textbf{action})}
+\newcommand{\ItPrediction}[0]{(\textbf{prediction})}
+
+
 \section{Evaluating counterfactual statements}\label{sec:counterfactual}
 
 %\subsection{On the nature of  counterfactual statements}
@@ -77,11 +83,11 @@ hypothesis). Then, given some observation $e$, the probability of the
 counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
 have been be true'' can be evaluated following a three-steps process:
 \begin{inparaenum}[]
-\item (\textbf{abduction}) compute the distribution $p_e$ of possible values for
+\item \ItAbduction{} compute the distribution $p_e$ of possible values for
   $\vec u$ given observation $e$, then
-\item (\textbf{action}) intervene in the model by replacing the
+\item \ItAction{} intervene in the model by replacing the
   defining equation for $x_j$ by ``$x_j = a$'' and finally
-\item (\textbf{prediction}) compute the probability that $\psi$ is true in this
+\item \ItPrediction{} compute the probability that $\psi$ is true in this
   new model when $\vec{u}$ is distributed along $p_e$.
 \end{inparaenum}
 Because rule-based models do not have a natural encoding in term of
@@ -92,62 +98,56 @@ very close in spirit though.
 
 
 \subsection{A semantics for counterfactuals}
+We think of an intervention as the product of an external force with
+the ability of preventing events that are about to happen. Precisely,
+an intervention $\iota$ is defined by a predicate
+$\BLOCKED{\iota}{\cdot}$ on events.\footnote{Our framework would
+  accomodate a much broader range of interventions but we make this
+  restriction for ease of exposition.}  Then, given a predicate $\psi$
+over traces, we write the proposition \textit{``Had
+  intervention $\iota$ happened in trace $\tau$, $\psi$ would have
+  been true''} as $\tau \models [\iota] \, \psi.$
 
 
-
-
-We start by formalizing the notion of an intervention. An intervention
-$\iota$ (``blocking $pk$" in our example) is a predicate
-$\BLOCKED{\iota}{e}$ that determines whether or not event $e$ is
-blocked. Given a predicate $\psi$ over traces, we write
-the proposition \textit{``Had intervention $\iota$ happened in trace
-  $\tau$, $\psi$ would have been true with probability greater than
-  $p \in [0,1]$''} as:
-\[ \tau \models_p [\iota] \, \psi.
-\]
-
-To give an operational meaning to this statement, we invoke the
-continuous time Markov chain (CTMC) semantics of a Kappa model as
-defined and implemented in
-\cite{DanosEtAl-APLAS07,BoutillierEK17}. For the present purpose it is
-conceptually useful to think of a CTMC abstractly in terms of the
-random repeated realization of abstract event. For every possible
-abstract event, we imagine a bell that rings at a time $t$ drawn from
-an exponential distribution $\lambda_r\exp(-\lambda_r t)$, where
-$\lambda_r$ is the stochastic rate constant of $r$. A simulation trace
-can be viewed as the realization of a random variable $T$ determined
-by the set $\omega$ of ring times: Starting with an initial mixture,
-when a bell rings at $t$, its associated potential event $(r, \xi)$
-transforms the mixture according to $r$ if $\xi$ yields a valid
-embedding of the left hand side of $r$ in the current mixture and time
-advances by $t$. Otherwise, time advances and nothing happens---a null
-event. Repeat on the resulting mixture.
+In order to assign a probability to this proposition, it is
+conceptually useful to think of the CTMC defined by a model
+in terms of the random repeated realization of abstract events.  For
+every possible abstract event $(r, \xi)$, one has to imagine a bell
+that rings randomly according to a Poisson process of parameter
+$\lambda_r$.\footnote{In other words, the time intervals between
+  consecutive ringings are drawn from exponential distributions of
+  parameter $\lambda_r$.}  A simulation trace can be viewed as a
+deterministic function $T$ of the
+the random set $\Sigma$ of ring times (also called \emph{schedule},
+and which corresponds to $\vec{u}$ in Pearl's construction): starting
+with the initial mixture and advancing in time, every time a bell
+rings, its associated abstract event $e$ transforms the current
+mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the bell labeled
+\textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings on
+the mixture of Figure~\ref{fig:mixture}, thend a bond is created
+between these two agents. However, if the bell labeled \textit{``apply
+  rule $b$ on substrate $1$ and kinase $2$'}' rings on the same
+mixture, nothing happens.
 
 We can extend this viewpoint to include interventions. For an
-intervention $\iota$, we define the random variable $\ATRAJ{}$ much in
-the same way as $T$, except that each time the bell rings, we require
-$\BLOCKED{\iota}{e, t}$ to be false for the potential event
-$e=(r, \xi)$ to be considered.  Counterfactual traces that are closest
-to the actual trace $\tau$ are then sampled by generating realizations
-of $\ATRAJ{}$ that inherit, whenever possible, the subset of $\omega$
-that made up $\tau$. 
-% An efficient implementation of this specification
-% for sampling the conditional random variable $\CTRAJ{}$ is available at
-% \begin{center}
-%   \url{https://github.com/jonathan-laurent/kappa-counterfactuals}.
-% \end{center} 
-We refer to this natural extension of CTMC semantics as
-\textit{counterfactual re-simulation} or \textit{co-simulation} for
-short. Using co-simulation, we can operationalize the counterfactual
-statements as follows.
+intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
+the same way as $T$, except that each time the bell associated to $e$
+rings at time $t$, we also require $\BLOCKED{\iota}{(e, t)}$ to be
+false for $e$ to trigger. Then, given an observed trace $\tau$, an
+intervention $\iota$ and a predicate $\psi$, we estimate $\PCFST{}$
+following Pearl's three-steps procedure: \ItAbduction{} we condition
+the distribution of $\Sigma$ on the observation that $T=\tau$, then
+\ItAction{} alter the behavior of simulation with intervention $\iota$
+and \ItPrediction{} compute the probability of $\psi$ in the resulting
+setting. This results in the following definition.
 
-\begin{definition}[Semantics of counterfactual statements] We write
-  $\tau \models_p [\iota] \, \psi$ the counterfactual statement
+\begin{definition}[Semantics of counterfactual statements] 
+  For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
+  predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
-    predicate $\psi$ would have been true with probability greater
-    than $p$''}.  It is defined as follows:
-  \[ \tau \models_p [\iota] \, \psi \quad \Longleftrightarrow \quad
-    \mathbf{P}( \psi(\ATRAJ{}) \ |\ T = \tau) \,\geq\, p \]
+    predicate $\psi$ would have been true''} is defined as:
+  \[ \PCFST{} \ \eqdef \
+    \mathbf{P}(\, \psi(\ATRAJ{}) \ |\ T = \tau\,). \]
 \end{definition}
 
 \subsection{The counterfactual resimulation algorithm}
