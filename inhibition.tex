@@ -2,82 +2,59 @@
 
 \section{Counterfactuals and inhibition}\label{sec:inhibition}
 
-Returning to our example, we can use co-simulation to quantify the
-influence of $pk$ on $p$ by estimating the probability of $p$
-happening had $pk$ not occurred. However, we can go further by using
-counterfactual traces to \textit{explain} this influence using both
-activation and inhibition arrows (Figure~\ref{fig:cex}).
+\subsection{Using counterfactual resimulation in practice}
+\label{sec:practice}
 
-Activation arrows are easy to define and identify in a trace. We say
-that an event $e$ activates $e'$ if $e$ is the last event before $e'$
-that modifies some site to the value it is tested for by
-$e'$. Inhibition arrows are trickier because they must relate events
-that happened to events that did not. We use counterfactual traces to
-give a rigorous account of inhibition using arrows that connect events
-from the factual trace to events in the counterfactual trace and vice
-versa.
+Returning to our example, let's see how we can use counterfactual
+resimulation to improve our understanding of the typical causal
+narrative leading to phosphorylating a substrate. First, how may one
+come to suspect that the narrative that is shown
+Figure~\ref{fig:dumb-story} is incomplete \textit{a priori} ? And
+then, how should one know what interventions might be worth trying in
+order to discover some additional causal structure ?
 
-A \textit{counterfactual experiment} is any triple
-$(\tau, \iota, \tau')$ for which there exists a random realization
-$\omega$ such that $\tau = T(\omega)$ and $\tau' =
-\ATRAJ{}(\omega)$. Such triples are produced by co-simulation.
+There is no perfect answer here but there are definitely useful
+heuristics we can use. In our example, one may notice by running
+repeated simulations that when rule $p$ triggers, the kinase involved
+is very likely to be phosphorylated (compared to the average ratio of
+phosphorylated kinases). The fact that our current causal narrative
+does not provide any explanation for this phenomenon is a sign that we
+should investigate more to know whether this correlation is accidental
+or revealing of a causal effect. In order to do so, it is natural to
+intervene by blocking the last event phosphorylating the kinase
+involved in $p$ in our sample traces. More generally, when
+\begin{inparaenum}[(i)]
+\item an event $e$ in a candidate causal narrative is executed
+  unusually often in a context which is more specific than what is
+  required by the left-hand side of the associated rule and
+\item this effect cannot be explained by the action of other events in
+  the same causal narrative,
+\end{inparaenum}
+then exploring counterfactual traces in which we block the last event
+responsible for at least a part of the unexplained context in the
+triggering a $e$ is likely to be worthwhile.
 
-\begin{proposition}%[Characterization of counterfactual experiments]
-  \label{prop:valid-cex}
-  A triple $(\tau, \iota, \tau')$ is a counterfactual experiment if
-  and only if all of the following hold:
-  \begin{enumerate}[leftmargin=1.3cm, label=\textbf{VC\arabic*.}]
-  \item \label{valid-cex:valid-traces} Both $\tau$ and $\tau'$ are
-    valid traces
-  \item \label{valid-cex:no-blocking} No event of $\tau'$ is blocked
-    by $\iota$
-  \item \label{valid-cex:co-occur} For every event $(e, t) \in \tau$
-    such that $(e, t) \notin \tau'$, then either $e$ is not
-    triggerable in $\TSTATE{t}{\tau'}$ or $(e, t)$ is blocked by
-    $\iota$.  Besides, for every event $(e', t') \in \tau'$ such that
-    $(e', t') \notin \tau$, then $e'$ is not triggerable in
-    $\TSTATE{t}{\tau}$.
-  \end{enumerate}
-\end{proposition}
-
-
-\begin{definition}
-  Let $(\tau, \iota, \tau')$ a counterfactual experiment. An
-  event $e$ that occurs at time $t$ in $\tau$ is said to inhibit an
-  event $e'$ that occurs at time $t'$ in $\tau'$ if all of the
-  following hold:
-  \begin{enumerate}[leftmargin=1.2cm, label=\textbf{IC\arabic*.}]
-  \item \label{inhibition:time} $t < t'$
-  \item \label{inhibition:breaks} there exists a site $s$ such that
-    $e$ is the last event in $\tau$ before $t'$ that modifies the
-    value of $s$ away from what $e'$ tests it for
-  \item \label{inhibition:nointf} there are no events in $\tau'$ that
-    modify $s$ during the time interval $(t, t')$.
-  \end{enumerate}
-  The same definiton holds switching $\tau$ and $\tau'$.
-\end{definition}
-
-
-
-\input{figures/cex}
-
-Figure~\ref{fig:cex} shows the influence of $pk$ on $p$ based on a
-counterfactual experiment. Dotted nodes correspond to events proper to
-the counterfactual trace $\tau'$, thick nodes to events proper to the
-factual trace $\tau$, and the remaining nodes correspond to events
-common to both traces. Activation arrows are depicted in black and
-inhibition arrows in red.
-
-The example illustrates the influence of $pk$ on $p$ mediated by the
-counterfactual event $u$. Such mediating events always exist, as
-stated by the following theorem.  %In general, we can always %exhibit
-a sequence of intermediate events connected by activation and
-inhibitio%n %arrows to relate an event that is proper to the factual
-trace to another %one that is blocked by the intervention $\iota$.
-
-\begin{theorem}\label{thm:completeness} Let $(\tau, \iota, \tau')$ be a counterfactual
-  experiment and $e$ an event that belongs only to $\tau$. Then there
-  exists an event $e_0 \in \tau$ that is blocked by $\iota$ and there
-  is a path from $e_0$ to $e$ with an even number of inhibition
-  arrows.
-\end{theorem}
+Back to our example, our simple heuristic suggests that we should
+block the last event responsible for the phosphorylation of the kinase
+before the substrate gets phosphorylated itself in sampled traces. On
+the particular case of trace~(\ref{example-trace}) of
+section~\ref{sec:example}, we ask: how likely is it that ``$p$ would
+have happened had $pk$ not happened'' ?  This can be translated
+literaly in the question of evaluating
+$\mathbf{P}(\tau \models [\iota] \, \psi)$ where
+\begin{inparaenum}[(i)]
+  % \item $\tau$ is trace~(\ref{example-trace})
+\item $\BLOCKED{\iota}{e'} = (e = pk)$ and
+\item $\psi[\tau'] = (p \in \tau')$.\footnote{Here, by $p$ and $pk$,
+    we refer to very specific events that appear at a particular time
+    in $\tau$.}
+\end{inparaenum}
+This choice of $\iota$ and $\psi$ is a reasonable one most of the
+time but some variations may be prefered occasionally. For example, if
+the rule $pk$ for phosphorylating is very fast, blocking only a single
+instance of the potential event associated with $pk$ may not have a
+very large effect as a new instance may trigger almost immediately
+after in most counterfactual traces, cancelling the effect of the
+intervention.  In this case, it is useful to make $\iota$ block every
+instance of the potential event associated with $pk$ in a defined
+timeframe.
