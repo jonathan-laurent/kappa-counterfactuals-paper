@@ -28,14 +28,14 @@
       $\propto \, \lambda_r |\DEMBS{r}{m, m_0}|$
       \STATE  draw a divergent embedding $\xi \in \DEMBS{r}{m, m_0}$
       \STATE {$e \gets (r, \xi)$}
-      \IF {$ \neg \, \BLOCKED{\iota}{e, t_{\text{c}}} $ }
+      \IF {$ \neg \, \BLOCKED{\iota}{(e, t_{\text{c}})} $ }
           \STATE $t \gets t_{\text{c}}$
           \STATE update $m$ to $\UPDATE{m}{e}$ and log event $(e, t)$
       \ENDIF
   \ELSE
       \STATE {$e \gets \EVF{}$}
       \STATE $t \gets t_{\text{f}}$
-      \IF {$ \neg \, \BLOCKED{\iota}{e, t} $ and $ \TRIGGERABLE{m}{e} $ }
+      \IF {$ \neg \, \BLOCKED{\iota}{(e, t)} $ and $ \TRIGGERABLE{m}{e} $ }
           \STATE update $m$ to $\UPDATE{m}{e}$ and log event $(e, t)$
       
       \ENDIF 
