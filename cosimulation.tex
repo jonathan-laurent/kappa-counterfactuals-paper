@@ -1,67 +1,219 @@
 % -*- TeX-master: "ijcai18.tex" -*-
 
-\newcommand{\PCFST}[0]{\mathbf{P}\left( \,\UPDATE{\tau}{[\iota]} \models \psi \,\right)}
+\newcommand{\PCFST}[0]{\mathbf{P}\left( \,\UPDATE{\tau}{[\iota]}
+    \models \psi \,\right)}
 \newcommand{\ItAbduction}[0]{(\textbf{abduction})}
 \newcommand{\ItAction}[0]{(\textbf{action})}
 \newcommand{\ItPrediction}[0]{(\textbf{prediction})}
 
 
-\section{Evaluating counterfactual statements}\label{sec:counterfactual}
+\section{Evaluating counterfactual
+  statements}\label{sec:counterfactual}
 
-%\subsection{On the nature of  counterfactual statements}
+% \subsection{On the nature of counterfactual statements}
 
-In the context of our toy model, the counterfactual statement we must assess is: ``If $pk$ had not happened, $p$ would not have happened." Our account in the previous section suggests that $pk$ played a role, but it is also clear that given the stochastic nature of rule firing $p$ could well have happened even in the absence of $pk$; it just is unlikely. Counterfactual statements are not either true or false, but have degrees of likelihood. To assess that likelihood is our task.
+In the context of our toy model, the counterfactual statement we must
+assess is: ``If $pk$ had not happened, $p$ would not have happened."
+Our account in the previous section suggests that $pk$ played a role,
+but it is also clear that given the stochastic nature of rule firing
+$p$ could well have happened even in the absence of $pk$; it just is
+unlikely. Counterfactual statements are not either true or false, but
+have degrees of likelihood. To assess that likelihood is our task.
 
-Given an original (factual) history $\tau$, a naive approach might be to sample counterfactual histories, each of which starts with the state of the system attained in $\tau$ just before event $pk$ happened, but in which we skip over $pk$ and then run an unconstrained simulation from that point onward. In this approach traces would quickly diverge from the original, distorting the causal role that $pk$ played \emph{specifically} in it.  The question here is not what causal role $pk$ \emph{can} play in principle, but what role it actually \emph{did} play in $\tau$. To this end, we need a procedure to sample counterfactual histories that are in a probabilistic sense as close to the original as the removal of $pk$ permits. In this reasoning we are following the long-standing insight \cite{lewis1974causation,pearlXX} that counterfactual statements cannot be detached from the context in which they are formulated, here the trace $\tau$.
+Given an original (factual) history $\tau$, a naive approach might be
+to sample counterfactual histories, each of which starts with the
+state of the system attained in $\tau$ just before event $pk$
+happened, but in which we skip over $pk$ and then run an unconstrained
+simulation from that point onward. In this approach traces would
+quickly diverge from the original, distorting the causal role that
+$pk$ played \emph{specifically} in it.  The question here is not what
+causal role $pk$ \emph{can} play in principle, but what role it
+actually \emph{did} play in $\tau$. To this end, we need a procedure
+to sample counterfactual histories that are in a probabilistic sense
+as close to the original as the removal of $pk$ permits. In this
+reasoning we are following the long-standing insight
+\cite{lewis1974causation,pearl2009causality} that counterfactual
+statements cannot be detached from the context in which they are
+formulated, here the trace $\tau$.
 
-The view just outlined follows the approach to counterfactual reasoning with structural equations models \cite{PearlXX,HitchcockXX}. We bend history through surgical intervention (the blocking of $pk$) and make use of evidence (the observation of $\tau$) by sampling counterfactual histories that probabilistically shadow $\tau$. This will be restated in more detail at the end of the section. 
+The view just outlined follows the approach to counterfactual
+reasoning with structural equations models
+\cite{pearl2009causality,woodward2003explanatory}. We bend history
+through surgical intervention (the blocking of $pk$) and make use of
+evidence (the observation of $\tau$) by sampling counterfactual
+histories that probabilistically shadow $\tau$. This will be restated
+in more detail at the end of the section.
 
-The novel aspect comes from executing Pearl's strategy in the context of a rule-based model for which, in general, it is impractical (if at all possible) to provide a manageable set of structural equations \emph{explicitly}. Rule-based models are meant to capture molecular systems of staggering complexity, whose explicit representation in terms of kinetic differential equations or stochastic master equations or graphical models whose observables are molecular species would trigger a combinatorial explosion that cannot be contained. However, rule-based models, like structural equations, are \emph{mechanistic}, each rule being the formalization of (ideally) an empirically identified local mechanism of interaction. We believe, therefore, that the basic concepts of evaluating counterfactuals in structural equation models carry over, but require a technique for appropriately sampling counterfactual traces. As a bonus, by extending existing causal analysis to pairs of factual and counterfactual traces, we can construct the graphical model \emph{specific to the phenomenon of interest} that was not available in explicit form at the outset.
+The novel aspect comes from executing Pearl's strategy in the context
+of a rule-based model for which, in general, it is impractical (if at
+all possible) to provide a manageable set of structural equations
+\emph{explicitly}. Rule-based models are meant to capture molecular
+systems of staggering complexity, whose explicit representation in
+terms of kinetic differential equations or stochastic master equations
+or graphical models whose observables are molecular species would
+trigger a combinatorial explosion that cannot be contained. However,
+rule-based models, like structural equations, are \emph{mechanistic},
+each rule being the formalization of (ideally) an empirically
+identified local mechanism of interaction. We believe, therefore, that
+the basic concepts of evaluating counterfactuals in structural
+equation models carry over, but require a technique for appropriately
+sampling counterfactual traces. As a bonus, by extending existing
+causal analysis to pairs of factual and counterfactual traces, we can
+construct the graphical model \emph{specific to the phenomenon of
+  interest} that was not available in explicit form at the outset.
 
 \subsection{A semantics for counterfactuals}
 \label{sec:counterfactuals-semantics}
 
-An intervention $\iota$ prevents the occurrence of an event. It is defined by a predicate $\BLOCKED{\iota}{\cdot}$ ranging over events. (Our framework can accomodate a much broader range of interventions, but we make this restriction for ease of exposition.)  Given a predicate $\psi$ over traces, we write the statement \textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$ would have been true''} as $\UPDATE{\tau}{[\iota]} \models \psi$ (read ``$\iota$ applied to $\tau$ satisfies $\psi$).
+An intervention $\iota$ prevents the occurrence of an event. It is
+defined by a predicate $\BLOCKED{\iota}{\cdot}$ ranging over
+events. (Our framework can accomodate a much broader range of
+interventions, but we make this restriction for ease of exposition.)
+Given a predicate $\psi$ over traces, we write the statement
+\textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
+  would have been true''} as $\UPDATE{\tau}{[\iota]} \models \psi$
+(read ``$\iota$ applied to $\tau$ satisfies $\psi$).
 
-To assign a probability to this statement, it is useful to reconceptualize 
-the CTMC induced by a set of rules.
+To assign a probability to this statement, it is useful to
+reconceptualize the CTMC induced by a set of rules.
 \begin{inparaenum}[(i)]
-\item \label{item:poisson}
-Consider all possible semi-events $(r, \xi)$, where $\xi$ maps into a large enough set of global identifiers. If no rule creates a new agent, as we shall assume for the sake of simplicity, the global identifiers are conserved and given by the initial mixture. Associate with each semi-event a Poisson process with rate $\lambda_r$, that is, generate a monotonically increasing series of time points $t_{r,i}$, $i=1,\ldots$ with intervals $\Delta t_r=t_{r,i+1}-t_{r,i}$ exponentially distributed, $\Prob{\Delta t_r=t}=\lambda_r\exp(-\lambda_r t)$. Run the series long enough to cover the anticipated runtime of the CTMC. In accordance with the physical assumptions underlying chemical kinetics, each semi-event by itself is independent of all others and so are each of its time points. 
-\item \label{item:union}
-Take the union of all points, $\cup_{r,i}t_{r,i}$, and sort in increasing order. Call this the schedule $\sigma$. 
-\item \label{item:chop}
-Determine the earliest semi-event $e=(r, \xi)$ that is executable in the current mixture and update the mixture according to $e$ (see section~\ref{sec:background} for definitions). This generates an event $(e, t_{r,k})$ with $t_{r,k}$ the corresponding time point. Delete from $\sigma$ all time points up to and including $t_{r,k}$. 
-\item \label{item:repeat}
-If $\sigma$ is not empty, return to (\ref{item:chop}). 
+\item \label{item:poisson} Consider all possible semi-events
+  $(r, \xi)$, where $\xi$ maps into a large enough set of global
+  identifiers. If no rule creates a new agent, as we shall assume for
+  the sake of simplicity, the global identifiers are conserved and
+  given by the initial mixture. Associate with each semi-event a
+  Poisson process with rate $\lambda_r$, that is, generate a
+  monotonically increasing series of time points $t_{r,i}$,
+  $i=1,\ldots$ with intervals $\Delta t_r=t_{r,i+1}-t_{r,i}$
+  exponentially distributed,
+  $\Prob{\Delta t_r=t}=\lambda_r\exp(-\lambda_r t)$. Run the series
+  long enough to cover the anticipated runtime of the CTMC. In
+  accordance with the physical assumptions underlying chemical
+  kinetics, each semi-event by itself is independent of all others and
+  so are each of its time points.
+\item \label{item:union} Take the union of all points,
+  $\cup_{r,i}t_{r,i}$, and sort in increasing order. Call this the
+  schedule $\sigma$.
+\item \label{item:chop} Determine the earliest semi-event $e=(r, \xi)$
+  that is executable in the current mixture and update the mixture
+  according to $e$ (see section~\ref{sec:background} for
+  definitions). This generates an event $(e, t_{r,k})$ with $t_{r,k}$
+  the corresponding time point. Delete from $\sigma$ all time points
+  up to and including $t_{r,k}$.
+\item \label{item:repeat} If $\sigma$ is not empty, return to
+  (\ref{item:chop}).
 \end{inparaenum}
-This terribly inefficient procedure is not meant for implementation. Its purpose is to conceptualize a particular CTMC as a random variable $\Sigma$ with value $\sigma$ (a vector of random numbers) that is converted into a trace $\tau$ by the deterministic steps (\ref{item:chop}) and (\ref{item:repeat}). For example, if the current mixture is given by Figure~\ref{fig:mixture} and the scan through $\sigma$ encounters the semi-event \emph{``apply rule $b$ to substrate $3$ and kinase $4$''}, then a bond is created between these two agents. If the scanned semi-event were \emph{``apply rule $b$ to substrate $1$ and kinase $2$'}', nothing happens. Note that associating a Poisson process to a semi-event allows for the latter to happen repeatedly. For example, a particular substrate and kinase might bind and unbind several times. It is straightforward to include interventions in this procedure by requiring  $\BLOCKED{\iota}{(e, t)}$ to be false for the event $(e,t)$ to be accepted and true to be skipped over. We can now define $\PCFST{}$.
-\begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
-Given an observed trace $\tau$, an intervention $\iota$, a random variable $\ATRAJ{}$ taking as values traces to which $\iota$ was applied, and a predicate $\psi$ on traces, the probability of the counterfactual statement \textit{``Had intervention $\iota$ occurred in trace $\tau$, predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \ \eqdef \
-    \mathbf{P}(\, \psi(\ATRAJ{} \ |\ T = \tau\,)). \]
+This terribly inefficient procedure is not meant for
+implementation. Its purpose is to conceptualize a particular CTMC as a
+random variable $\Sigma$ with value $\sigma$ (a vector of random
+numbers) that is converted into a trace $\tau$ by the deterministic
+steps (\ref{item:chop}) and (\ref{item:repeat}). For example, if the
+current mixture is given by Figure~\ref{fig:mixture} and the scan
+through $\sigma$ encounters the semi-event \emph{``apply rule $b$ to
+  substrate $3$ and kinase $4$''}, then a bond is created between
+these two agents. If the scanned semi-event were \emph{``apply rule
+  $b$ to substrate $1$ and kinase $2$'}', nothing happens. Note that
+associating a Poisson process to a semi-event allows for the latter to
+happen repeatedly. For example, a particular substrate and kinase
+might bind and unbind several times. It is straightforward to include
+interventions in this procedure by requiring $\BLOCKED{\iota}{(e, t)}$
+to be false for the event $(e,t)$ to be accepted and true to be
+skipped over. We can now define $\PCFST{}$.
+\begin{definition}[Semantics of counterfactual
+  statements]\label{def:counterfactuals}
+  Given an observed trace $\tau$, an intervention $\iota$, a random
+  variable $\ATRAJ{}$ taking as values traces to which $\iota$ was
+  applied, and a predicate $\psi$ on traces, the probability of the
+  counterfactual statement \textit{``Had intervention $\iota$ occurred
+    in trace $\tau$, predicate $\psi$ would have been true''} is
+  defined as:
+  \[ \PCFST{} \ \eqdef \ \mathbf{P}(\, \psi(\ATRAJ{} \ |\ T =
+    \tau\,)). \]
 \end{definition}
 
 \subsection{The counterfactual resimulation algorithm}
 
-We refer to instances of the conditional random variable $\CTRAJ{}$ as \emph{counterfactual traces} and introduce a variation of the CTMC algorithm to efficiently sample them.  We call it \emph{counterfactual resimulation}, since it works by going through every event of $\tau$, resimulating only those parts of $\tau$ that are affected by $\iota$.
+We refer to instances of the conditional random variable $\CTRAJ{}$ as
+\emph{counterfactual traces} and introduce a variation of the CTMC
+algorithm to efficiently sample them.  We call it \emph{counterfactual
+  resimulation}, since it works by going through every event of
+$\tau$, resimulating only those parts of $\tau$ that are affected by
+$\iota$.
 
 \input{algos/cosimulation}
 
-To explicate Algorithm~\ref{alg:cosimulation} we need the notion of \emph{divergent activity} of rule $r$, which we define by first introducing the set of \emph{divergent embeddings} of the left-hand side of $r$ into mixture $m$ relative to a reference mixture $m_0$: \[\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.\] Equivalently, a divergent embedding is an embedding whose codomain features a \emph{divergent site}, that is, a site whose state differs across $m$ and $m_0$. The {divergent activity} of a rule $r$ in mixture $m$ relative to $m_0$ is then defined as the product $\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of the system, $\alpha'(m, m_0)$, is the sum of all divergent activities. We use the notation $\TSTATE{t}{\tau}$ to refer to the mixture at time $t$, which obtains from the initial mixture after updating it for each event in turn up to time $t$ in $\tau$. 
+To explicate Algorithm~\ref{alg:cosimulation} we need the notion of
+\emph{divergent activity} of rule $r$, which we define by first
+introducing the set of \emph{divergent embeddings} of the left-hand
+side of $r$ into mixture $m$ relative to a reference mixture $m_0$:
+\[\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.\]
+Equivalently, a divergent embedding is an embedding whose codomain
+features a \emph{divergent site}, that is, a site whose state differs
+across $m$ and $m_0$. The {divergent activity} of a rule $r$ in
+mixture $m$ relative to $m_0$ is then defined as the product
+$\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of
+the system, $\alpha'(m, m_0)$, is the sum of all divergent
+activities. We use the notation $\TSTATE{t}{\tau}$ to refer to the
+mixture at time $t$, which obtains from the initial mixture after
+updating it for each event in turn up to time $t$ in $\tau$.
 
-For convenience we provide a cursory summary of Algorithm~\ref{alg:cosimulation}. The factual trace $\tau$ guides the construction of a counterfactual trace $\ATRAJ{}$ as follows. The portion of $\tau$ up to the intervention (the blocking of a single event, say) is copied over to $\ATRAJ{}$. At this point, the factual and counterfactual mixture start to differ, giving rise to divergent rule activities. The next candidate event in $\ATRAJ{}$ is determined as in the standard Algorithm~\ref{alg:gillespie}, but using divergent activities. If the time of the candidate event is earlier than the next event in the factual trace, the counterfactual mixture and trace are updated with the candidate event; if the time is later, the event in the factual trace occurs at its factual time in the counterfactual scenario instead, but only if the counterfactual mixture admits it, otherwise nothing happens. The simulated time of $\ATRAJ{}$ is advanced accordingly in all cases. Repeat.
+For convenience we provide a cursory summary of
+Algorithm~\ref{alg:cosimulation}. The factual trace $\tau$ guides the
+construction of a counterfactual trace $\ATRAJ{}$ as follows. The
+portion of $\tau$ up to the intervention (the blocking of a single
+event, say) is copied over to $\ATRAJ{}$. At this point, the factual
+and counterfactual mixture start to differ, giving rise to divergent
+rule activities. The next candidate event in $\ATRAJ{}$ is determined
+as in the standard Algorithm~\ref{alg:gillespie}, but using divergent
+activities. If the time of the candidate event is earlier than the
+next event in the factual trace, the counterfactual mixture and trace
+are updated with the candidate event; if the time is later, the event
+in the factual trace occurs at its factual time in the counterfactual
+scenario instead, but only if the counterfactual mixture admits it,
+otherwise nothing happens. The simulated time of $\ATRAJ{}$ is
+advanced accordingly in all cases. Repeat.
 
-The role and relevance of the concept of divergent activity in the counterfactual resimulation algorithm can be summarized by the following theorem, where we write $\tau \cap I = \emptyset$ as a shortcut for the proposition ``no event of trace $\tau$ occurs in the time interval $I$''.
-\begin{theorem}[Property of the divergent activity]\label{thm:div-activity}
-Let $\tau$ be a trace and $\iota$ an intervention. Let $I = (t, t+\delta)$ be    a time interval such that $\tau \cap I = \emptyset$ and $m_0 =\TSTATE{t}{\tau}$. Then, we have
+The role and relevance of the concept of divergent activity in the
+counterfactual resimulation algorithm can be summarized by the
+following theorem, where we write $\tau \cap I = \emptyset$ as a
+shortcut for the proposition ``no event of trace $\tau$ occurs in the
+time interval $I$''.
+\begin{theorem}[Property of the divergent
+  activity]\label{thm:div-activity}
+  Let $\tau$ be a trace and $\iota$ an intervention. Let
+  $I = (t, t+\delta)$ be a time interval such that
+  $\tau \cap I = \emptyset$ and $m_0 =\TSTATE{t}{\tau}$. Then, we have
   \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
       \TSTATE{t}{\ATRAJ{}} = m\ }
     \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
   \]
 \end{theorem}
-\noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the divergent activity $\alpha'$ determines the probability that an event happens in the counterfactual trace prior to the next event in the factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of Theorem~\ref{thm:div-activity} is given in Appendix~\ref{ap:div-activity}.
+\noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the
+divergent activity $\alpha'$ determines the probability that an event
+happens in the counterfactual trace prior to the next event in the
+factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of
+Theorem~\ref{thm:div-activity} is given in
+Appendix~\ref{ap:div-activity}.
 
-We return to the correspondence of our approach to Pearl's three-step procedure. The rules of a model do not themselves contain random variables representing unknown causal factors. Rather, randomness stems solely from the execution schedule $\Sigma$, which represents the intrinsic randomness of chemical kinetics. In section~\ref{sec:counterfactuals-semantics} we showed that the series of dice rolls $\Sigma=\sigma$ uniquely defines a trace. Thus, the step in which evidence is used to update knowledge about random factors in structural equations simply becomes the observation of the factual trace: The $\Sigma$ of the trace is the evidence that provides (complete) information about the randomness that made it the trace it is. The second step, in which a surgical intervention happens is the same in structural equations and here. The third step, in which the modified structural equations are used to compute probabilities, becomes the sampling of modified traces $\ATRAJ{}$ conditioned by $\Sigma=\sigma$ (the evidence). By virtue of the resimulation Algorithm~\ref{alg:cosimulation} $\ATRAJ{}$ inherits as many events from the factual history as the surgical intervention permits it to. This is an operationalization of Lewis' closest worlds criterion without going off the metaphysical cliff.
+We return to the correspondence of our approach to Pearl's three-step
+procedure. The rules of a model do not themselves contain random
+variables representing unknown causal factors. Rather, randomness
+stems solely from the execution schedule $\Sigma$, which represents
+the intrinsic randomness of chemical kinetics. In
+section~\ref{sec:counterfactuals-semantics} we showed that the series
+of dice rolls $\Sigma=\sigma$ uniquely defines a trace. Thus, the step
+in which evidence is used to update knowledge about random factors in
+structural equations simply becomes the observation of the factual
+trace: The $\Sigma$ of the trace is the evidence that provides
+(complete) information about the randomness that made it the trace it
+is. The second step, in which a surgical intervention happens is the
+same in structural equations and here. The third step, in which the
+modified structural equations are used to compute probabilities,
+becomes the sampling of modified traces $\ATRAJ{}$ conditioned by
+$\Sigma=\sigma$ (the evidence). By virtue of the resimulation
+Algorithm~\ref{alg:cosimulation} $\ATRAJ{}$ inherits as many events
+from the factual history as the surgical intervention permits it
+to. This is an operationalization of Lewis' closest worlds criterion
+without going off the metaphysical cliff.
 
-%\input{proofs/cosimulation}
+% \input{proofs/cosimulation}
