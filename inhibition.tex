@@ -14,10 +14,6 @@ then, how should one know what interventions might be worth trying in
 order to discover some additional causal structure through
 counterfactual resimulation?
 
-
-% if we had several kinase in the mixture: very likely to be
-% phosphorylated
-% 
 There is no perfect answer here but there are heuristics we can
 use. In our example, one may notice by running repeated simulations
 that when rule $p$ triggers, the kinase involved is very likely to be
@@ -64,4 +60,42 @@ intervention.  In this case, it is useful to make $\iota$ block every
 instance of the potential event associated with $pk$ in a defined
 timeframe.
 
+Sampling counterfactual traces repeatedly for
+trace~(\ref{example-trace}) would reveal that ``event $p$ would not
+have happened had $pk$ not happened'' with very high probability.
+However, we can go further by using counterfactual traces to
+\textit{explain} this influence using both activation and inhibition
+arrows (Figure~\ref{fig:cex}).
 
+
+\subsection{Counterfactual experiments}
+
+A \textit{counterfactual experiment} is any triple
+$(\tau, \iota, \tau')$ for which there exists a schedule $\sigma$ such
+that $\tau = T(\sigma)$ and $\tau' = \ATRAJ{}(\sigma)$. Such triples
+are produced by counterfactual resimulation.
+
+\subsection{Activation and inhibition}
+
+
+Before we start formalizing activation and inhibition, it is useful to
+define some vocabulary about what it means for an event to \emph{test}
+or \emph{modify} a site. Without loss of generality, we shall assume
+that sites on an agent can either be binding sites or tagged sites
+(sites carrying an internal state) but cannot have both functions. The
+\textit{value} of a tagged site in a mixture is defined as its current
+tag and the value of a binding site is either $\textsc{free}$ or
+$\textsc{bound-to}(s)$, where $s$ identifies another site in the
+mixture.  An event is said to \emph{modify} a site if it changes its
+value when executed. It is said to \emph{test} a site $s$ to value $v$
+if the left-hand side of the associated rule requires $s$ to have
+value $v$ for it to be executable. For example, event $p$ in
+trace~(\ref{example-trace}) tests three sites and modifies one.
+
+\input{figures/cex}
+
+
+%Looking closely at the counterfactual traces,
+%one may 
+
+%In this section, we show
