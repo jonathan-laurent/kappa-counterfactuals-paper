@@ -2,6 +2,9 @@
 
 \section{Counterfactuals and inhibition}\label{sec:inhibition}
 
+\paragraph{Remark on notation} Whereas we used the letter $e$ to denote
+potential events in the previous sections. it is used to denote events from
+now on.
 
 \subsection{Counterfactual experiments}
 
@@ -9,6 +12,25 @@ A \textit{counterfactual experiment} is any triple
 $(\tau, \iota, \tau')$ for which there exists a schedule $\sigma$ such
 that $\tau = T(\sigma)$ and $\tau' = \ATRAJ{}(\sigma)$. Such triples
 are produced by counterfactual resimulation.
+
+\begin{proposition}%[Characterization of counterfactual experiments]
+  \label{prop:valid-cex}
+  A triple $(\tau, \iota, \tau')$ is a valid counterfactual experiment if
+  and only if all of the following hold:
+  \begin{inparaenum}[(1)]
+  \item \label{valid-cex:valid-traces} both $\tau$ and $\tau'$ are
+    valid traces ;
+  \item \label{valid-cex:no-blocking} no event of $\tau'$ is blocked
+    by $\iota$ ;
+  \item \label{valid-cex:co-occur} for every event $e \in \tau$
+    such that $e \notin \tau'$, then either $e$ is not
+    executable in $\TSTATE{t}{\tau'}$ or $e$ is blocked by
+    $\iota$ ;
+  \item \label{valid-cex:co-occur2} for every event $e' \in \tau'$
+    such that $e' \notin \tau$, then $e'$ is not triggerable in
+    $\TSTATE{t}{\tau}$.
+  \end{inparaenum}
+\end{proposition}
 
 \subsection{Activation and inhibition}
 
@@ -28,9 +50,3 @@ value $v$ for it to be executable. For example, event $p$ in
 trace~(\ref{example-trace}) tests three sites and modifies one.
 
 \input{figures/cex}
-
-
-%Looking closely at the counterfactual traces,
-%one may 
-
-%In this section, we show

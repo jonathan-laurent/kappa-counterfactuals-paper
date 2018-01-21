@@ -2,72 +2,33 @@
 
 \newcommand{\PCFST}[0]{\ProbParen{\CFST{}}}
 
-\newcommand{\ItAbduction}[0]{(\textbf{abduction})}
-\newcommand{\ItAction}[0]{(\textbf{action})}
-\newcommand{\ItPrediction}[0]{(\textbf{prediction})}
+\newcommand{\ItAbduction}[0]{(\textit{abduction})}
+\newcommand{\ItAction}[0]{(\textit{action})}
+\newcommand{\ItPrediction}[0]{(\textit{prediction})}
 
 
-\section{Evaluating counterfactual statements}\label{sec:counterfactual}
+\section{Evaluating counterfactual
+  statements}\label{sec:counterfactual}
 
-Let's suppose that we have observed a trace $\tau$ in which a kinase
-$k$ gets phosphorylated ($pk$) at time $t$ and then binds ($b$) to a
-substrate $s$, which gets phosphorylated in turn ($p$). One may wonder
-what causal influence event $pk$ had on event $p$ in this specific
-scenario. According to a counterfactual account of causality, this
-translates into the question of how likely it is that {``$p$ would
-  have happened had $pk$ not happened''}.\footnote{We are being
-  oversimple here for ease of exposition. In reality, how to best
-  express such a statement of actual causality in terms of
-  counterfactuals is still a matter of endless debate
-  \cite{halpern2016actual}. }
 
-A naive attempt to answer this question may go as follows: one may
-sample many simulation traces starting from the state of $\tau$ one
-moment before time $t$ and reject every trace in which rule $pk$
-triggers on $k$ in some time window around $t$.  Among the remaining
-traces, we would measure the frequency of those for which $s$ gets
-phosphorylated by $k$ in some defined time frame and take it as an
-estimate of the likelihood of our counterfactual statement.
+In the context of our toy model, the counterfactual statement we must
+assess is: ``If $pk$ had not happened, $p$ would not have happened."
+Our account in the previous section suggests that $pk$ played a role,
+but it is also clear that given the stochastic nature of rule firing
+$p$ could well have happened even in the absence of $pk$; it just is
+unlikely. Counterfactual statements are not either true or false, but
+have degrees of likelihood. To assess that likelihood is our task.
 
-The line of reasoning above is flawed in two major ways. First, $k$
-and $s$ may never bind to each other in the first place in most of the
-sampled traces,\footnote{For example, this would be the case if $s$
-  was competing with many other substrates for binding to $k$.} in
-which case whether or not $k$ got phosphorylated is irrelevant. Worst,
-the consequent of the more precise counterfactual statement
-\textit{``had $pk$ not happened, the opportunity for $p$ would have
-  been cut short by an early unbinding event between $k$ and $s$''}
-would not even make sense on those traces.
-%One may suggest to make the same sampling experiment, this time also
-%conditioning by $k$ binding to $s$. However, it is unclear how many
-%other such things we may have to condition by.
-The key lesson here is that counterfactual statements are undetachable
-from the context in which they are formulated (in our example the
-trace $\tau$). Quoting Lewis, they refer to worlds ``\textbf{closest}
-to the actual one in which something went different''
-\cite{lewis1974causation}. In our example, all those closest worlds
-must feature $s$ and $k$ binding together as they do in $\tau$,
-among other things.
+Given an original (factual) trace $\tau$, a naive approach might be
+to sample counterfactual traces, each of which starts with the
+state of the system attained in $\tau$ just before event $pk$
+happened, but in which we skip over $pk$ and then run an unconstrained
+simulation from that point onward. In this approach traces would
+quickly diverge from the original, distorting the causal role that
+$pk$ played \emph{specifically} in it. The question here is not what
+causal role $pk$ \emph{can} play in principle, but what role it
+actually \emph{did} play in $\tau$.
 
-The second problem comes from a more fundamental impossibility of
-evaluating counterfactual statements through observation alone. As a
-way to illustrate this, let's imagine that every kinase has a second
-phosphorylation site $x$, which state has no impact on the kinase
-behavior but is almost perfectly correlated with the state of the
-first phosphorylation site (which determines how strongly the kinase
-can bind to a substrate). Then, conditioned on $k$ getting
-phosphorylated at $x$, it is indeed much more likely that the first
-substrate it binds to will get phosphorylated in turn. However, we
-would not say that these two events are counterfactually dependent (or
-even causally related). The key lesson here is that causality and
-counterfactuals are not about conditioning but about
-\emph{interventions}. This is a fundamental idea in modern causal
-inference, which is well illustrated by a famous example: observing
-repeatedly that your pavement gets wet whenever it rains gives you no
-information about whether you live in a universe in which rain causes
-wet pavements or in which wet pavements cause rain. In order to find
-out, you need to intervene and spill water on your pavement yourself
-to see whether or not it starts raining as a result.
 
 Pearl's standard account of counterfactual statements is based on
 applying \textit{``surgical interventions''} on structural equation
@@ -82,51 +43,50 @@ hypothesis). Then, given some observation $e$, the probability of the
 counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
 have been be true'' can be evaluated following a three-steps process:
 \begin{inparaenum}[]
-\item \ItAbduction{} compute the distribution $p_e$ of possible values for
-  $\vec u$ given observation $e$, then
-\item \ItAction{} intervene in the model by replacing the
-  defining equation for $x_j$ by ``$x_j = a$'' and finally
-\item \ItPrediction{} compute the probability that $\psi$ is true in this
-  new model when $\vec{u}$ is distributed along $p_e$.
+\item \ItAbduction{} compute the distribution $p_e$ of possible values
+  for $\vec u$ given observation $e$, then
+\item \ItAction{} intervene in the model by replacing the defining
+  equation for $x_j$ by ``$x_j = a$'' and finally
+\item \ItPrediction{} compute the probability that $\psi$ is true in
+  this new model when $\vec{u}$ is distributed along $p_e$.
 \end{inparaenum}
 Because rule-based models do not have a natural encoding in term of
 structural equations, Pearl's construction does not apply
-straightforwardly in our case. Our proposal is very close in spirit though.
+straightforwardly in our case. Our proposal is very close in spirit
+though.
 
 
 
 \subsection{A semantics for counterfactuals}
 \label{subsec:counterfactuals-semantics}
-We think of an intervention as the product of an external force with
-the ability of preventing events that are about to happen. Precisely,
-an intervention $\iota$ is defined by a predicate
-$\BLOCKED{\iota}{\cdot}$ on events.\footnote{Our framework would
-  accomodate a much broader range of interventions but we make this
-  restriction for ease of exposition.}  Then, given a predicate $\psi$
-over traces, we write the proposition \textit{``Had
-  intervention $\iota$ happened in trace $\tau$, $\psi$ would have
-  been true''} as $\tau \models [\iota] \, \psi.$
 
+An intervention $\iota$ prevents the occurrence of selected events. It
+is defined by a predicate $\BLOCKED{\iota}{\cdot}$ ranging over
+events. (Our framework can accomodate a much broader range of
+interventions, but we make this restriction for ease of exposition.)
+Given a predicate $\psi$ over traces, we write the statement
+\textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
+  would have been true''} as $\CFST{}$.
 
-In order to assign a probability to this proposition, it is
-conceptually useful to think of the CTMC induced by a model in terms
-of the repeated random realization of abstract events.  For every
-possible abstract event $(r, \xi)$, one has to imagine a bell that
-rings randomly according to a Poisson process of parameter
-$\lambda_r$.\footnote{In other words, the time intervals between
-  consecutive ringings are drawn from exponential distributions of
-  parameter $\lambda_r$.}  A simulation trace can be viewed as a
-deterministic function $T$ of the random variable $\Sigma$ that
-features the set of ring times for every abstract event (we call it
-\emph{schedule} and it corresponds to $\vec{u}$ in Pearl's
-construction): starting with the initial mixture and advancing in
-time, every time a bell rings, its associated abstract event $e$
-transforms the current mixture $m$ if $\TRIGGERABLE{m}{e}$. For
-example, if the bell labeled \textit{``apply rule $b$ on substrate $3$
-  and kinase $4$''} rings on the mixture of Figure~\ref{fig:mixture},
-then a bond is created between these two agents. However, if the bell
-labeled \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}'
-rings on the same mixture, nothing happens.
+To assign a probability to this statement, it is conceptually useful
+to think of the CTMC induced by a model in terms of the repeated
+random realization of potential events.  For every possible potential
+event $(r, \xi)$, one has to imagine a bell that rings randomly
+according to a Poisson process of parameter $\lambda_r$.\footnote{In
+  other words, the time intervals between consecutive ringings are
+  drawn from exponential distributions of parameter $\lambda_r$.}  A
+simulation trace can be viewed as a deterministic function $T$ of the
+random variable $\Sigma$ that features the set of ring times for every
+potential event (we call it \emph{schedule} and it corresponds to
+$\vec{u}$ in Pearl's construction): starting with the initial mixture
+and advancing in time, every time a bell rings, its associated
+potential event $e$ transforms the current mixture $m$ if
+$\TRIGGERABLE{m}{e}$. For example, if the bell labeled \textit{``apply
+  rule $b$ on substrate $3$ and kinase $4$''} rings on the mixture of
+Figure~\ref{fig:mixture}, then a bond is created between these two
+agents. However, if the bell labeled \textit{``apply rule $b$ on
+  substrate $1$ and kinase $2$'}' rings on the same mixture, nothing
+happens.
 
 We can extend this viewpoint to include interventions. For an
 intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
@@ -134,18 +94,19 @@ the same way as $T$, except that each time the bell associated to $e$
 rings at time $t$, we also require $\BLOCKED{\iota}{(e, t)}$ to be
 false for $e$ to trigger. Then, given an observed trace $\tau$, an
 intervention $\iota$ and a predicate $\psi$, we compute $\PCFST{}$
-according to Pearl's three-steps procedure: \ItAbduction{} we condition
-the distribution of $\Sigma$ on the observation that $T=\tau$, then
-\ItAction{} we alter the behavior of simulation with intervention $\iota$
-and \ItPrediction{} we compute the probability of $\psi$ in the resulting
-setting. This results in the following definition.
+according to Pearl's three-steps procedure: \ItAbduction{} we
+condition the distribution of $\Sigma$ on the observation that
+$T=\tau$, then \ItAction{} we alter the behavior of simulation with
+intervention $\iota$ and \ItPrediction{} we compute the probability of
+$\psi$ in the resulting setting. This results in the following
+definition.
 
 \begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
   For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef \ \mathbf{P}(\, \psi(\ATRAJ{}) \ |\ T = \tau\,). \]
+  \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}) \ |\ T = \tau}. \]
 \end{definition}
 
 \subsection{The counterfactual resimulation algorithm}
@@ -153,18 +114,22 @@ setting. This results in the following definition.
 
 Following Definition~\ref{def:counterfactuals}, we can estimate the
 probability of the counterfactual statement
-$\tau \models [\iota] \, \psi$ by sampling instances of the random
+$\CFST{}$ by sampling instances of the random
 variable $\CTRAJ{}$. Such instances are called \emph{counterfactual
-  traces}. Intuitively, they give an account of what else trace
-$\tau$ could have been had intervention $\iota$ happened.  We
-introduce Algorithm~\ref{alg:cosimulation} a variation of Gillespie's
+  traces}. Intuitively, they give an account of what else trace $\tau$
+could have been had intervention $\iota$ happened.  We introduce
+Algorithm~\ref{alg:cosimulation} a variation of Doob-Gillespie's
 algorithm to sample a counterfactual trace efficiently given a
 reference trace $\tau$ and an intervention $\iota$.  We call it
-\emph{counterfactual resimulation} algorithm, as it works by going
-through every event of $\tau$, only resimulating parts of $\tau$ that are
-affected by $\iota$. In particular, when $\iota$ is the trivial
-intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it outputs
-$\tau$ with no modification.
+\emph{counterfactual resimulation} algorithm, since it works by going
+through every event of $\tau$, resimulating only those parts of $\tau$
+that are remotely affected by $\iota$. In particular, when $\iota$ is
+the trivial intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it
+outputs $\tau$ with no modification.
+
+
+
+
 
 This algorithm relies on a modified notion of activity we call
 \emph{divergent activity}. We define the set of \emph{divergent
@@ -172,16 +137,14 @@ This algorithm relies on a modified notion of activity we call
 and relative to $m_0$ as
 \[\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.\]
 Equivalently, a divergent embedding is an embedding whose codomain
-features a \emph{divergent site}, that is a site whose binding or
-internal state is different in $m$ and $m_0$. The {divergent activity}
-of a rule $r$ in mixture $m$ and relative to $m_0$ is then defined as
-the product $\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent
-  activity} $\alpha'(m, m_0)$ is defined as
-the sum of the divergent activities of every rule. Finally,
-Algorithm~\ref{alg:cosimulation} uses the notation $\TSTATE{t}{\tau}$
-to refer to the state of trace $\tau$ at time $t$, which is what we
-get from the initial mixture after triggering every event that is
-prior to $t$ in $\tau$ in turn.
+features a \emph{divergent site}, that is, a site whose state differs
+across $m$ and $m_0$. The {divergent activity} of a rule $r$ in
+mixture $m$ relative to $m_0$ is then defined as the product
+$\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of
+the system, $\alpha'(m, m_0)$, is the sum of all divergent
+activities. Finally, we use the notation $\TSTATE{t}{\tau}$ to refer
+to the mixture at time $t$, which obtains from the initial mixture
+after updating it for each event in turn up to time $t$ in $\tau$.
 
 \input{algos/cosimulation}
 
@@ -243,14 +206,13 @@ generally, when
 responsible for at least a part of the unexplained context in the
 triggering a $e$ is likely to be worthwhile.
 
-In our example, this heuristic suggests that we should
-block the last event responsible for the phosphorylation of the kinase
-before the substrate gets phosphorylated itself in sampled traces. For
-the particular case of trace~(\ref{example-trace}) of
+In our example, this heuristic suggests that we should block the last
+event responsible for the phosphorylation of the kinase before the
+substrate gets phosphorylated itself in sampled traces. For the
+particular case of trace~(\ref{example-trace}) of
 section~\ref{sec:example}, we ask: how likely is it that ``$p$ would
 have happened had $pk$ not happened'' ?  This can be translated
-literaly in the question of evaluating
-$\mathbf{P}(\tau \!\models\! [\iota] \, \psi)$ where
+literaly in the question of evaluating $\mathbf{P}(\CFST{})$ where
 \begin{inparaenum}[(i)]
   % \item $\tau$ is trace~(\ref{example-trace})
 \item $\BLOCKED{\iota}{e'} = (e = pk)$ and

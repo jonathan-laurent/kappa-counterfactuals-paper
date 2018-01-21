@@ -26,7 +26,9 @@
 % State in a trace
 %\newcommand{\TSTATE}[2]{\m{State}_{#1}(#2)}
 %\newcommand{\TSTATE}[2]{\left[#2\right]^{#1}}
-\newcommand{\TSTATE}[2]{#2^{[#1]}}
+%\newcommand{\TSTATE}[2]{#2^{[#1]}}
+%\newcommand{\TSTATE}[2]{#2[#1]}
+\newcommand{\TSTATE}[2]{#2\text{\footnotesize$[#1]$}}
 
 % Embeddings and divergent embeddings
 \newcommand{\EMBS}[2]{\m{Emb}_{#1}(#2)}
