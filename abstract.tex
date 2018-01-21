@@ -1,17 +1,26 @@
 % -*- TeX-master: "ijcai18.tex" -*-
 
 \begin{abstract}
-  Rule-based modeling languages can be used to write mechanistic
-  models of complex reaction systems. Some techniques have been
-  proposed to analyze the causal structure of the event series that
-  are produced by simulating such models, ideally providing means for
-  revealing the emergence of pathways from low-level interactions.
-  Unfortunately, these techniques are mostly blind to stochastic rates
-  and fail at giving a proper account of inhibition between events. In
-  response to those issues, we propose a complementary approach that
-  is based on counterfactual reasoning. In particular, we introduce an
-  algorithm to uncover the causal structure of simulation traces by
-  exploring counterfactual scenarios that account for various external
-  interventions. Then, we show how such scenarios can be analyzed in
-  term of inhibition between factual and counterfactual events.
+  With the advance of experimental technologies in molecular biology,
+  there is not only a need to aggregate but also interpret information
+  about complex molecular systems of interaction. Rule-based models
+  capable of translating mechanistic information into systems dynamics
+  will play a central role in identifying targets for and
+  understanding mechanisms of interventions in cellular
+  processes. While this approach often replaces a world we don't
+  understand with a model we don't understand, the latter can be
+  subject to causal analysis difficult to achieve in the
+  former. Existing techniques for such models are based on viewing
+  causality as a relation of enablement between events. Here we
+  complement this approach by including relations of prevention,
+  consistent with the ubiquitous occurrence of inhibitory interactions
+  in biology. We propose and implement a method for executing
+  computational experiments that provide a rigorous semantics to
+  counterfactual statements. Our method is close in spirit to the
+  ideas developed by Pearl and Halpern, but addresses models whose
+  mechanistic complexity is not readily translatable into structural
+  equations. By leveraging a stochastic simulator we sample
+  counterfactual trajectories that are probabilistically as close to a
+  given factual trajectory as a chosen intervention permits them to
+  be.
 \end{abstract}
