@@ -1,14 +1,13 @@
 % -*- TeX-master: "ijcai18.tex" -*-
 
-\newcommand{\PCFST}[0]{\mathbf{P}\left( \,\tau \models [\iota] \, \psi \,\right)}
+\newcommand{\PCFST}[0]{\ProbParen{\CFST{}}}
+
 \newcommand{\ItAbduction}[0]{(\textbf{abduction})}
 \newcommand{\ItAction}[0]{(\textbf{action})}
 \newcommand{\ItPrediction}[0]{(\textbf{prediction})}
 
 
 \section{Evaluating counterfactual statements}\label{sec:counterfactual}
-
-%\subsection{On the nature of  counterfactual statements}
 
 Let's suppose that we have observed a trace $\tau$ in which a kinase
 $k$ gets phosphorylated ($pk$) at time $t$ and then binds ($b$) to a
@@ -97,7 +96,7 @@ straightforwardly in our case. Our proposal is very close in spirit though.
 
 
 \subsection{A semantics for counterfactuals}
-\label{sec:counterfactuals-semantics}
+\label{subsec:counterfactuals-semantics}
 We think of an intervention as the product of an external force with
 the ability of preventing events that are about to happen. Precisely,
 an intervention $\iota$ is defined by a predicate
@@ -146,11 +145,11 @@ setting. This results in the following definition.
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \ \eqdef \
-    \mathbf{P}(\, \psi(\ATRAJ{}) \ |\ T = \tau\,). \]
+  \[ \PCFST{} \eqdef \ \mathbf{P}(\, \psi(\ATRAJ{}) \ |\ T = \tau\,). \]
 \end{definition}
 
 \subsection{The counterfactual resimulation algorithm}
+\label{subsec:cosim-algo}
 
 Following Definition~\ref{def:counterfactuals}, we can estimate the
 probability of the counterfactual statement
@@ -208,4 +207,70 @@ before the time of the next event in $\tau$ (test of line
 \ref{cosim:cev}).  A proof of Theorem~\ref{thm:div-activity} is
 available Appendix~\ref{ap:div-activity}.
 
-%\input{proofs/cosimulation}
+
+
+
+\subsection{Using counterfactual resimulation in practice}
+\label{subsec:cosim-practice}
+
+Returning to our example, let's see how we can use counterfactual
+resimulation to improve our understanding of the typical causal
+narrative leading to the phosphorylation of a substrate. First, how
+may one come to suspect that the narrative that is shown
+Figure~\ref{fig:dumb-story} is incomplete \textit{a priori} ? And
+then, how should one know what interventions might be worth trying in
+order to discover some additional causal structure through
+counterfactual resimulation?
+
+There is no perfect answer here but there are heuristics we can
+use. In our example, one may notice by running repeated simulations
+that when rule $p$ triggers, the kinase involved is very likely to be
+phosphorylated. The fact that the causal narrative
+Figure~\ref{fig:dumb-story} does not provide any insight into this
+phenomenon is a sign that we should investigate whether it is
+an accidental correlation or revealing of an unknown causal effect. In
+order to do so, it is natural to intervene by blocking the last event
+phosphorylating the kinase involved in $p$ in sampled traces. More
+generally, when
+\begin{inparaenum}[(i)]
+\item an event $e$ in a candidate causal narrative is executed
+  unusually often in a context which is more specific than what is
+  required by the left-hand side of the associated rule and
+\item this effect cannot be explained by the action of other events in
+  the same causal narrative,
+\end{inparaenum}
+\textit{then} exploring counterfactual traces in which we block the last event
+responsible for at least a part of the unexplained context in the
+triggering a $e$ is likely to be worthwhile.
+
+In our example, this heuristic suggests that we should
+block the last event responsible for the phosphorylation of the kinase
+before the substrate gets phosphorylated itself in sampled traces. For
+the particular case of trace~(\ref{example-trace}) of
+section~\ref{sec:example}, we ask: how likely is it that ``$p$ would
+have happened had $pk$ not happened'' ?  This can be translated
+literaly in the question of evaluating
+$\mathbf{P}(\tau \!\models\! [\iota] \, \psi)$ where
+\begin{inparaenum}[(i)]
+  % \item $\tau$ is trace~(\ref{example-trace})
+\item $\BLOCKED{\iota}{e'} = (e = pk)$ and
+\item $\psi[\tau'] = (p \in \tau')$.\footnote{Here, by $p$ and $pk$,
+    we refer to very specific events that appear at a particular time
+    in $\tau$.}
+\end{inparaenum}
+This choice of $\iota$ and $\psi$ is reasonable most of the
+time but some variations may be prefered occasionally. For example, if
+the rule $pk$ for phosphorylating is very fast, blocking only a single
+instance of the potential event associated with $pk$ may not have a
+very large effect as a new instance would trigger almost immediately
+after in most counterfactual traces, cancelling the effect of the
+intervention.  In this case, it is useful to make $\iota$ block every
+instance of the potential event associated with $pk$ in a defined
+timeframe.
+
+Sampling counterfactual traces repeatedly for
+trace~(\ref{example-trace}) would reveal that ``event $p$ would not
+have happened had $pk$ not happened'' with very high probability.
+However, we can go further by using counterfactual traces to
+\textit{explain} this influence using both activation and inhibition
+arrows (Figure~\ref{fig:cex}).

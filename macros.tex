@@ -1,45 +1,57 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formatting macros
+
 %\newcommand{\m}[1]{{\small\textsf{#1}}}
 \newcommand{\m}[1]{{\textsc{#1}}}
+\newcommand{\TODO}[1]{[\textsl{#1}]}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Math Macros
 
 \newcommand{\Nat}{{\mathbb N}}
 \newcommand{\Real}{{\mathbb R}}
-
 \newcommand{\eqdef}{\triangleq}
 
+\newcommand{\Prob}[1]{\mathbf{P} \left\{\, #1 \,\right\}}
+\newcommand{\ProbParen}[1]{\mathbf{P} \left(\, #1 \,\right)}
+\newcommand{\CProb}[2]{\Prob{#1 \ |\  #2}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Kappa notations
+
+% Left-hand side and right-hand side of a rule
 \newcommand{\RLHS}[1]{L_{#1}}
 \newcommand{\RRHS}[1]{R_{#1}}
 
-
-
-
-\newcommand{\TODO}[1]{[\textsl{#1}]}
-\newcommand{\Prob}[1]{\mathbf{P} \left\{\, #1 \,\right\}}
-\newcommand{\CProb}[2]{\Prob{#1 \ |\  #2}}
+% State in a trace
 %\newcommand{\TSTATE}[2]{\m{State}_{#1}(#2)}
-%\newcommand{\TSTATE}[2]{\mathcal{S}_{#1}(#2)}
 %\newcommand{\TSTATE}[2]{\left[#2\right]^{#1}}
 \newcommand{\TSTATE}[2]{#2^{[#1]}}
-%newcommand{\TSTATE}[2]{\left<#2\right>^{#1}}
 
-
+% Embeddings and divergent embeddings
 \newcommand{\EMBS}[2]{\m{Emb}_{#1}(#2)}
 \newcommand{\DEMBS}[2]{\m{Emb}'_{#1}(#2)}
 %\newcommand{\EMBS}[2]{\mathcal{E}'_{#1}(#2)}
 %\newcommand{\DEMBS}[2]{\mathcal{E}'_{#1}(#2)}
 
-\newcommand{\TIME}[1]{\textsc{time}(#1)}
-
+% Executable potential event
 \newcommand{\TRIGGERABLE}[2]{#1 \vdash #2}
 
+% Updating a mixture
 \newcommand{\UPDATE}[2]{#1\nolinebreak\boldsymbol{\cdot}\nolinebreak#2}
 %\newcommand{\UPDATE}[2]{#1 \,!\, #2}
 
+% Time of an event
+\newcommand{\TIME}[1]{\textsc{time}(#1)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Macros for counterfactuals
 
-
-
+% Altered and counterfactual traces
 \newcommand{\ATRAJ}[0]{{T_\iota}}
 \newcommand{\CTRAJ}[0]{{T_\iota\,|\,\{T=\tau\}}}
 
+% 'blocked' predicate
 \newcommand{\BLOCKED}[2]{\m{blocked}_{#1}[#2]}
+
+\newcommand{\CFST}[0]{\tau \models [\iota] \, \psi}
