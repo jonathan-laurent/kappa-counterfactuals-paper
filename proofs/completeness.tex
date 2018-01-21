@@ -1,36 +1,46 @@
+It is convenient to prove the following result instead, which is
+slightly more general.
 \begin{theorem*} Let $(\tau, \iota, \tau')$ be a counterfactual
   experiment. If $e$ is an event that belongs only to $\tau$
-  (respectively $\tau'$), then there exists an event $\hat e$ in
-  $\tau$ that is blocked by $\iota$ and there is a path of activation
-  and inhibition arrows from $\hat e$ to $e$.
+  or $\tau'$, then there exists an event $\hat e$ in
+  $\tau$ that is blocked by $\iota$ and there is a directed path 
+  from $\hat e$ to $e$.
 \end{theorem*}
 \begin{proof}
   We prove this theorem by induction on the number of events before
-  $e$ in both $\tau$ and $\tau'$. Let's consider $(e, t) \in \tau$
-  such that $(e, t) \notin \tau'$. If $\BLOCKED{\iota}{(e, t)}$ is
-  true, then we are done. Otherwise, by ($\ref{valid-cex:co-occur}$),
-  $e$ is not triggerable in $\TSTATE{t}{\tau'}$. Therefore, there
-  exists a site $s$ such that $s$ is not in the state which is
-  required for $e$ to happen in mixture $\TSTATE{t}{\tau'}$. Let's
-  define $(e_0, t_0)$ the last event in $\tau$ before time $t$ that
-  modifies site $s$ and $(e_0', t'_0)$ the last event in $\tau'$
-  before $e$ that also modifies $s$. These events modify $s$ to
-  different values so they cannot be the same. Therefore, we have
-  $t_0 \neq t_0'$ with probability one.
+  $e$ in both $\tau$ and $\tau'$. Let's consider $e \in \tau$ such
+  that $e \notin \tau'$. If $\BLOCKED{\iota}{e}$ is true, then we are
+  done. Otherwise, by item ($\ref{valid-cex:co-occur}$) of
+  Proposition~\ref{prop:valid-cex}, $e$ is not executable in
+  $\tau'$. Therefore, there exists a site $s$ such that event $e$
+  tests $s$ to a different value than it has in $\TSTATE{t}{\tau'}$.
+  Let $t = \TIME{e}$.  Let's define $e_0$ the last event in $\tau$
+  modifying $s$ that occurs strictly before time $t$, and $e_0'$ the
+  last event in $\tau'$ modifying $s$ that occurs strictly before time
+  $t$. These events modify $s$ to different values so they cannot be
+  the same. Therefore, we have $\TIME{e_0} \neq \TIME{e_0'}$ with
+  probability one.
 
   \begin{itemize}
-  \item If $\TIME{e_0} < \TIME{e_0'}$ (test of notation), then we have
-    $(e_0, t_0) \notin \tau'$ and so we can apply the induction
-    hypothesis on $e_0$. As a consequence, there exists a path from an
-    event $\hat e$ in $\tau$ which is blocked by $\iota$ to
-    $e_0$. Besides, $e_0$ activates $e$. Therefore, there is a path
-    between $\hat e$ and $e$.
-  \item If $t_0' < t_0$, then we have $(e'_0, t'_0) \notin \tau$ and
-    so we can apply the induction hypothesis on $e'_0$. As a
-    consequence, there exists a path from an event $\hat e$ in $\tau$
-    which is blocked by $\iota$ to $e'_0$. Besides, $e_0'$ inhibits
-    $e$.  Therefore, there is a path between $e$ and $\hat e$.
+  \item If $\TIME{e_0} < \TIME{e_0'}$, then we have
+    $e_0 \notin \tau'$ and so we can apply the induction hypothesis on
+    $e_0$. As a consequence, there exists a path from an event
+    $\hat e$ in $\tau$ which is blocked by $\iota$ to $e_0$. Besides,
+    $e_0$ activates $e$. Therefore, there is a path between $\hat e$
+    and $e$.
+  \item If $\TIME{e_0'} < \TIME{e_0}$, then we have
+    $e'_0 \notin \tau$ and so we can apply the induction
+    hypothesis on $e'_0$. As a consequence, there exists a path from
+    an event $\hat e$ in $\tau$ which is blocked by $\iota$ to
+    $e'_0$. Besides, $e_0'$ inhibits $e$. Therefore, there is a path
+    between $e$ and $\hat e$.
   \end{itemize}
-  The same proof holds switching $\tau$ and $\tau'$.
-
+  The same proof holds for when $e \in \tau'$ and $e \notin \tau$,
+  using item~($\ref{valid-cex:co-occur2}$) of
+  Proposition~\ref{prop:valid-cex} instead of
+  item~($\ref{valid-cex:co-occur}$).
 \end{proof}
+This result implies Theorem~\ref{thm:completeness}. In particular,
+\emph{any} directed path from $\tau$ to $\tau$ necessarily contains an
+even number of inhibition arrow as inhibition arrows always go from
+$\tau$ to $\tau'$ or the other way around.
