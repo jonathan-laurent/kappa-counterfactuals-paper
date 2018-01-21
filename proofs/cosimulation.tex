@@ -1,8 +1,8 @@
-\begin{theorem*}
-  Let $\tau$ a trace
-  and $\iota$ an intervention. Let $I = (t, t+\delta)$ a time interval
-  such that $\tau \cap I = \emptyset$ and $m_0 =
-  \TSTATE{t}{\tau}$. Then, we have
+\begin{theorem*}[Property of the divergent activity]
+  Let $\tau$ a trace and $\iota$ an intervention. Let
+  $I = (t, t+\delta)$ a time interval such that
+  $\tau \cap I = \emptyset$ and $m_0 = \TSTATE{t}{\tau}$. Then, we
+  have
   \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
       \TSTATE{t}{\ATRAJ{}} = m\ }
     \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
@@ -42,41 +42,40 @@
   processes, we have:
   \begin{equation}\label{eqn:pscheduled2}
     m_0 \not\vdash e \ \ \Longrightarrow\ \ \CProb{e \notin \Sigma \cap I}{
-      T=\tau } = e^{-\lambda_e \delta}.
-  \end{equation}
+      T=\tau } = e^{-\lambda_e \delta}
+  \end{equation} where $\lambda_e$ is the rate of the rule associated with potential event $e$.
   Combining (\ref{eqn:pscheduled1}) and (\ref{eqn:pscheduled2}) with
   equation (\ref{eqn:scheduled-decomposition}),
- \begin{equation*}
-       \CProb{ \ATRAJ{} \cap I = \emptyset }
-       { T=\tau,\,\TSTATE{t}{\ATRAJ{}} = m }
-       = \ 
-      \exp{ \! \Big ( \!- \hspace{-1em} \sum_{m \vdash e, \, m_0 \not\vdash
-      e} \hspace{-0.9em} \lambda_e \cdot \delta \Big ) }
+  \begin{equation*}
+    \CProb{ \ATRAJ{} \cap I = \emptyset }
+    { T=\tau,\,\TSTATE{t}{\ATRAJ{}} = m }
+    = \ 
+    \exp{ \! \Big ( \!- \hspace{-1em} \sum_{m \vdash e, \, m_0 \not\vdash
+        e} \hspace{-0.9em} \lambda_e \cdot \delta \Big ) }
   \end{equation*}
   % \begin{equation*}
   %   \begin{aligned}
-  %      & \CProb{ \ATRAJ{} \cap I = \emptyset } { T=\tau,\,
-  %       \TSTATE{t}{\ATRAJ{}} = m }
+  %     & \CProb{ \ATRAJ{} \cap I = \emptyset } { T=\tau,\,
+  %     \TSTATE{t}{\ATRAJ{}} = m }
   %     \\[-0cm]
   %     &= \
   %     \hspace{-0.5em} \prod_{m \vdash e, \,
-  %       m_0 \not\vdash e} \!\!\! e^{-\lambda_e \delta}
-  %     \ = \ 
+  %     m_0 \not\vdash e} \!\!\! e^{-\lambda_e \delta}
+  %     \ = \
   %     \exp{ \Big ( - \!\!\! \sum_{m \vdash e, \, m_0 \not\vdash
   %     e} \hspace{-0.8em} \lambda_e \ \cdot \ \delta \Big ) }
   %   \end{aligned}
   % \end{equation*}
   Finally, we can recognize the divergent activity in the exponential
-  above:
-  \vskip 0.0cm
+  above: \vskip 0.0cm
   \begin{equation*}
     \begin{aligned}
-      \sum_{m \vdash e, \, m_0 \not\vdash e} \hspace{-0.8em} \lambda_e \ 
+      \sum_{m \vdash e, \, m_0 \not\vdash e} \hspace{-0.8em} \lambda_e
+      \
       &= \ \sum_{(r, \xi)} \lambda_r \textbf{1}\{ m \vdash (r, \xi),\ m_o \not\vdash (r, \xi) \} \\
       &= \ \sum_r \lambda_r\sum_\xi \textbf{1}\{ m \vdash (r, \xi),\ ,m_o \not\vdash (r, \xi) \} \\
-      &= \ \sum_r \lambda_r |\DEMBS{r}{m, m_0}|
-      \ = \ \alpha'(m, m_0).
-      %\\ &= \ \alpha'(m, m_0).
+      &= \ \sum_r \lambda_r |\DEMBS{r}{m, m_0}| \ = \ \alpha'(m, m_0).
+      % \\ &= \ \alpha'(m, m_0).
     \end{aligned}
   \end{equation*}
   \vskip 0.2cm
