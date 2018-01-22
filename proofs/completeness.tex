@@ -26,13 +26,13 @@ slightly more general.
     $e_0 \notin \tau'$ and so we can apply the induction hypothesis on
     $e_0$. As a consequence, there exists a path from an event
     $\hat e$ in $\tau$ which is blocked by $\iota$ to $e_0$. Besides,
-    $e_0$ activates $e$. Therefore, there is a path between $\hat e$
+    $e_0$ enables $e$. Therefore, there is a path between $\hat e$
     and $e$.
   \item If $\TIME{e_0'} < \TIME{e_0}$, then we have
     $e'_0 \notin \tau$ and so we can apply the induction
     hypothesis on $e'_0$. As a consequence, there exists a path from
     an event $\hat e$ in $\tau$ which is blocked by $\iota$ to
-    $e'_0$. Besides, $e_0'$ inhibits $e$. Therefore, there is a path
+    $e'_0$. Besides, $e_0'$ prevents $e$. Therefore, there is a path
     between $e$ and $\hat e$.
   \end{itemize}
   The same proof holds for when $e \in \tau'$ and $e \notin \tau$,
@@ -42,5 +42,5 @@ slightly more general.
 \end{proof}
 This result implies Theorem~\ref{thm:completeness}. In particular,
 \emph{any} directed path from $\tau$ to $\tau$ necessarily contains an
-even number of inhibition arrow as inhibition arrows always go from
+even number of prevention arrows as these arrows always go from
 $\tau$ to $\tau'$ or the other way around.
