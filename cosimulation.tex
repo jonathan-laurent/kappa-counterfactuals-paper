@@ -19,29 +19,30 @@ $p$ could well have happened even in the absence of $pk$; it just is
 unlikely. Counterfactual statements are not either true or false, but
 have degrees of likelihood. To assess that likelihood is our task.
 
-Given an original (factual) trace $\tau$, a naive approach might be
-to sample counterfactual traces, each of which starts with the
-state of the system attained in $\tau$ just before event $pk$
-happened, but in which we skip over $pk$ and then run an unconstrained
-simulation from that point onward. In this approach traces would
-quickly diverge from the original, distorting the causal role that
-$pk$ played \emph{specifically} in it. The question here is not what
-causal role $pk$ \emph{can} play in principle, but what role it
-actually \emph{did} play in $\tau$.
+Given an original (factual) trace $\tau$, a naive approach might be to
+sample counterfactual traces, each of which starts with the state of
+the system attained in $\tau$ just before event $pk$ happened, but in
+which we skip over $pk$ and then run an unconstrained simulation from
+that point onward. In this approach traces would quickly diverge from
+the original, distorting the causal role that $pk$ played
+\emph{specifically} in it. The question here is not what causal role
+$pk$ \emph{can} play in principle, but what role it actually
+\emph{did} play in $\tau$. In this sense, counterfactual statements
+are undetachable from the context in which they are formulated.
 
-
-Pearl's standard account of counterfactual statements is based on
-applying \textit{``surgical interventions''} on structural equation
-models. Such a model features a finite sequence $(x_1, \dots, x_n)$ of
-variables. Each variable $x_i$ is associated a \emph{functional
-  equation} of the form $x_i = f_i(x_1, \dots, x_{i-1}, u_i)$, where
-$f_i$ is a deterministic function and $u_i$ is a random
-variable. Ideally, each $f_i$ defines an independent and autonomous
-physical mechanism. This is partially enforced by the requirement that
-the $(u_i)_i$ must be mutually independent (Markovian
-hypothesis). Then, given some observation $e$, the probability of the
-counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
-have been be true'' can be evaluated following a three-steps process:
+Pearl's standard account of counterfactual statements
+\cite{pearl2009causality} is based on performing \textit{``surgical
+  interventions''} on structural equation models. Such a model
+features a finite sequence $(x_1, \dots, x_n)$ of variables. To each
+variable $x_i$ is associated a \emph{functional equation} of the form
+$x_i = f_i(x_1, \dots, x_{i-1}, u_i)$, where $f_i$ is a deterministic
+function and $u_i$ is a random variable. Ideally, each $f_i$ defines
+an independent and autonomous physical mechanism. This is partially
+enforced by the requirement that the $(u_i)_i$ must be mutually
+independent (Markovian hypothesis). Then, given some observation $e$,
+the probability of the counterfactual statement ``had $x_j$ been equal
+to $a$, $\psi$ would have been be true'' can be evaluated following a
+three-steps process:
 \begin{inparaenum}[]
 \item \ItAbduction{} compute the distribution $p_e$ of possible values
   for $\vec u$ given observation $e$, then
@@ -50,11 +51,11 @@ have been be true'' can be evaluated following a three-steps process:
 \item \ItPrediction{} compute the probability that $\psi$ is true in
   this new model when $\vec{u}$ is distributed along $p_e$.
 \end{inparaenum}
-Because rule-based models do not have a natural encoding in term of
-structural equations, Pearl's construction does not apply
-straightforwardly in our case. Our proposal is very close in spirit
-though.
 
+Because traces generated from rule-based models do not have a natural
+encoding in terms of structural equations, Pearl's construction does
+not apply straightforwardly in our case. The solution we are about to
+propose remains faithful to it though.
 
 
 \subsection{A semantics for counterfactuals}
@@ -68,25 +69,24 @@ Given a predicate $\psi$ over traces, we write the statement
 \textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
   would have been true''} as $\CFST{}$.
 
-To assign a probability to this statement, it is conceptually useful
-to think of the CTMC induced by a model in terms of the repeated
-random realization of potential events.  For every possible potential
-event $(r, \xi)$, one has to imagine a bell that rings randomly
-according to a Poisson process of parameter $\lambda_r$.\footnote{In
-  other words, the time intervals between consecutive ringings are
-  drawn from exponential distributions of parameter $\lambda_r$.}  A
-simulation trace can be viewed as a deterministic function $T$ of the
-random variable $\Sigma$ that features the set of ring times for every
-potential event (we call it \emph{schedule} and it corresponds to
-$\vec{u}$ in Pearl's construction): starting with the initial mixture
-and advancing in time, every time a bell rings, its associated
-potential event $e$ transforms the current mixture $m$ if
-$\TRIGGERABLE{m}{e}$. For example, if the bell labeled \textit{``apply
-  rule $b$ on substrate $3$ and kinase $4$''} rings on the mixture of
-Figure~\ref{fig:mixture}, then a bond is created between these two
-agents. However, if the bell labeled \textit{``apply rule $b$ on
-  substrate $1$ and kinase $2$'}' rings on the same mixture, nothing
-happens.
+To assign a probability to this statement, it is useful to
+reconceptualize the CTMC induced by a model as follows. For every
+possible potential event $(r, \xi)$, one has to imagine a bell that
+rings randomly according to a Poisson process of parameter
+$\lambda_r$.\footnote{In other words, the time intervals between
+  consecutive ringings are drawn from exponential distributions of
+  parameter $\lambda_r$.}  A simulation trace can be viewed as a
+deterministic function $T$ of the random variable $\Sigma$ that
+features the set of ring times for every potential event (we call it
+\emph{schedule} and it corresponds to $\vec{u}$ in Pearl's
+construction): starting with the initial mixture and advancing in
+time, every time a bell rings, its associated potential event $e$
+transforms the current mixture $m$ if $\TRIGGERABLE{m}{e}$. For
+example, if the bell labeled \textit{``apply rule $b$ on substrate $3$
+  and kinase $4$''} rings on the mixture of Figure~\ref{fig:mixture},
+then a bond is created between these two agents. However, if the bell
+labeled \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}'
+rings on the same mixture, nothing happens.
 
 We can extend this viewpoint to include interventions. For an
 intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
