@@ -150,7 +150,7 @@ generate a causal account by first computing a \emph{sub-trace} of
 \item \emph{minimal} in the sense that none of its valid sub-traces
   features $p$.
 \end{inparaenum}
-Relations of activation among the events in the minimal sub-trace are
+Relations of enablement among the events in the minimal sub-trace are
 then determined to yield a directed acyclic graph. Minimization is, in
 general, an NP-hard problem, although trivial in our toy
 example. Figure~\ref{fig:dumb-story} depicts the explanation graph for
@@ -162,7 +162,7 @@ trace into events that are necessary for the outcome---which includes
 eliminating futile cycles. Thus, the explanation graph simply consists
 in moving from the initial condition $I$, symbolized by the
 \emph{init} event, to the last $b$ before the $u$. The arrows are
-activation relations as defined informally in the Introduction (see
+enablement relations as defined informally in the Introduction (see
 also section~\ref{sec:inhibition}).
 
 \input{figures/dumb-story}
@@ -177,7 +177,7 @@ to be sticky and giving the slow phosphorylation $p$ a chance to
 occur. It seems reasonable to assert that $p$ would probably not have
 happened had $pk$ not happened, since the opportunity for $p$ would
 have been curtailed by a fast unbinding event. Thus, $pk$ should be
-part of the explanation, although it neither activates $b$ nor $p$
+part of the explanation, although it neither enables $b$ nor $p$
 directly (both rules are independent of $K$'s phosphorylation
 state). Reasoning of this kind is \emph{counterfactual} and can be
 deployed to define causality
@@ -185,6 +185,8 @@ deployed to define causality
 
 In section~\ref{sec:counterfactual}, we give a rigorous semantics to
 this line of reasoning and introduce an algorithm for simulating
-counterfactual scenarios. In section~\ref{sec:inhibition} we show that
-inhibition arrows relate events between factual and counterfactual
-traces, leading to the explanation shown in Figure~\ref{fig:cex}.
+counterfactual scenarios. In section~\ref{sec:inhibition}, we show how
+counterfactual dependencies between events can be systematically
+explained in terms of a combination of enablement and prevention
+arrows, leading to the explanation shown Figure~\ref{fig:cex}. 
+%for the counterfactual dependency between $p$ and $pk$ in our example.

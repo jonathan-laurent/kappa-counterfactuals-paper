@@ -48,16 +48,16 @@ from two drawbacks. First, the focus on necessity in step
 (in that they dramatically increase the probability of observing the
 outcome), yet are not logically necessary for achieving it. Second,
 step (\ref{step:highlight}) is limited to a narrow notion of causal
-influence that we may call \emph{activation}. Put simply, an event $a$
-is said to activate event $b$, if $a$ modifies an aspect of the state
-of the world in such a way as to directly enable $b$ to happen. This
+influence that we may call \emph{enablement}. Put simply, an event $a$
+is said to enable event $b$, if $a$ modifies an aspect of the state of
+the world in such a way as to directly permit $b$ to happen. This
 positively tinted version of influence is blind to the ubiquitous role
-of \emph{inhibition} in molecular biology.  Indeed, an event $a$ may
-cause an event $b$ without (transitively) activating it, but instead
+of inhibitory interactions in molecular biology.  Indeed, an event $a$
+may cause an event $b$ without (transitively) enabling it, but instead
 by preventing another event $c$ that would have prevented
 $b$. Clearly, uncovering such an explanatory narrative is challenging
-because it involves events that may \emph{not} occur in a trace ($c$
-in this case).
+because it involves events that may \emph{not} occur in a simulation
+trace ($c$ in this case).
 
 We here propose an approach based on counterfactual reasoning that
 complements the existing causal analysis of event series generated
@@ -78,8 +78,7 @@ Our contributions are as follows.
   permits them to. To this end, we introduce an algorithm to generate
   counterfactual traces and provide an efficient implementation for
   the Kappa language.
-\item We show how counterfactual dependencies between events give rise
-  to explanations that include a combination of activating and
-  inhibiting influences that are more in line with biological
-  reasoning.
+\item We show how counterfactual dependencies between events can be
+  systematically explained in terms of enablement and prevention
+  relations that are more in line with biological reasoning.
 \end{enumerate}
