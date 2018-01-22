@@ -2,24 +2,144 @@
 
 \section{Counterfactuals and inhibition}\label{sec:inhibition}
 
-\paragraph{Remark on notation} Whereas we used the letter $e$ to
-denote potential events in the previous sections, we use it to denote
-\emph{events} from now on. Besides, we write $\TIME{e}$ the time of
-occurence of event $e$. Finally, an event $e$ occuring at time $t$ is
-said to be executable in trace $\tau$ if the associated potential
+The diagram shown Figure~\ref{fig:cex} extends the one in
+Figure~\ref{fig:dumb-story} and explains the counterfactual dependency
+between $pk$ and $p$ in \RefTrace{}. The dotted node corresponds to a
+\emph{counterfactual event}, which is absent from \RefTrace{}. It is
+related to \emph{factual} events by inhibition arrows, which are
+displayed in red. These arrows can be read as follows: ``$pk$ prevents
+$u$, which would have prevented $p$''.  In this section, we give a
+precise semantics to such diagrams and discuss how they can be
+generated automatically.
+
+As discussed in section~\ref{subsec:dumb-story}, a causal narrative
+like the one in Figure~\ref{fig:dumb-story} is generated from a trace,
+which usually results from a compression process, and whose events are
+organized in a directed acyclic graphs, edges being activation arrows.
+Activation arrows are easy to define in the context of a trace, and we
+give a formal definition in section~\ref{subsec:inhibition}.
+Inhibition arrows are trickier because they must relate events that
+happened to events that did not. For this reason, previous
+work~\cite{DanosEtAl-CONCUR07} fails to provide a proper account of
+them.  Our insight is to use counterfactual traces to give a rigorous
+account of inhibition using arrows that connect events from a factual
+trace to events in an associated counterfactual trace and vice versa.
+
+
+\paragraph{Remark on notation} Although we used the letter $e$ to
+denote potential events in previous sections, we use it to denote
+\emph{events} in this section. We write $\TIME{e}$ the time
+of occurence of event $e$. Finally, an event $e$ occuring at time $t$
+is said to be executable in trace $\tau$ if the associated potential
 event is executable in mixture $\TSTATE{t}{\tau}$.
 
 
-\subsection{Counterfactual experiments}
+\subsection{Counterfactual experiments and inhibition}
+\label{subsec:cex}\label{subsec:inhibition}
 
-A \textit{counterfactual experiment} is any triple
-$(\tau, \iota, \tau')$ for which there exists a schedule $\sigma$ such
-that $\tau = T(\sigma)$ and $\tau' = \ATRAJ{}(\sigma)$. Such triples
-are produced by counterfactual resimulation.
+A \textit{counterfactual experiment} is obtained by pairing a
+\emph{factual} trace to a counterfactual counterpart. Formally, a
+counterfactual experiment is a triple $(\tau, \iota, \tau')$ for which
+there exists a schedule $\sigma$ such that $\tau = T(\sigma)$ and
+$\tau' = \ATRAJ{}(\sigma)$. Such triples are produced by
+counterfactual resimulation.
+
+Before we formalize activation and inhibition in the context of a
+counterfactual experiment, it is useful to define some vocabulary
+about what it means for an event to \emph{test} or \emph{modify} a
+site. Without loss of generality, we shall assume that sites on an
+agent can either be binding sites or tagged sites (sites carrying an
+internal state) but cannot have both functions. The \textit{value} of
+a tagged site in a mixture is defined as its current tag and the value
+of a binding site is either $\textsc{free}$ or $\textsc{bound-to}(s)$,
+where $s$ identifies another site in the mixture.  An event is said to
+\emph{modify} a site if it changes its value when executed. It is said
+to \emph{test} a site $s$ to value $v$ if the left-hand side of the
+associated rule requires $s$ to have value $v$ for it to be
+executable. For example, event $p$ in \RefTrace{} tests three sites
+and modifies one. We can now proceed in defining activation and inhibition.
+
+\input{figures/cex}
+
+\begin{definition}[Activation]
+  Let $\tau$ a trace and $e, e'$ two events in $\tau$.  We say that
+  $e$ activates $e'$ if $e$ is the last event before $e'$ that
+  modifies some site to the value it is tested for by $e'$.
+\end{definition}
+
+\begin{definition}[Inhibition]
+  Let $(\tau, \iota, \tau')$ a counterfactual experiment. An
+  event $e$ that occurs at time $t$ in $\tau$ is said to inhibit an
+  event $e'$ that occurs at time $t'$ in $\tau'$ if all of the
+  following hold:
+  \begin{inparaenum}[(1)]
+  \item \label{inhibition:time} $t < t'$ ;
+  \item \label{inhibition:breaks} there exists a site $s$ such that
+    $e$ is the last event in $\tau$ before $t'$ that modifies the
+    value of $s$ away from what $e'$ tests it for ;
+  \item \label{inhibition:nointf} there are no events in $\tau'$ that
+    modify $s$ during the time interval $(t, t')$.
+  \end{inparaenum}
+  The same definiton holds switching $\tau$ and $\tau'$.
+\end{definition}
+
+Counterfactual experiments can be represented as directed acyclic graphs
+like the one in Figure~\ref{fig:cex}. Such a graph features three kinds
+of nodes:
+\begin{inparaenum}[]
+\item events that are proper to the factual trace (thick solid nodes),
+\item events that are proper to the counterfactual trace (dotted nodes) and
+\item events that are common to both traces (normal solid nodes).
+\end{inparaenum} Edges consist in activation and inhibition arrows.
+
+
+As illustrated Figure~\ref{fig:cex}, the influence of $pk$ on $p$ in
+our example is mediated by the counterfactual event $u$. Such mediating
+events always exist, as stated by the following theorem.
+
+\begin{theorem}[Completeness of activation and inhibition]
+\label{thm:completeness} 
+  Let $(\tau, \iota, \tau')$ be a counterfactual experiment and $e$ an
+  event that belongs only to $\tau$. Then, there exists an event
+  $\hat e \in \tau$ that is blocked by $\iota$ and there is a directed
+  path from $\hat e$ to $e$ with an even number of inhibition arrows.
+\end{theorem}
+\noindent This theorem states that counterfactual dependencies can
+always be explained in terms of activation and inhibition between
+individual events. A proof is provided in
+Appendix~\ref{ap:completeness}. In our opinion, this is a powerful
+result, which establishes a bridge between two different visions of
+causality: the vision based on event structures
+\cite{winskel1986event} that is dominant in the concurrency community
+and the vision based on counterfactuals which is dominant in the
+causal inference community \cite{pearl2009causality}.
+
+\subsection{Compression of counterfactual experiments}
+
+Counterfactual experiments that are produced using counterfactual
+resimulation are usually very large. They typically feature a lot of
+redundancy, including events that are irrelevant to the outcome of
+interest or futile cycles as discussed in
+section~\ref{subsec:dumb-story}. Therefore, a compression step is
+usually necessary before concise causal narratives can be extracted
+from them. The two traces composing a counterfactual experiment cannot
+be compressed separately following the procedure described in
+section~\ref{subsec:dumb-story} though. Indeed, once compressed
+separately, there is no guarantee that these two traces can still be
+generated from a unique schedule and therefore form a valid
+counterfactual experiment. Instead, compressing a
+counterfactual experiment consists in extracting a minimal \emph{valid}
+sub-experiment.
+
+
+A counterfactual experiment $(\tau_1, \iota, \tau_1')$ is said to be a
+\emph{sub-experiment} of $(\tau_2, \iota, \tau_2')$ if $\tau_1$ is a
+sub-trace of $\tau_2$ and $\tau_1'$ is a sub-trace of $\tau_2'$. Also,
+valid counterfactual experiments can be characterized as follows.
 
 \begin{proposition}%[Characterization of counterfactual experiments]
   \label{prop:valid-cex}
-  A triple $(\tau, \iota, \tau')$ is a (valid) counterfactual experiment if
+  A triple $(\tau, \iota, \tau')$ is a valid counterfactual experiment if
   and only if all of the following hold:
   \begin{inparaenum}[(1)]
   \item \label{valid-cex:valid-traces} both $\tau$ and $\tau'$ are
@@ -36,52 +156,15 @@ are produced by counterfactual resimulation.
   \end{inparaenum}
 \end{proposition}
 
-\subsection{Inhibition}
+\noindent Then, compressing a counterfactual experiment consists
+in finding a minimal valid sub-experiment such that
+\begin{inparaenum}[(i)]
+\item the outome of interest appears in the factual trace but not in
+the counterfactual trace and
+\item events that are blocked by $\iota$ are kept in the factual trace.
+\end{inparaenum}
+Because these constraints along with the properties featured in
+Proposition~\ref{prop:valid-cex} can be encoded as boolean
+satisfiability constraints, then compressing a counterfactual
+experiment can be done using standard \textsc{sat}-solving techniques.
 
-
-Before we start formalizing activation and inhibition, it is useful to
-define some vocabulary about what it means for an event to \emph{test}
-or \emph{modify} a site. Without loss of generality, we shall assume
-that sites on an agent can either be binding sites or tagged sites
-(sites carrying an internal state) but cannot have both functions. The
-\textit{value} of a tagged site in a mixture is defined as its current
-tag and the value of a binding site is either $\textsc{free}$ or
-$\textsc{bound-to}(s)$, where $s$ identifies another site in the
-mixture.  An event is said to \emph{modify} a site if it changes its
-value when executed. It is said to \emph{test} a site $s$ to value $v$
-if the left-hand side of the associated rule requires $s$ to have
-value $v$ for it to be executable. For example, event $p$ in
-trace~(\ref{example-trace}) tests three sites and modifies one.
-
-\input{figures/cex}
-
-\begin{definition}
-  Let $(\tau, \iota, \tau')$ a counterfactual experiment. An
-  event $e$ that occurs at time $t$ in $\tau$ is said to inhibit an
-  event $e'$ that occurs at time $t'$ in $\tau'$ if all of the
-  following hold:
-  \begin{inparaenum}[(1)]
-  \item \label{inhibition:time} $t < t'$ ;
-  \item \label{inhibition:breaks} there exists a site $s$ such that
-    $e$ is the last event in $\tau$ before $t'$ that modifies the
-    value of $s$ away from what $e'$ tests it for ;
-  \item \label{inhibition:nointf} there are no events in $\tau'$ that
-    modify $s$ during the time interval $(t, t')$.
-  \end{inparaenum}
-  The same definiton holds switching $\tau$ and $\tau'$.
-\end{definition}
-
-
-The example illustrates the influence of $pk$ on $p$ mediated by the
-counterfactual event $u$. Such mediating events always exist, as
-stated by the following theorem.  In general, we can always %exhibit
-a sequence of intermediate events connected by activation and
-inhibition arrows to relate an event that is proper to the factual
-trace to another one that is blocked by the intervention $\iota$.
-
-\begin{theorem}\label{thm:completeness} 
-  Let $(\tau, \iota, \tau')$ be a counterfactual experiment and $e$ an
-  event that belongs only to $\tau$. Then there exists an event
-  $\hat e \in \tau$ that is blocked by $\iota$ and there is a directed
-  path from $\hat e$ to $e$ with an even number of inhibition arrows.
-\end{theorem}

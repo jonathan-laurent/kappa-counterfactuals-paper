@@ -209,16 +209,14 @@ triggering a $e$ is likely to be worthwhile.
 In our example, this heuristic suggests that we should block the last
 event responsible for the phosphorylation of the kinase before the
 substrate gets phosphorylated itself in sampled traces. For the
-particular case of trace~(\ref{example-trace}) of
+particular case of \RefTrace{} of
 section~\ref{sec:example}, we ask: how likely is it that ``$p$ would
 have happened had $pk$ not happened'' ?  This can be translated
 literaly in the question of evaluating $\mathbf{P}(\CFST{})$ where
 \begin{inparaenum}[(i)]
   % \item $\tau$ is trace~(\ref{example-trace})
 \item $\BLOCKED{\iota}{e'} = (e = pk)$ and
-\item $\psi[\tau'] = (p \in \tau')$.\footnote{Here, by $p$ and $pk$,
-    we refer to very specific events that appear at a particular time
-    in $\tau$.}
+\item $\psi[\tau'] = (p \in \tau')$.
 \end{inparaenum}
 This choice of $\iota$ and $\psi$ is reasonable most of the
 time but some variations may be prefered occasionally. For example, if
@@ -231,8 +229,8 @@ instance of the potential event associated with $pk$ in a defined
 timeframe.
 
 Sampling counterfactual traces repeatedly for
-trace~(\ref{example-trace}) would reveal that ``event $p$ would not
+\RefTrace{} would reveal that ``event $p$ would not
 have happened had $pk$ not happened'' with very high probability.
 However, we can go further by using counterfactual traces to
 \textit{explain} this influence using both activation and inhibition
-arrows (Figure~\ref{fig:cex}).
+arrows.

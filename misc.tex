@@ -9,72 +9,12 @@ markovian, the only only relevant information about what has already
 been simulated is the current state of the counterfactual world
 $s := \TSTATE{t}{\ATRAJ{}}$.
 
-At some point, we have to define
-\[\EMBS{r}{m} = \{ \xi \,:\, m \vdash (r, \xi) \}\]
-and notice that
-\[\DEMBS{r}{m, m_0} = \EMBS{r}{m} \setminus \EMBS{r}{m_0}.\]
-
-
-\begin{definition}[Divergent embedding]
-  Let $m$ a mixture and $m_0$ a reference mixture. A site $s$ is said
-  to be \emph{divergent} if it is in a different state in $m$ and in
-  $m_0$.  Then, an embedding $\xi$ of a rule $r$ into $m$ is said to
-  be \emph{divergent} if it features a divergent site. We write
-  $\DEMBS{r}{m, m_0}$ the set of such embeddings.
-\end{definition}
-
-\begin{definition}[Divergent activity]
-  The \emph{divergent activity} of a rule $r$ is defined as the
-  product of its reaction rate $\lambda_r$ by the cardinal of
-  $\DEMBS{r}{m, m_0}$.  The total divergent activity of the system
-  $\alpha'(m, m_0)$ is defined as the sum of the divergent activity of
-  every rule:
-  \[\alpha'(m, m_0) = \sum_r \lambda_r |\DEMBS{r}{m, m_0}| \]
-\end{definition}
-
-\subsection*{On co-simulation}
-
-Indeed, suppose we are simulating a counterfactual trace and the
-current mixture at time $t$ is $m$. Let $m_0$ the state of the
-reference trace at time $t$. We say that a site is divergent if it has
-different states in $m$ and $m_0$.  Besides, an embedding of the left
-hand side of a rule $r$ into $m$ that features at least one divergent
-site is said to be divergent. We write $\DEMBS{r}{m, m_0}$ the set of
-all such embeddings.  Finally, we define the divergent activity of a
-rule as the product of its rate by the number of divergent embeddings
-of its left hand side into $m$ and write $\alpha'(m, m_0)$ the total
-divergent activity:
-\[\alpha'(m, m_0) = \sum_r \lambda_r |\DEMBS{r}{m, m_0}|. \]
-
-
 During normal simulation of a Kappa model, the activity of the
 reaction mixture can be interpreted as its propensity to change. In
 contrast, during counterfactual simulation, the divergent activity can
 be interpreted as the propensity of the counterfactual mixture to
 diverge from the reference mixture.
 
-\paragraph{Other concepts and notations}
+The reason why some nodes appear thicker than others is discussed in
+section~\ref{subsec:cex}.
 
-
-
-\begin{itemize}
-\item 
-
-\item Writing $L_r$ and $R_r$ the left hand side and right hand side of a rule.
-
-\item An \emph{embedding} of the left hand side $L_r$ of a rule $r$ to
-  a mixture $m$ is a map $\xi$ from agents of $L_r$ to global agent
-  identifiers such that\dots
-\end{itemize}
-
-Here, the result was simply $(b, p)$. Then, we computed activation
-arrows within this sub-trace using the following rule: there is an
-arrow between event $e$ and event $e'$ if
-% \begin{inparaenum}[i)]
-% \item $e$ happens before $e'$ and
-% \item $e'$ tests a site $s$ such that $e$ is the last event before
-%   $e'$ to modify $s$.
-% \end{inparaenum}
-$e$ is the last event before $e'$ that modifies some site to the state
-it is tested for by $e'$. In general, this results in a \textsc{dag}
-where nodes are events and edges are activation arrows.
