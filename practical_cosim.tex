@@ -1,0 +1,54 @@
+\section{Practical use of  counterfactual resimulation}
+\label{sec:cosim-practice}
+
+Returning to our example, let's see how we can use counterfactual
+resimulation to improve our understanding of the typical causal
+narrative leading to the phosphorylation of a substrate. First, how
+may one come to suspect that the narrative that is shown
+Figure~\ref{fig:dumb-story} is incomplete \textit{a priori} ? And
+then, how should one know what interventions might be worth trying in
+order to discover some additional causal structure through
+counterfactual resimulation?
+
+There is no perfect answer here but there are heuristics we can
+use. In our example, one may notice by running repeated simulations
+that when rule $p$ triggers, the kinase involved is very likely to be
+phosphorylated. The fact that the causal narrative
+Figure~\ref{fig:dumb-story} does not provide any insight into this
+phenomenon is a sign that we should investigate whether it is
+an accidental correlation or revealing of an unknown causal effect. In
+order to do so, it is natural to intervene by blocking the last event
+phosphorylating the kinase involved in $p$ in sampled traces. More
+generally, when
+\begin{inparaenum}[(i)]
+\item an event $e$ in a candidate causal narrative is executed
+  unusually often in a context which is more specific than what is
+  required by the left-hand side of the associated rule and
+\item this effect cannot be explained by the action of other events in
+  the same causal narrative,
+\end{inparaenum}
+\textit{then} exploring counterfactual traces in which we block the last event
+responsible for at least a part of the unexplained context in the
+triggering a $e$ is likely to be worthwhile.
+
+In our example, this heuristic suggests that we should block the last
+event responsible for the phosphorylation of the kinase before the
+substrate gets phosphorylated itself in sampled traces. For the
+particular case of \RefTrace{} of
+section~\ref{sec:example}, we ask: how likely is it that ``$p$ would
+have happened had $pk$ not happened'' ?  This can be translated
+literaly in the question of evaluating $\mathbf{P}(\CFST{})$ where
+\begin{inparaenum}[(i)]
+  % \item $\tau$ is trace~(\ref{example-trace})
+\item $\BLOCKED{\iota}{e'} = (e = pk)$ and
+\item $\psi[\tau'] = (p \in \tau')$.
+\end{inparaenum}
+This choice of $\iota$ and $\psi$ is reasonable most of the
+time but some variations may be prefered occasionally. For example, if
+the rule $pk$ for phosphorylating is very fast, blocking only a single
+instance of the potential event associated with $pk$ may not have a
+very large effect as a new instance would trigger almost immediately
+after in most counterfactual traces, cancelling the effect of the
+intervention.  In this case, it is useful to make $\iota$ block every
+instance of the potential event associated with $pk$ in a defined
+timeframe.

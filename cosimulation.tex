@@ -70,36 +70,49 @@ Given a predicate $\psi$ over traces, we write the statement
   would have been true''} as $\CFST{}$.
 
 To assign a probability to this statement, it is useful to
-reconceptualize the CTMC induced by a model as follows. For every
-possible potential event $(r, \xi)$, one has to imagine a bell that
-rings randomly according to a Poisson process of parameter
-$\lambda_r$.\footnote{In other words, the time intervals between
-  consecutive ringings are drawn from exponential distributions of
-  parameter $\lambda_r$.}  A simulation trace can be viewed as a
-deterministic function $T$ of the random variable $\Sigma$ that
-features the set of ring times for every potential event (we call it
-\emph{schedule} and it corresponds to $\vec{u}$ in Pearl's
-construction): starting with the initial mixture and advancing in
-time, every time a bell rings, its associated potential event $e$
-transforms the current mixture $m$ if $\TRIGGERABLE{m}{e}$. For
-example, if the bell labeled \textit{``apply rule $b$ on substrate $3$
-  and kinase $4$''} rings on the mixture of Figure~\ref{fig:mixture},
-then a bond is created between these two agents. However, if the bell
-labeled \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}'
-rings on the same mixture, nothing happens.
+reconceptualize the CTMC induced by a model in such a way that the
+source of randomness is factored out from the system's state. This can
+be done as follows:
+\begin{inparaenum}[(i)]
+\item Consider all possible potential events $(r, \xi)$, where $\xi$
+  maps into a large enough set of global identifiers. If no rule
+  creates a new agent, as we shall assume for the sake of simplicity,
+  those global identifiers are given by the initial mixture. For each
+  one of these potential events, one has to imagine a bell that rings
+  randomly according to a Poisson process of parameter
+  $\lambda_r$. (This means that the time intervals between consecutive
+  ringings are drawn independently from an exponential distribution of
+  parameter $\lambda_r$.) All these Poisson processes are gathered in
+  a random variable $\Sigma$ that we call \emph{schedule}. It features
+  the sequence of ring times for every bell and plays the same role as
+  the variable $\vec{u}$ in Pearl's construction.
+\item Then, a simulation trace can be viewed as a deterministic
+  function of $\Sigma$: starting with the initial mixture and
+  advancing in time, every time a bell rings, its associated potential
+  event $e$ transforms the current mixture $m$ if
+  $\TRIGGERABLE{m}{e}$. For example, if the bell labeled
+  \textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings on
+  the mixture of Figure~\ref{fig:mixture}, then a bond is created
+  between these two agents. However, if the bell labeled
+  \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}' rings on
+  the same mixture, nothing happens. We write $T(\sigma)$ the
+  particular trace generated from schedule $\sigma$ and
+  $T = T(\Sigma)$.
+\end{inparaenum}
+
 
 We can extend this viewpoint to include interventions. For an
 intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
 the same way as $T$, except that each time the bell associated to $e$
 rings at time $t$, we also require $\BLOCKED{\iota}{(e, t)}$ to be
 false for $e$ to trigger. Then, given an observed trace $\tau$, an
-intervention $\iota$ and a predicate $\psi$, we compute $\PCFST{}$
-according to Pearl's three-steps procedure: \ItAbduction{} we
-condition the distribution of $\Sigma$ on the observation that
-$T=\tau$, then \ItAction{} we alter the behavior of simulation with
-intervention $\iota$ and \ItPrediction{} we compute the probability of
-$\psi$ in the resulting setting. This results in the following
-definition.
+intervention $\iota$ and a predicate $\psi$,
+the probability of $\CFST{}$ can be computed according to Pearl's
+three-steps strategy: \ItAbduction{} condition the distribution of
+$\Sigma$ by the observation that $T=\tau$, then \ItAction{} alter
+the behavior of simulation with intervention $\iota$ and
+\ItPrediction{} compute the probability of $\psi$ in the resulting
+setting. This results in the following definition.
 
 \begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
   For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
@@ -108,6 +121,9 @@ definition.
     predicate $\psi$ would have been true''} is defined as:
   \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}) \ |\ T = \tau}. \]
 \end{definition}
+
+
+
 
 \subsection{The counterfactual resimulation algorithm}
 \label{subsec:cosim-algo}
@@ -118,7 +134,7 @@ $\CFST{}$ by sampling instances of the random
 variable $\CTRAJ{}$. Such instances are called \emph{counterfactual
   traces}. Intuitively, they give an account of what else trace $\tau$
 could have been had intervention $\iota$ happened.  We introduce
-Algorithm~\ref{alg:cosimulation} a variation of Doob-Gillespie's
+Algorithm~\ref{alg:cosimulation} a variation of the Doob-Gillespie's
 algorithm to sample a counterfactual trace efficiently given a
 reference trace $\tau$ and an intervention $\iota$.  We call it
 \emph{counterfactual resimulation} algorithm, since it works by going
@@ -126,9 +142,6 @@ through every event of $\tau$, resimulating only those parts of $\tau$
 that are remotely affected by $\iota$. In particular, when $\iota$ is
 the trivial intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it
 outputs $\tau$ with no modification.
-
-
-
 
 
 This algorithm relies on a modified notion of activity we call
@@ -143,7 +156,7 @@ mixture $m$ relative to $m_0$ is then defined as the product
 $\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of
 the system, $\alpha'(m, m_0)$, is the sum of all divergent
 activities. Finally, we use the notation $\TSTATE{t}{\tau}$ to refer
-to the mixture at time $t$, which obtains from the initial mixture
+to the mixture at time $t$, which is obtained from the initial mixture
 after updating it for each event in turn up to time $t$ in $\tau$.
 
 \input{algos/cosimulation}
@@ -163,74 +176,17 @@ the time interval $I$''.
     \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
   \]
 \end{theorem}
-\noindent Indeed, at every iteration of
-Algorithm~\ref{alg:cosimulation}, the divergent activity $\alpha'$
-determines the probability that a ``counterfactual event'' triggers
-before the time of the next event in $\tau$ (test of line
-\ref{cosim:cev}).  A proof of Theorem~\ref{thm:div-activity} is
-available Appendix~\ref{ap:div-activity}.
+\noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the
+divergent activity $\alpha'$ determines the probability that an event
+happens in the counterfactual trace prior to the next event in the
+factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of
+Theorem~\ref{thm:div-activity} is given in
+Appendix~\ref{ap:div-activity}.
 
 
-
-
-\subsection{Using counterfactual resimulation in practice}
-\label{subsec:cosim-practice}
-
-Returning to our example, let's see how we can use counterfactual
-resimulation to improve our understanding of the typical causal
-narrative leading to the phosphorylation of a substrate. First, how
-may one come to suspect that the narrative that is shown
-Figure~\ref{fig:dumb-story} is incomplete \textit{a priori} ? And
-then, how should one know what interventions might be worth trying in
-order to discover some additional causal structure through
-counterfactual resimulation?
-
-There is no perfect answer here but there are heuristics we can
-use. In our example, one may notice by running repeated simulations
-that when rule $p$ triggers, the kinase involved is very likely to be
-phosphorylated. The fact that the causal narrative
-Figure~\ref{fig:dumb-story} does not provide any insight into this
-phenomenon is a sign that we should investigate whether it is
-an accidental correlation or revealing of an unknown causal effect. In
-order to do so, it is natural to intervene by blocking the last event
-phosphorylating the kinase involved in $p$ in sampled traces. More
-generally, when
-\begin{inparaenum}[(i)]
-\item an event $e$ in a candidate causal narrative is executed
-  unusually often in a context which is more specific than what is
-  required by the left-hand side of the associated rule and
-\item this effect cannot be explained by the action of other events in
-  the same causal narrative,
-\end{inparaenum}
-\textit{then} exploring counterfactual traces in which we block the last event
-responsible for at least a part of the unexplained context in the
-triggering a $e$ is likely to be worthwhile.
-
-In our example, this heuristic suggests that we should block the last
-event responsible for the phosphorylation of the kinase before the
-substrate gets phosphorylated itself in sampled traces. For the
-particular case of \RefTrace{} of
-section~\ref{sec:example}, we ask: how likely is it that ``$p$ would
-have happened had $pk$ not happened'' ?  This can be translated
-literaly in the question of evaluating $\mathbf{P}(\CFST{})$ where
-\begin{inparaenum}[(i)]
-  % \item $\tau$ is trace~(\ref{example-trace})
-\item $\BLOCKED{\iota}{e'} = (e = pk)$ and
-\item $\psi[\tau'] = (p \in \tau')$.
-\end{inparaenum}
-This choice of $\iota$ and $\psi$ is reasonable most of the
-time but some variations may be prefered occasionally. For example, if
-the rule $pk$ for phosphorylating is very fast, blocking only a single
-instance of the potential event associated with $pk$ may not have a
-very large effect as a new instance would trigger almost immediately
-after in most counterfactual traces, cancelling the effect of the
-intervention.  In this case, it is useful to make $\iota$ block every
-instance of the potential event associated with $pk$ in a defined
-timeframe.
-
-Sampling counterfactual traces repeatedly for
-\RefTrace{} would reveal that ``event $p$ would not
+Returning to our running example, sampling counterfactual traces
+repeatedly for \RefTrace{} would reveal that ``event $p$ would not
 have happened had $pk$ not happened'' with very high probability.
 However, we can go further by using counterfactual traces to
-\textit{explain} this influence using both activation and inhibition
+\textit{explain} this influence using enablement and prevention
 arrows.
