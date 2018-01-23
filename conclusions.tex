@@ -1,12 +1,28 @@
 \section*{Conclusions}
 
-We have proposed a new way to generate causal explanations in Kappa
-based on counterfactual reasoning, in which causal explanation are
-augmented by including inhibition between events. By leveraging the
-Kappa stochastic simulator for co-simulation, we expect this technique
-to increase the sensitivity of explanatory accounts to kinetics.
+This paper proposes a methodology (and implementation) for giving meaning to counterfactual statements in the spirit of approaches based on structural equation models (SEMs) but in contexts where SEMs are not directly applicable. The case in point are rule-based models deployed with the goal of studying how a specific set of combinatorial and concurrent interactions underlie a complex process. Such problems are rampant in molecular systems biology. 
 
-Future work will investigate how this approach interacts with trace
-compression \cite{DBLP:conf/fsttcs/DanosFFHH12} and establish
-heuristics to determine which counterfactual interventions are worth
-attempting on a given reference trace.
+Structural equations represent explicitly (for example in terms of a
+factor graph) aspects of the causal structure of a system. Yet, for
+rule-based models that structure is implicit and has first to be
+revealed. We argue that counterfactual statements play an important
+role to this end. The challenge, then, is to give a semantics to
+counterfactual statements when, unlike in SEM approaches, no explicit
+causal structure is available to begin with. We break that impasse by
+proposing a technique we call counterfactual simulation that is
+cognate to the idea of counterfactual experiments in SEM. Using
+counterfactual simulation, we show that causally explanatory diagrams
+involving relations of enablement and prevention between events can be
+constructed.
+
+Our method leaves open many questions regarding best practices, which
+we hope to address in future work. Such issues depend on the
+availability of empirically meaningful models. On a more conceptual
+side, we wonder whether explanatory diagrams, such as
+Figure~\ref{fig:cex}, constructed via counterfactual experiments as we
+define them here might constitute a basis for obtaining structural
+equations from complex models. These equations would always be
+relative to an outcome of interest defined at the outset. Replacing a
+rule-based model with such equations could enable targeted statistical
+analysis to estimate model parameters, for which simulations would be
+too expensive.
