@@ -4,7 +4,7 @@
 
 module Main where
 
-import Diagrams.Prelude
+import Diagrams.Prelude hiding (Linear)
 import Diagrams.Backend.SVG
 import Diagrams.Backend.SVG.CmdLine
 
@@ -27,7 +27,7 @@ textRule = renderText 1.0
 
 textAgent = renderText 0.8
 
-textId = renderText 0.65
+textId = renderText 0.7
 
 --------------------------------------------------------------------------------
 
@@ -149,17 +149,46 @@ labelBy d t =
     env = square 0.8
   
 
-mixture :: Diagram B
-mixture =
-  rotateBy (1/16) block1 ||| strutX 0.6  |||  rotateBy (-1/16) block2
+data MixtureOptions = Linear | Compact | Standard deriving Eq
+
+mixture :: MixtureOptions -> Diagram B
+mixture opts =
+  case opts of
+    Linear -> linear
+    Compact -> compact
+    Standard -> standard
+    
   where
-    block1 = duo (agS True (Just False) `labelBy` "1")
-                 (agK True (Just True)  `labelBy` "2")
-             # bondSK
-    block2 = atPoints (triangle 4.7 # rotateBy (-1/4)) elts2
-    elts2 = [ rotateBy (1/8) (agS True (Just True) `labelBy` "3"),
-              agK True (Just False) `labelBy` "4",
-              agS True (Just False) `labelBy` "5" ]
+
+    -- Elementary bricks    
+    ag1 = agS True (Just False) `labelBy` "1"
+    ag2 = agK True (Just True)  `labelBy` "2"
+    ag3 = agS True (Just True)  `labelBy` "3"
+    ag4 = agK True (Just False) `labelBy` "4"
+    ag5 = agS True (Just False) `labelBy` "5"
+    block1 = duo ag1 ag2 # bondSK
+
+    -- Full version
+    standard = rotateBy (1/16) block1 ||| strutX 0.6 ||| rotateBy (-1/16) block2
+      where
+        elts2 = [ rotateBy (1/8) ag3, ag4, ag5 ]
+        block2 = atPoints (triangle 4.7 # rotateBy (-1/4)) elts2
+        
+    -- Compact version
+    compact = rotateBy (1/rot) block1 ||| strutX 1.2 ||| rotateBy (0/rot) block2
+      where
+        rot = 25
+        elts2 = [ rotateBy (-1/rot) ag3,
+                  rotateBy (-1/rot) ag4,
+                  rotateBy (1/rot) ag5 ]
+        h = 2.0
+        w = 8
+        sep = 0.7
+        block2 = atPoints [p2 (0,h), p2 (w/2,0), p2 (w-sep,h)] elts2
+
+    -- linear version
+    linear = hsep 1.3 [ block1, ag3, ag4, ag5]
+     
 
 --------------------------------------------------------------------------------
 
@@ -169,6 +198,8 @@ renderDiag f d =
 
 main = do
   renderDiag "model.svg" model
-  renderDiag "cpats.svg" cpats
+  --renderDiag "cpats.svg" cpats
   renderDiag "signature.svg" signature
-  renderDiag "mixture.svg" mixture
+  renderDiag "mixture.svg" (mixture Standard)
+  renderDiag "mixture-compact.svg" (mixture Compact)
+  renderDiag "mixture-linear.svg" (mixture Linear)

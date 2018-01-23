@@ -11,7 +11,16 @@
 %\reviewtrue
 \reviewfalse
 
+\newif\ifshort
+\shorttrue
+%\shortfalse
+
 \newcommand{\noreview}[1]{\ifreview \else #1 \fi}
+\newcommand{\longversion}[1]{\ifshort \else #1 \fi}
+\newcommand{\tryinline}[1]{
+  \ifshort $\ensuremath{#1}$ 
+  \else \[\ensuremath{#1}\] 
+  \fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

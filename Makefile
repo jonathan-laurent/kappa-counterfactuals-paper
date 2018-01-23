@@ -17,8 +17,7 @@ $(MAIN).pdf : $(MAIN).tex $(TEX) $(DOT)
 .PHONY: diagrams
 diagrams :
 	cd diagrams ; make
-	cp diagrams/model.pdf figures/model.pdf
-	cp diagrams/mixture.pdf figures/mixture.pdf
+	cp diagrams/*.pdf figures/
 
 .PHONY: clean
 clean:

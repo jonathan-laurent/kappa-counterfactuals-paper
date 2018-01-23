@@ -85,7 +85,7 @@ identifiers assigned by $\xi$ exist in $m$ and the agents bearing them
 match $\RLHS{r}$. In this case, we write $\TRIGGERABLE{m}{(r, \xi)}$
 (read ``$m$ admits $(r, \xi)$") and $\xi$ is called an
 \emph{embedding} of $\RLHS{r}$ into $m$:
-\[\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}.\]
+\tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}.}
 Whenever $m \vdash (r, \xi)$, we write $m'=\UPDATE{m}{(r, \xi)}$ for
 the mixture $m'$ obtained by executing $(r, \xi)$, i.e.\@ by rewriting
 the agents with identifiers in the codomain of $\xi$ into $\RRHS{r}$.
@@ -118,7 +118,7 @@ kappalanguage.org}. The algorithm outputs a sequence of (realized)
 defined as a pair $(e, t)$ with $e$ a potential event and $t$ its time
 of occurrence.
 
-\input{algos/gillespie}
+\longversion{\input{algos/gillespie}}
 
 \subsection{Where existing analysis falls short}
 \label{subsec:dumb-story}

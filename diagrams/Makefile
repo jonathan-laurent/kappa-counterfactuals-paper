@@ -1,4 +1,4 @@
-DIAGS=model cpats mixture
+DIAGS=model  mixture mixture-compact mixture-linear
 SVGS=$(DIAGS:%=%.svg)
 PDFS=$(DIAGS:%=%.pdf)
 

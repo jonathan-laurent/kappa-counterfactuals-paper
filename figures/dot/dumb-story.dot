@@ -1,6 +1,6 @@
 digraph {
     graph [ranksep=0.3];
-    node [fontname="CMU Typewriter Text", label="\N", fontsize=12];
+    node [fontname="CMU Typewriter Text", label="\N", fontsize=13];
     edge [arrowhead=vee];
 
     graph [rankdir="LR"]
