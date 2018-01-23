@@ -5,6 +5,16 @@
 \pdfpageheight=11in
 \usepackage{ijcai18}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newif\ifreview
+%\reviewtrue
+\reviewfalse
+
+\newcommand{\noreview}[1]{\ifreview \else #1 \fi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Use the postscript times font!
 \usepackage{times}
 \usepackage{xcolor}
@@ -43,6 +53,10 @@
   Rule-Based Models
 }
 
+\ifreview
+\author{Anonymous authors}
+%\setlength\titlebox{2in}
+\else
 \author{
   Jonathan Laurent$^1$,
   Jean Yang$^1$,
@@ -56,6 +70,8 @@
   % jyang2+@cs.cmu.edu, \ 
   walter\_fontana@hms.harvard.edu
 }
+\fi
+
 % \setlength\titlebox{2.5in}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,16 +89,20 @@
 \input{cosimulation}
 \input{inhibition}
 %\input{conclusions}
+
+\ifreview
+\else
 \input{acknowledgments}
 \input{appendices}
 \input{practical_cosim}
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % The file named.bst is a bibliography style 
 % file for BibTeX 0.99c
-\nocite{*}
-\bibliographystyle{named}
+\nocite{Halpern2005,lewis2000causation,Lewis1973}
+lewis2000causation\bibliographystyle{named}
 \bibliography{ijcai18}
 
 \end{document}
