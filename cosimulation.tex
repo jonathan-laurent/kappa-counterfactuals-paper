@@ -10,7 +10,6 @@
 \section{Evaluating counterfactual
   statements}\label{sec:counterfactual}
 
-
 In the context of our toy model, the counterfactual statement we must
 assess is: ``If $pk$ had not happened, $p$ would not have happened."
 Our account in the previous section suggests that $pk$ played a role,
@@ -25,46 +24,44 @@ the system attained in $\tau$ just before event $pk$ happened, but in
 which we skip over $pk$ and then run an unconstrained simulation from
 that point onward. In this approach traces would quickly diverge from
 the original, distorting the causal role that $pk$ played
-\emph{specifically} in it. The question here is not what causal role
-$pk$ \emph{can} play in principle, but what role it actually
-\emph{did} play in $\tau$. In this sense, counterfactual statements
+specifically in it. The question here is not what causal role
+$pk$ can play in principle, but what role it actually
+did play in $\tau$. In this sense, counterfactual statements
 are undetachable from the context in which they are formulated.
 
 Pearl's standard account of counterfactual statements
 \cite{pearl2009causality} is based on performing \textit{``surgical
-  interventions''} on structural equation models. Such a model
-features a finite sequence $(x_1, \dots, x_n)$ of variables. To each
-variable $x_i$ is associated a \emph{functional equation} of the form
+  interventions''} on a structural equation model (SEM). A SEM
+features a finite sequence $(x_1, \dots, x_n)$ of variables, each
+associated to a \emph{functional equation} of the form
 $x_i = f_i(x_1, \dots, x_{i-1}, u_i)$, where $f_i$ is a deterministic
 function and $u_i$ is a random variable. Ideally, each $f_i$ defines
 an independent and autonomous physical mechanism. This is partially
-enforced by the requirement that the $(u_i)_i$ must be mutually
-independent (Markovian hypothesis). Then, given some observation $e$,
+enforced by the requirement that the $u_i$ must be mutually
+independent. Given some observation $e$,
 the probability of the counterfactual statement ``had $x_j$ been equal
-to $a$, $\psi$ would have been be true'' can be evaluated following a
+to $a$, $\psi$ would have been be true'' is evaluated following a
 three-steps process:
 \begin{inparaenum}[]
-\item \ItAbduction{} compute the distribution $p_e$ of possible values
+\item \ItAbduction{} compute the distribution $p_e$ of values
   for $\vec u$ given observation $e$, then
 \item \ItAction{} intervene in the model by replacing the defining
   equation for $x_j$ by ``$x_j = a$'' and finally
 \item \ItPrediction{} compute the probability that $\psi$ is true in
-  this new model when $\vec{u}$ is distributed along $p_e$.
+  this new model when $\vec{u}$ is distributed according to $p_e$.
 \end{inparaenum}
 
 Because traces generated from rule-based models do not have a natural
 encoding in terms of structural equations, Pearl's construction does
-not apply straightforwardly in our case. The solution we are about to
-propose remains faithful to it though.
-
+not apply straightforwardly in our case.
 
 \subsection{A semantics for counterfactuals}
 \label{subsec:counterfactuals-semantics}
 
 An intervention $\iota$ prevents the occurrence of selected events. It
 is defined by a predicate $\BLOCKED{\iota}{\cdot}$ ranging over
-events. (Our framework can accomodate a much broader range of
-interventions, but we make this restriction for ease of exposition.)
+events. \longversion{(Our framework can accomodate a much broader range of
+interventions, but we make this restriction for ease of exposition.)}
 Given a predicate $\psi$ over traces, we write the statement
 \textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
   would have been true''} as $\CFST{}$.
@@ -78,39 +75,38 @@ be done as follows:
   maps into a large enough set of global identifiers. If no rule
   creates a new agent, as we shall assume for the sake of simplicity,
   those global identifiers are given by the initial mixture. For each
-  one of these potential events, one has to imagine a bell that rings
-  randomly according to a Poisson process of parameter
-  $\lambda_r$. (This means that the time intervals between consecutive
-  ringings are drawn independently from an exponential distribution of
-  parameter $\lambda_r$.) All these Poisson processes are gathered in
+  one of these potential events, imagine a bell that rings
+ according to a Poisson process of parameter
+  $\lambda_r$, i.e.\@ the time intervals between consecutive
+  ringings are drawn independently from an exponential distribution with
+  parameter $\lambda_r$. These Poisson processes are all gathered in
   a random variable $\Sigma$ that we call \emph{schedule}. It features
   the sequence of ring times for every bell and plays the same role as
-  the variable $\vec{u}$ in Pearl's construction.
-\item Then, a simulation trace can be viewed as a deterministic
+  the variable $\vec{u}$ in a SEM.
+\item A simulation trace can be viewed as a deterministic
   function of $\Sigma$: starting with the initial mixture and
-  advancing in time, every time a bell rings, its associated potential
+  moving through time, whenever a bell rings, its associated potential
   event $e$ transforms the current mixture $m$ if
-  $\TRIGGERABLE{m}{e}$. For example, if the bell labeled
-  \textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings on
-  the mixture of Figure~\ref{fig:mixture}, then a bond is created
-  between these two agents. However, if the bell labeled
-  \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}' rings on
-  the same mixture, nothing happens. We write $T(\sigma)$ the
+  $\TRIGGERABLE{m}{e}$. For example, if the current mixture $m$ is given as in 
+  Figure~\ref{fig:mixture} and the bell labeled
+  \textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings, then a bond is created
+  between these two agents. However, the bell labeled
+  \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}' would have no effect 
+  on $m$. We write $T(\sigma)$ the
   particular trace generated from schedule $\sigma$ and
   $T = T(\Sigma)$.
 \end{inparaenum}
 
-
-We can extend this viewpoint to include interventions. For an
+We extend this viewpoint to include interventions. For an
 intervention $\iota$, we define the altered trace $\ATRAJ{}$ much in
 the same way as $T$, except that each time the bell associated to $e$
 rings at time $t$, we also require $\BLOCKED{\iota}{(e, t)}$ to be
-false for $e$ to trigger. Then, given an observed trace $\tau$, an
+false for $e$ to be executed.  Given an observed trace $\tau$, an
 intervention $\iota$ and a predicate $\psi$,
-the probability of $\CFST{}$ can be computed according to Pearl's
+the probability of $\CFST{}$ can now be computed according to Pearl's
 three-steps strategy: \ItAbduction{} condition the distribution of
 $\Sigma$ by the observation that $T=\tau$, then \ItAction{} alter
-the behavior of simulation with intervention $\iota$ and
+the behavior of the simulation with intervention $\iota$ and
 \ItPrediction{} compute the probability of $\psi$ in the resulting
 setting. This results in the following definition.
 
@@ -122,27 +118,23 @@ setting. This results in the following definition.
   \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}) \ |\ T = \tau}. \]
 \end{definition}
 
-
-
-
 \subsection{The counterfactual resimulation algorithm}
 \label{subsec:cosim-algo}
 
-Following Definition~\ref{def:counterfactuals}, we can estimate the
+Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement
 $\CFST{}$ by sampling instances of the random
-variable $\CTRAJ{}$. Such instances are called \emph{counterfactual
+variable $\CTRAJ{}$. Such instances are \emph{counterfactual
   traces}. Intuitively, they give an account of what else trace $\tau$
 could have been had intervention $\iota$ happened.  We introduce
-Algorithm~\ref{alg:cosimulation} a variation of the Doob-Gillespie's
-algorithm to sample a counterfactual trace efficiently given a
-reference trace $\tau$ and an intervention $\iota$.  We call it
-\emph{counterfactual resimulation} algorithm, since it works by going
+Algorithm~\ref{alg:cosimulation}, a variation of the Doob-Gillespie
+algorithm, to sample a counterfactual trace efficiently given a
+reference trace $\tau$ and an intervention $\iota$. We call it
+\emph{counterfactual resimulation}, since it works by going
 through every event of $\tau$, resimulating only those parts of $\tau$
-that are remotely affected by $\iota$. In particular, when $\iota$ is
+that are affected by $\iota$. In particular, when $\iota$ is
 the trivial intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it
-outputs $\tau$ with no modification.
-
+returns $\tau$.
 
 This algorithm relies on a modified notion of activity we call
 \emph{divergent activity}. We define the set of \emph{divergent
@@ -152,23 +144,25 @@ and relative to $m_0$ as
 Equivalently, a divergent embedding is an embedding whose codomain
 features a \emph{divergent site}, that is, a site whose state differs
 across $m$ and $m_0$. The {divergent activity} of a rule $r$ in
-mixture $m$ relative to $m_0$ is then defined as the product
+mixture $m$ relative to $m_0$ is then the product
 $\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of
 the system, $\alpha'(m, m_0)$, is the sum of all divergent
 activities. Finally, we use the notation $\TSTATE{t}{\tau}$ to refer
-to the mixture at time $t$, which is obtained from the initial mixture
-after updating it for each event in turn up to time $t$ in $\tau$.
+to the mixture at time $t$ in $\tau$\longversion{, which is obtained
+  from the initial mixture after updating it for each event in turn up
+  to time $t$ in $\tau$}.
+
 
 \input{algos/cosimulation}
 
-The role and relevance of the concept of divergent activity in the
-counterfactual resimulation algorithm can be summarized by the
-following theorem, where we write $\tau \cap I = \emptyset$ as a
-shortcut for the proposition ``no event of trace $\tau$ triggers in
+The role and relevance of the concept of divergent activity in
+counterfactual resimulation is summarized by the
+following theorem, where $\tau \cap I = \emptyset$ is a
+shortcut for the proposition ``no event of trace $\tau$ occurs in
 the time interval $I$''.
 \begin{theorem}[Property of the divergent activity]\label{thm:div-activity}
-  Let $\tau$ a trace
-  and $\iota$ an intervention. Let $I = (t, t+\delta)$ a time interval
+  For $\tau$ a trace
+  and $\iota$ an intervention, let $I = (t, t+\delta)$ be a time interval
   such that $\tau \cap I = \emptyset$ and $m_0 =
   \TSTATE{t}{\tau}$. Then, we have
   \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
@@ -182,7 +176,6 @@ happens in the counterfactual trace prior to the next event in the
 factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of
 Theorem~\ref{thm:div-activity} is given in
 Appendix~\ref{ap:div-activity}.
-
 
 Returning to our running example, sampling counterfactual traces
 repeatedly for \RefTrace{} would reveal that ``event $p$ would not

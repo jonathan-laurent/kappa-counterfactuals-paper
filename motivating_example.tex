@@ -6,10 +6,6 @@ In this section, we provide some background on the Kappa language and
 introduce a toy example motivating the need for counterfactual
 reasoning in analyzing the causal structure of simulation traces.
 
-% Maybe we should say a few eords here about what the model is about
-% so that the reader is not shocked by the use of the word
-% phosphorylation"
-
 \subsection{Some background on Kappa}\label{sec:background}
 
 Proteins are complex molecular machines that interact with one another
@@ -19,8 +15,7 @@ physical inputs. These interactions consist in, roughly, tagging and
 un-tagging each other with molecular flags and binding and un-binding
 each other to form transient associations. In this way, proteins come
 to have ``state" that can control the interactions they engage
-in. Each kind of protein is usually present in several copies, that
-is, proteins have an abundance.
+in. Each kind of protein is usually present in several to many copies.
  
 In Kappa, a protein is modeled as an abstract \emph{agent} with a name
 that designates its \emph{type} and a signature of distinguishable
@@ -38,36 +33,36 @@ $S$. Agents of both types feature a binding site at which they can
 bind one another and a site that can be in one of two possible states:
 \emph{unphosphorylated} or \emph{phosphorylated}. Thus, agents of type
 $K$ also have a phosphorylation state, but for the sake of simplicity
-we will have them acquire it ``spontaneously", as specified below.
+we will have them acquire it ``spontaneously".
 
 A \emph{mixture} is a multiset of agents whose state at each site is
 fully specified. A mixture represents the state of a system and can be
 thought of as a (potentially large) graph consisting of many connected
 components. In a mixture, agents of the same type are distinguished by
-a unique global identifier.
+a unique global identifier (Figure~\ref{fig:mixture}).
 
 \input{figures/mixture}
 
-As indicated in the Introduction, interactions between agents are
+Interactions between agents are
 modeled by local rewriting \emph{rules}.  A rule $r$ is defined by a
 triple $(\RLHS{r}, \RRHS{r}, \lambda_r)$, where $\RLHS{r}$ is the
 left-hand side specifying a pattern (the pre-condition), $\RRHS{r}$
-the right-hand side (or post-condition) and $\lambda_r$ a firing rate.
-The basic idea is that a ``location" at which $\RLHS{r}$ matches the
-mixture is rewritten in place by $\RRHS{r}$, thereby changing the
+the right-hand side (or post-condition), and $\lambda_r$ a firing rate.
+The basic idea is that the ``location" at which the
+mixture matches $\RLHS{r}$ is rewritten in place by $\RRHS{r}$, changing the
 state of the system. (Technically, a rule also requires a mapping from
 agents in $\RLHS{r}$ to agents in $\RRHS{r}$ to make the rewrite
 unambiguous.) By virtue of the $\lambda_r$, the rules of a model,
 together with an initial number of agents, constitute a dynamical
-system, to be defined shortly.
+system, which we defined shortly.
 
-Agents in our toy model are subject to the rules depicted in
+In our toy model, agents are subject to the rules depicted in
 Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates
 can bind each other provided their binding sites are free
 (unbound). Note that $\RLHS{b}$ of rule $b$ is a pattern: It omits
 mentioning the sites that carry phosphorylation state, which are
-therefore not considered when matching $\RLHS{b}$ to the
-mixture. Rules $u$ and $u^{*}$ define unbinding events that depend on
+therefore not considered when matching the
+mixture to $\RLHS{b}$. Rules $u$ and $u^{*}$ define unbinding events that depend on
 the phosphorylation state of the kinase $K$. The distinction is
 motivated by kinetics: Rule $u$ fires at a faster rate than $u^{*}$.
 Rule $p$ specifies that a substrate can be phosphorylated when it is
@@ -85,6 +80,7 @@ identifiers assigned by $\xi$ exist in $m$ and the agents bearing them
 match $\RLHS{r}$. In this case, we write $\TRIGGERABLE{m}{(r, \xi)}$
 (read ``$m$ admits $(r, \xi)$") and $\xi$ is called an
 \emph{embedding} of $\RLHS{r}$ into $m$:
+% (or a match of $m$ to $\RLHS{r}$)
 \tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}.}
 Whenever $m \vdash (r, \xi)$, we write $m'=\UPDATE{m}{(r, \xi)}$ for
 the mixture $m'$ obtained by executing $(r, \xi)$, i.e.\@ by rewriting
@@ -112,7 +108,7 @@ following steps:
 \end{inparaenum}
 This algorithm has a sophisticated implementation tuned for rule-based
 models in Kappa as described in
-\cite{DanosEtAl-APLAS07,BoutillierEK17}\noreview{; it is available at
+\cite{DanosEtAl-APLAS07,BoutillierEK17}\longversion{; it is available at
 kappalanguage.org}. The algorithm outputs a sequence of (realized)
 \emph{events}, called a \emph{trace}, where an event is formally
 defined as a pair $(e, t)$ with $e$ a potential event and $t$ its time
@@ -151,9 +147,8 @@ generate a causal account by first computing a \emph{sub-trace} of
   features $p$.
 \end{inparaenum}
 Relations of enablement among the events in the minimal sub-trace are
-then determined to yield a directed acyclic graph. Minimization is, in
-general, an NP-hard problem, although trivial in our toy
-example. Figure~\ref{fig:dumb-story} depicts the explanation graph for
+then determined to yield a directed acyclic graph. Minimization is an NP-hard problem, although trivial in our toy
+example. Figure~\ref{fig:dumb-story} depicts the resulting explanation graph for
 the occurrence of $p$. Note that, in the original trace, the first
 occurence of $b$ sets the necessary conditions for $p$, but these are
 subsequently undone by $u$ only for the second occurrence of $b$ to
@@ -188,5 +183,5 @@ this line of reasoning and introduce an algorithm for simulating
 counterfactual scenarios. In section~\ref{sec:inhibition}, we show how
 counterfactual dependencies between events can be systematically
 explained in terms of a combination of enablement and prevention
-arrows, leading to the explanation shown Figure~\ref{fig:cex}. 
+arrows, leading to the explanation shown in Figure~\ref{fig:cex}. 
 %for the counterfactual dependency between $p$ and $pk$ in our example.

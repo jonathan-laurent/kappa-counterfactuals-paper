@@ -29,13 +29,13 @@ trace to events in an associated counterfactual trace and vice versa.
 
 \paragraph{Remark on notation} Although we used the letter $e$ to
 denote potential events in previous sections, we use it to denote
-\emph{events} in this section. We write $\TIME{e}$ the time
-of occurence of event $e$. Finally, an event $e$ occuring at time $t$
-is said to be executable in trace $\tau$ if the associated potential
+\emph{events} in this section. We write $\TIME{e}$ the time of
+occurence of event $e$. Finally, an event $e$ occuring at time $t$ is
+said to be executable in trace $\tau$ if the associated potential
 event is executable in mixture $\TSTATE{t}{\tau}$.
 
 
-\subsection{Prevention in  counterfactual experiments}
+\subsection{Prevention in counterfactual experiments}
 \label{subsec:cex}\label{subsec:inhibition}
 
 A \textit{counterfactual experiment} is obtained by pairing a
@@ -64,15 +64,16 @@ prevention.
 \input{figures/cex}
 
 \begin{definition}[Enablement]
-  Let $\tau$ a trace and $e, e'$ two events in $\tau$.  We say that
+  Let $\tau$ be a trace and $e, e'$ two events in $\tau$.  We say that
   $e$ enables $e'$ if $e$ is the last event before $e'$ that modifies
   some site to the value it is tested for by $e'$.
 \end{definition}
 
 \begin{definition}[Prevention]
-  Let $(\tau, \iota, \tau')$ a counterfactual experiment. An event $e$
-  that occurs at time $t$ in $\tau$ is said to prevent an event $e'$
-  that occurs at time $t'$ in $\tau'$ if all of the following hold:
+  Let $(\tau, \iota, \tau')$ be a counterfactual experiment. An event
+  $e$ that occurs at time $t$ in $\tau$ is said to prevent an event
+  $e'$ that occurs at time $t'$ in $\tau'$ if all of the following
+  hold:
   \begin{inparaenum}[(1)]
   \item \label{inhibition:time} $t < t'$ ;
   \item \label{inhibition:breaks} there exists a site $s$ such that
@@ -95,7 +96,6 @@ three kinds of nodes:
 \end{inparaenum}
 % Edges consist in enablement and prevention arrows.
 
-
 As illustrated Figure~\ref{fig:cex}, the influence of $pk$ on $p$ in
 our example is mediated by the counterfactual event $u$. Such
 mediating events always exist, as stated by the following theorem.
@@ -109,31 +109,27 @@ mediating events always exist, as stated by the following theorem.
 \end{theorem}
 \noindent This theorem states that counterfactual dependencies can
 always be explained in terms of enablement and prevention relations
-between individual events. A proof is provided in
-Appendix~\ref{ap:completeness}. In our opinion, this is a powerful
-result, which establishes a bridge between two different visions of
-causality: the vision based on event structures
-\cite{winskel1986event} that is dominant in the concurrency community
-and the vision based on counterfactuals which is dominant in the
-causal inference community \cite{pearl2009causality}.
+between individual events. A proof is in
+Appendix~\ref{ap:completeness}. This result establishes a bridge
+between two different visions of causality: the vision based on event
+structures \cite{winskel1986event} that is dominant in the concurrency
+community and the vision based on counterfactuals which is dominant in
+the causal inference community \cite{pearl2009causality}.
 
 \subsection{Compression of counterfactual experiments}
 
-Counterfactual experiments that are produced using counterfactual
-resimulation are usually very large. They typically feature a lot of
-redundancy, including events that are irrelevant to the outcome of
-interest or futile cycles as discussed in
-section~\ref{subsec:dumb-story}. Therefore, a compression step is
-usually necessary before concise causal narratives can be extracted
-from them. The two traces composing a counterfactual experiment cannot
-be compressed separately following the procedure described in
-section~\ref{subsec:dumb-story} though. Indeed, once compressed
-separately, there is no guarantee that these two traces can still be
-generated from a unique schedule and therefore form a valid
-counterfactual experiment. Instead, compressing a
-counterfactual experiment consists in extracting a minimal \emph{valid}
-sub-experiment.
-
+Counterfactual experiments produced with counterfactual resimulation
+are usually very large. They typically feature a lot of redundancy,
+including events that are irrelevant to the outcome of interest or
+futile cycles as discussed in section~\ref{subsec:dumb-story}. A
+compression step is usually necessary before concise causal narratives
+can be extracted from such experiments. However, the two traces of a
+counterfactual experiment cannot be compressed separately following
+the procedure described in section~\ref{subsec:dumb-story}, as there
+is no guarantee that the compressed traces can still be generated from
+a unique schedule to form a valid counterfactual experiment. Instead,
+compressing a counterfactual experiment consists in extracting a
+minimal \emph{valid} sub-experiment.
 
 A counterfactual experiment $(\tau_1, \iota, \tau_1')$ is said to be a
 \emph{sub-experiment} of $(\tau_2, \iota, \tau_2')$ if $\tau_1$ is a
@@ -142,34 +138,32 @@ valid counterfactual experiments can be characterized as follows.
 
 \begin{proposition}%[Characterization of counterfactual experiments]
   \label{prop:valid-cex}
-  A triple $(\tau, \iota, \tau')$ is a valid counterfactual experiment if
-  and only if all of the following hold:
+  A triple $(\tau, \iota, \tau')$ is a valid counterfactual experiment
+  if and only if all of the following hold:
   \begin{inparaenum}[(1)]
   \item \label{valid-cex:valid-traces} both $\tau$ and $\tau'$ are
     valid traces ;
   \item \label{valid-cex:no-blocking} no event of $\tau'$ is blocked
     by $\iota$ ;
-  \item \label{valid-cex:co-occur} for every event $e \in \tau$
-    such that $e \notin \tau'$, then either $e$ is not
-    executable in $\tau'$ or $e$ is blocked by
-    $\iota$ ;
+  \item \label{valid-cex:co-occur} for every event $e \in \tau$ such
+    that $e \notin \tau'$, then either $e$ is not executable in
+    $\tau'$ or $e$ is blocked by $\iota$ ;
   \item \label{valid-cex:co-occur2} for every event $e' \in \tau'$
-    such that $e' \notin \tau$, then $e'$ is not triggerable in
-    $\tau$.
+    such that $e' \notin \tau$, then $e'$ is not executable in $\tau$.
   \end{inparaenum}
 \end{proposition}
 
-\noindent Then, compressing a counterfactual experiment consists
-in finding a minimal valid sub-experiment such that
+\noindent Compressing a counterfactual experiment consists in finding
+a minimal valid sub-experiment such that
 \begin{inparaenum}[(i)]
 \item the outcome of interest appears in the factual trace but not in
-the counterfactual trace and
+  the counterfactual trace and
 \item events that are blocked by $\iota$ or on which the outcome of
   interest was shown to be counterfactually dependent in previous
   analyses are kept in the factual trace.
 \end{inparaenum}
 Because these constraints along with the properties featured in
 Proposition~\ref{prop:valid-cex} can be encoded as boolean
-satisfiability constraints, then compressing a counterfactual
-experiment can be done using standard \textsc{sat}-solving techniques.
+satisfiability constraints, compressing a counterfactual experiment
+can be done using standard \textsc{sat}-solving techniques.
 
