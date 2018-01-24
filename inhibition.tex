@@ -2,15 +2,29 @@
 
 \section{Counterfactuals and prevention}\label{sec:inhibition}
 
+\ifshort
+
 The diagram shown Figure~\ref{fig:cex} extends the one in
 Figure~\ref{fig:dumb-story} and explains the counterfactual dependency
 between $pk$ and $p$ in \RefTrace{}. The dotted node corresponds to a
 \emph{counterfactual event}, which is absent from \RefTrace{}. It is
-related to \emph{factual} events by prevention arrows, which are
-displayed in red. These arrows can be read as follows: ``$pk$ prevents
-$u$, which would have prevented $p$''.  In this section, we give a
-precise semantics to such diagrams and discuss how they can be
-generated systematically.
+related to \emph{factual} events by prevention arrows, shown in
+red. These arrows can be read as follows: ``$pk$ prevents $u$, which
+prevents $p$''. In this section, we give a rigorous account of
+prevention by connecting events in a factual trace to events in a
+cognate counterfactual trace as produced by counterfactual
+resimulation, and vice versa.
+
+\else
+
+The diagram shown Figure~\ref{fig:cex} extends the one in
+Figure~\ref{fig:dumb-story} and explains the counterfactual dependency
+between $pk$ and $p$ in \RefTrace{}. The dotted node corresponds to a
+\emph{counterfactual event}, which is absent from \RefTrace{}. It is
+related to \emph{factual} events by prevention arrows, shown in
+red. These arrows can be read as follows: ``$pk$ prevents $u$, which
+prevents $p$''. In this section, we give a precise semantics to such
+diagrams and discuss how they can be generated systematically.
 
 As discussed in section~\ref{subsec:dumb-story}, a causal narrative
 like the one in Figure~\ref{fig:dumb-story} is generated from a trace,
@@ -25,6 +39,8 @@ them.  Our insight is to use counterfactual traces to give a rigorous
 account of prevention using arrows that connect events from a factual
 trace to events in an associated counterfactual trace and vice versa.
 
+\fi
+
 \ifshort \vspace{-0.45cm} \else \vspace{-0.3cm} \fi
 
 \paragraph{Remark on notation} Although we used the letter $e$ to
@@ -38,28 +54,23 @@ event is executable in mixture $\TSTATE{t}{\tau}$.
 \subsection{Prevention in counterfactual experiments}
 \label{subsec:cex}\label{subsec:inhibition}
 
-A \textit{counterfactual experiment} is obtained by pairing a
-\emph{factual} trace to a counterfactual counterpart. Formally, a
-counterfactual experiment is a triple $(\tau, \iota, \tau')$ for which
-there exists a schedule $\sigma$ such that $\tau = T(\sigma)$ and
-$\tau' = \ATRAJ{}(\sigma)$. Such triples are produced by
-counterfactual resimulation.
+A \textit{counterfactual experiment} is a triple
+$(\tau, \iota, \tau')$ for which there exists a schedule $\sigma$ such
+that $\tau = T(\sigma)$ and $\tau' = \ATRAJ{}(\sigma)$. Such triples
+are produced by counterfactual resimulation.
 
-Before we formalize enablement and prevention in the context of a
-counterfactual experiment, it is useful to define some vocabulary
-about what it means for an event to \emph{test} or \emph{modify} a
-site. Without loss of generality, we shall assume that sites on an
-agent can either be binding sites or tagged sites (sites carrying an
-internal state) but cannot have both functions. The \textit{value} of
-a tagged site in a mixture is defined as its current tag and the value
-of a binding site is either $\textsc{free}$ or $\textsc{bound-to}(s)$,
-where $s$ identifies another site in the mixture.  An event is said to
-\emph{modify} a site if it changes its value when executed. It is said
-to \emph{test} a site $s$ to value $v$ if the left-hand side of the
-associated rule requires $s$ to have value $v$ for it to be
-executable. For example, event $p$ in \RefTrace{} tests three sites
-and modifies one. We can now proceed in defining enablement and
-prevention.
+To formalize enablement and prevention we need to define some terms
+used in Kappa to talk about events. Without loss of generality, we
+shall assume that a site on an agent carry either a binding state or
+a tagging state but not both. The
+\textit{value} of a tagged site in a mixture is its current tag and
+the value of a binding site is either $\textsc{free}$ or
+$\textsc{bound-to}(s)$, where $s$ identifies another site in the
+mixture.  An event is said to \emph{modify} a site if it changes its
+value.  An event is said to \emph{test} a site $s$ for value $v$ if
+the left-hand side of the associated rule requires $s$ to have value
+$v$ for the event to be executable. For example, event $p$ in
+\RefTrace{} tests three sites and modifies one.
 
 \input{figures/cex}
 
@@ -158,9 +169,9 @@ a minimal valid sub-experiment such that
 \begin{inparaenum}[(i)]
 \item the outcome of interest appears in the factual trace but not in
   the counterfactual trace and
-\item events that are blocked by $\iota$ or on which the outcome of
+\item events that are blocked by $\iota$, or on which the outcome of
   interest was shown to be counterfactually dependent in previous
-  analyses are kept in the factual trace.
+  analyses, are kept in the factual trace.
 \end{inparaenum}
 Because these constraints along with the properties featured in
 Proposition~\ref{prop:valid-cex} can be encoded as boolean
