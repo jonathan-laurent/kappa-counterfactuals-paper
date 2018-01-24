@@ -2,20 +2,20 @@
 
 \section{Counterfactuals and prevention}\label{sec:inhibition}
 
-\ifshort
+% \ifshort
 
-The diagram shown Figure~\ref{fig:cex} extends the one in
-Figure~\ref{fig:dumb-story} and explains the counterfactual dependency
-between $pk$ and $p$ in \RefTrace{}. The dotted node corresponds to a
-\emph{counterfactual event}, which is absent from \RefTrace{}. It is
-related to \emph{factual} events by prevention arrows, shown in
-red. These arrows can be read as follows: ``$pk$ prevents $u$, which
-prevents $p$''. In this section, we give a rigorous account of
-prevention by connecting events in a factual trace to events in a
-cognate counterfactual trace as produced by counterfactual
-resimulation, and vice versa.
+% The diagram shown Figure~\ref{fig:cex} extends the one in
+% Figure~\ref{fig:dumb-story} and explains the counterfactual dependency
+% between $pk$ and $p$ in \RefTrace{}. The dotted node corresponds to a
+% \emph{counterfactual event}, which is absent from \RefTrace{}. It is
+% related to \emph{factual} events by prevention arrows, shown in
+% red. These arrows can be read as follows: ``$pk$ prevents $u$, which
+% prevents $p$''. In this section, we give a rigorous account of
+% prevention by connecting events in a factual trace to events in a
+% cognate counterfactual trace as produced by counterfactual
+% resimulation, and vice versa.
 
-\else
+% \else
 
 The diagram shown Figure~\ref{fig:cex} extends the one in
 Figure~\ref{fig:dumb-story} and explains the counterfactual dependency
@@ -34,21 +34,21 @@ Enablement arrows are easy to define in the context of a trace, and we
 give a formal definition in section~\ref{subsec:inhibition}.
 Prevention arrows are trickier because they must relate events that
 happened to events that did not. For this reason, previous
-work~\cite{DanosEtAl-CONCUR07} fails to provide a proper account of
-them.  Our insight is to use counterfactual traces to give a rigorous
-account of prevention using arrows that connect events from a factual
-trace to events in an associated counterfactual trace and vice versa.
+work~\cite{DanosEtAl-CONCUR07,DBLP:conf/fsttcs/DanosFFHH12} fails to
+provide a proper account of them.  Our insight is to use
+counterfactual traces to give a rigorous account of prevention using
+arrows that connect events from a factual trace to events in a
+cognate counterfactual trace and vice versa.
 
-\fi
+%\fi
 
-\ifshort \vspace{-0.45cm} \else \vspace{-0.3cm} \fi
+\ifshort \vspace{-0.4cm} \else \vspace{-0.3cm} \fi
 
-\paragraph{Remark on notation} Although we used the letter $e$ to
-denote potential events in previous sections, we use it to denote
-\emph{events} in this section. We write $\TIME{e}$ the time of
-occurence of event $e$. Finally, an event $e$ occuring at time $t$ is
-said to be executable in trace $\tau$ if the associated potential
-event is executable in mixture $\TSTATE{t}{\tau}$.
+\paragraph{Remark} The letter $e$ was used to denote potential events
+in previous sections. In this section, it denotes
+\emph{events}. An event $e$ occuring at time $t$ is said to be
+executable in trace $\tau$ if the associated potential event is
+executable in mixture $\TSTATE{t}{\tau}$.
 
 
 \subsection{Prevention in counterfactual experiments}
