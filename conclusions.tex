@@ -1,28 +1,74 @@
-\section*{Conclusions}
+% -*- TeX-master: "ijcai18.tex" -*-
 
-This paper proposes a methodology (and implementation) for giving meaning to counterfactual statements in the spirit of approaches based on structural equation models (SEMs) but in contexts where SEMs are not directly applicable. The case in point are rule-based models deployed with the goal of studying how a specific set of combinatorial and concurrent interactions underlie a complex process. Such problems are rampant in molecular systems biology. 
+\section*{Conclusions and future work}
 
-Structural equations represent explicitly (for example in terms of a
-factor graph) aspects of the causal structure of a system. Yet, for
-rule-based models that structure is implicit and has first to be
-revealed. We argue that counterfactual statements play an important
-role to this end. The challenge, then, is to give a semantics to
-counterfactual statements when, unlike in SEM approaches, no explicit
-causal structure is available to begin with. We break that impasse by
-proposing a technique we call counterfactual simulation that is
-cognate to the idea of counterfactual experiments in SEM. Using
-counterfactual simulation, we show that causally explanatory diagrams
-involving relations of enablement and prevention between events can be
-constructed.
+This paper proposes a methodology and implementation for giving
+meaning to counterfactual statements in stochastic rule-based
+graph-rewrite systems that have found application in molecular systems
+biology, although our method is not specific to such systems. A
+widespread approach to the analysis of counterfactuals is based on
+structural equation models (SEMs), which encode the causal structure
+of a system. The models we consider consist of many concurrently
+applicable rules that encode many local patterns of action, such as
+individual protein-protein interactions or chemical transformations. A
+graph representing the dependencies among all possible molecular
+observables in such a system would be of forbidding combinatorial
+complexity. It is, therefore, not obvious how to obtain an appropriate
+or a manageable SEM.
 
-Our method leaves open many questions regarding best practices, which
-we hope to address in future work. Such issues depend on the
-availability of empirically meaningful models. On a more conceptual
-side, we wonder whether explanatory diagrams, such as
-Figure~\ref{fig:cex}, constructed via counterfactual experiments as we
-define them here might constitute a basis for obtaining structural
-equations from complex models. These equations would always be
-relative to an outcome of interest defined at the outset. Replacing a
-rule-based model with such equations could enable targeted statistical
-analysis to estimate model parameters, for which simulations would be
-too expensive.
+Our approach defines a semantics for counterfactuals in such systems
+that is nonetheless very much along the lines of Halpern and Pearl
+\cite{pearl2009causality,halpern2016actual}, despite the absence of
+explicit structural equations. We proceed by modifying the
+continuous-time Monte Carlo algorithm that generates traces in
+rule-based models in such a way as to sample counterfactual
+trajectories that stay probabilistically as close to the original
+(factual) trajectory as an intervention causing divergence permits
+them to be. We then show how to construct causal diagrams that explain
+an outcome of interest in terms of enablement and prevention relations
+between events. Enablement is a standard causal relation between
+events within the factual or within the counterfactual traces, whereas
+prevention shows up as a relation between pairs of events, one in the
+factual and the other in the counterfactual trace. In particular,
+prevention can involve events that were not observed in the factual
+trace. This results in explanatory diagrams that resonate more with
+the ubiquitous presence of inhibitory interactions in biology.
+
+Despite a sound theoretical foundation and an effective implementation
+based on a state-of-the-art simulator for rule-based models
+\cite{DanosEtAl-APLAS07,BoutillierEK17}, our technique is in need of
+rigorous practical assessment using large-scale models. However, such
+evaluation requires first addressing difficult practical
+questions. Most notably, which counterfactual experiments are worth
+trying? It is entirely unclear a priori which interventions are
+informative for traces that include many millions of events. At
+present, we can only offer tentative directions for future study. One
+way to proceed is by developing heuristics, such as identifying
+correlations between events in samples of factual traces (or in a
+single long trace). In our toy model, the occurrence of $p$ is often
+preceded by the occurrence of $pk$. This correlation, together with
+the absence of $pk$ from some initial causal account---such as the one
+presently achievable in a fully automated fashion based on enablement
+alone, (Figure~\ref{fig:dumb-story}---suggests to try a counterfactual
+experiment on $pk$. More generally, if
+\begin{inparaenum}[(i)]
+\item a context $\mathcal C$ in which an event $e$ occurs is
+  frequently more specific than is required by the left-hand side of
+  the underlying rule and
+\item this observation cannot be explained by the current causal
+  narrative,
+\end{inparaenum} then a counterfactual experiment in
+which we block the last event responsible for at least part of
+$\mathcal C$ seems worthwhile in order to assess whether the current
+causal narrative needs to be updated. In our toy example we are led to
+evaluate whether $\mathbf{P}(\CFST{})$ with
+$\BLOCKED{\iota}{e'} = (e = pk)$ and $\psi[\tau'] = (p \in
+\tau')$. But difficulties do not end here. This particular choice of
+$\iota$ and $\psi$ may not be useful if rule $pk$ has high activity,
+for example because agents of type $K$ are present in the system with
+high abundance. Blocking a single $pk$ event might not have much of an
+effect, as the same underlying rule would immediately trigger again,
+cancelling the effect of the intervention.  In this case, $\iota$
+could consist in blocking every instance of the potential event
+associated with $pk$, i.e.\@ ``knocking out" rule $pk$, for a defined
+timeframe.
