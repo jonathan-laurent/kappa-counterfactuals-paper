@@ -153,7 +153,6 @@ to the mixture at time $t$ in $\tau$\longversion{, which is obtained
   from the initial mixture after updating it for each event in turn up
   to time $t$ in $\tau$}.
 
-
 \input{algos/cosimulation}
 
 The role and relevance of the concept of divergent activity in
@@ -176,7 +175,15 @@ divergent activity $\alpha'$ determines the probability that an event
 happens in the counterfactual trace prior to the next event in the
 factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of
 Proposition~\ref{prop:div-activity} is given in
-Appendix~\ref{ap:div-activity}.
+Appendix~\ref{ap:div-activity}. It is the main step
+in establishing the correctness of counterfactual resimulation.
+
+\begin{theorem}%[Correctness of counterfactual resimulation]
+  The counterfactual resimulation algorithm correctly
+  samples instances of $\,\CTRAJ{}$.
+  %as defined in
+  %section~\ref{subsec:counterfactuals-semantics}.
+\end{theorem}
 
 Returning to our running example, sampling counterfactual traces
 repeatedly for \RefTrace{} would reveal that ``event $p$ would not
