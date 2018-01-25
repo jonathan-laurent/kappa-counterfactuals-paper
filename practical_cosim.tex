@@ -1,4 +1,4 @@
-\section{Practical use of  counterfactual resimulation}
+\section{Practical use of counterfactual resimulation}
 \label{sec:cosim-practice}
 
 Our approach raises some practical questions. How do we know that a
@@ -21,12 +21,14 @@ experiment on $pk$. More generally, if
 then a counterfactual experiment in which we block the last event
 responsible for at least part of $\mathcal C$ seems worthwhile in
 order to assess whether the current causal narrative needs to be
-updated. In our toy example we are led to evaluate whether
+updated.  In our toy example we are led to evaluate whether
 $\mathbf{P}(\CFST{})$ with $\BLOCKED{\iota}{e'} = (e = pk)$ and
-$\psi[\tau'] = (p \in \tau')$. However, this choice of $\iota$ and
-$\psi$ may not be useful if rule $pk$ has high activity. Blocking a
-single event occurrence might not have much of an effect, as the same
-rule would immediately trigger again, cancelling the effect of the
-intervention.  In this case, $\iota$ could consist in blocking every
-instance of the potential event associated with $pk$, i.e.\@
-``knocking out" rule $pk$, in a defined timeframe.
+$\psi[\tau'] = (p \in \tau')$. But difficulties do not end here. This
+particular choice of $\iota$ and $\psi$ may not be useful if rule $pk$
+has high activity, for example because agents of type $K$ are present
+in the system with high abundance. Blocking a single $pk$ event might
+not have much of an effect, as the same underlying rule would
+immediately trigger again, cancelling the effect of the intervention.
+In this case, $\iota$ could consist in blocking every instance of the
+potential event associated with $pk$, i.e.\@ ``knocking out" rule
+$pk$, for a defined timeframe.

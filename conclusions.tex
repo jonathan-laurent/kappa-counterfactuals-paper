@@ -13,8 +13,7 @@ applicable rules that encode many local patterns of action, such as
 individual protein-protein interactions or chemical transformations. A
 graph representing the dependencies among all possible molecular
 observables in such a system would be of forbidding combinatorial
-complexity. It is, therefore, not obvious how to obtain an appropriate
-or a manageable SEM.
+complexity.
 
 Our approach defines a semantics for counterfactuals in such systems
 that is nonetheless very much along the lines of Halpern and Pearl
@@ -25,14 +24,21 @@ rule-based models in such a way as to sample counterfactual
 trajectories that stay probabilistically as close to the original
 (factual) trajectory as an intervention causing divergence permits
 them to be. We then show how to construct causal diagrams that explain
-an outcome of interest in terms of enablement and prevention relations
-between events. Enablement is a standard causal relation between
-events within the factual or within the counterfactual traces, whereas
-prevention shows up as a relation between pairs of events, one in the
-factual and the other in the counterfactual trace. In particular,
-prevention can involve events that were not observed in the factual
-trace. This results in explanatory diagrams that resonate more with
-the ubiquitous presence of inhibitory interactions in biology.
+counterfactual dependencies in terms of enablement and prevention
+relations between events. Enablement is a standard causal relation
+between events within the factual or within the counterfactual traces,
+whereas prevention shows up as a relation between pairs of events, one
+in the factual and the other in the counterfactual trace. In
+particular, prevention can involve events that were not observed in
+the factual trace. This results in explanatory diagrams that resonate
+more with the ubiquitous presence of inhibitory interactions in
+biology and that can capture subtle kinetic aspects of rule-based
+models.  Finally, our completeness result according to which any
+counterfactual dependency can be ``explained'' in terms of enablement
+and prevention not only increases our confidence in our account of
+counterfactuals, but also connects two visions of causality that are
+typically treated disjointly.
+
 
 Despite a sound theoretical foundation and an effective implementation
 based on a state-of-the-art simulator for rule-based models
@@ -57,18 +63,21 @@ experiment on $pk$. More generally, if
   the underlying rule and
 \item this observation cannot be explained by the current causal
   narrative,
-\end{inparaenum} then a counterfactual experiment in
-which we block the last event responsible for at least part of
-$\mathcal C$ seems worthwhile in order to assess whether the current
-causal narrative needs to be updated. In our toy example we are led to
-evaluate whether $\mathbf{P}(\CFST{})$ with
-$\BLOCKED{\iota}{e'} = (e = pk)$ and $\psi[\tau'] = (p \in
-\tau')$. But difficulties do not end here. This particular choice of
-$\iota$ and $\psi$ may not be useful if rule $pk$ has high activity,
-for example because agents of type $K$ are present in the system with
-high abundance. Blocking a single $pk$ event might not have much of an
-effect, as the same underlying rule would immediately trigger again,
-cancelling the effect of the intervention.  In this case, $\iota$
-could consist in blocking every instance of the potential event
-associated with $pk$, i.e.\@ ``knocking out" rule $pk$, for a defined
-timeframe.
+\end{inparaenum} then a counterfactual experiment in which we block
+the last event responsible for at least part of $\mathcal C$ seems
+worthwhile in order to assess whether the current causal narrative
+needs to be updated.  Another important practical questions is whether
+interventions should block events punctually or ``knock out'' the
+associated potential event for a defined timeframe (our framework
+accomodates both approaches). 
+
+On a more conceptual side, we are investigating principled ways to
+``glue'' together explanatory diagrams (such as Figure~\ref{fig:cex})
+corresponding to different counterfactual experiments in a single
+``summary diagram'' that would synthetize the current understanding of
+the causal structure of a system relative to an outcome of
+interested. More speculatively, we wonder whether such a summary
+diagram might constitute a basis for obtaining approximate structural
+equations from complex models. Replacing a rule-based model with such
+equations could enable targeted statistical analysis to estimate model
+parameters, for which simulations would be too expensive.
