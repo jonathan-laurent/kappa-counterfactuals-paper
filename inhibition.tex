@@ -27,18 +27,17 @@ prevents $p$''. In this section, we give a precise semantics to such
 diagrams and discuss how they can be generated systematically.
 
 As discussed in section~\ref{subsec:dumb-story}, a causal narrative
-like the one in Figure~\ref{fig:dumb-story} is generated from a trace,
-which usually results from a compression process, and whose events are
-organized in a directed acyclic graphs, edges being enablement arrows.
-Enablement arrows are easy to define in the context of a trace, and we
-give a formal definition in section~\ref{subsec:inhibition}.
-Prevention arrows are trickier because they must relate events that
-happened to events that did not. For this reason, previous
-work~\cite{DanosEtAl-CONCUR07,DBLP:conf/fsttcs/DanosFFHH12} fails to
-provide a proper account of them.  Our insight is to use
-counterfactual traces to give a rigorous account of prevention using
-arrows that connect events from a factual trace to events in a
-cognate counterfactual trace and vice versa.
+like the one in Figure~\ref{fig:dumb-story} usually results from a
+trace after causal compression.  Its events are organized in a
+directed acyclic graphs, edges being enablement arrows. Enablement is
+straightforward to define in the context of a trace (see
+section~\ref{subsec:inhibition}). Prevention is trickier because it
+relates events that happened to events that did not. For this reason,
+previous work~\cite{DanosEtAl-CONCUR07,DBLP:conf/fsttcs/DanosFFHH12}
+fails to properly account for them.  Our insight is to use
+counterfactual traces to define prevention as connecting events from a
+factual trace to events in a cognate counterfactual trace or vice
+versa.
 
 %\fi
 
