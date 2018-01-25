@@ -26,18 +26,18 @@ trajectories that stay probabilistically as close to the original
 them to be. We then show how to construct causal diagrams that explain
 counterfactual dependencies in terms of enablement and prevention
 relations between events. Enablement is a standard causal relation
-between events within the factual or within the counterfactual traces,
-whereas prevention shows up as a relation between pairs of events, one
-in the factual and the other in the counterfactual trace. In
-particular, prevention can involve events that were not observed in
-the factual trace. This results in explanatory diagrams that resonate
-more with the ubiquitous presence of inhibitory interactions in
-biology and that can capture subtle kinetic aspects of rule-based
-models.  Finally, our completeness result according to which any
-counterfactual dependency can be ``explained'' in terms of enablement
-and prevention not only increases our confidence in our account of
-counterfactuals, but also connects two visions of causality that are
-typically treated disjointly.
+between events within factual or within counterfactual traces, whereas
+prevention shows up as a relation between pairs of events, one in the
+factual and the other in the counterfactual trace. In particular,
+prevention can involve events that were not observed in the factual
+trace. This results in explanatory diagrams that resonate more with
+the ubiquitous presence of inhibitory interactions in biology and that
+can capture subtle kinetic aspects of rule-based models.  Finally, our
+completeness result according to which any counterfactual dependency
+can be ``explained'' in terms of enablement and prevention not only
+increases our confidence in our account of counterfactuals, but also
+connects two visions of causality that are typically treated
+disjointly (see the comment after Theorem~\ref{thm:completeness}).
 
 
 Despite a sound theoretical foundation and an effective implementation
@@ -48,15 +48,16 @@ evaluation requires first addressing difficult practical
 questions. Most notably, which counterfactual experiments are worth
 trying? It is entirely unclear a priori which interventions are
 informative for traces that include many millions of events. At
-present, we can only offer tentative directions for future study. One
-way to proceed is by developing heuristics, such as identifying
+present, we can only offer tentative directions for future study.
+
+One way to proceed is by developing heuristics, such as identifying
 correlations between events in samples of factual traces (or in a
 single long trace). In our toy model, the occurrence of $p$ is often
 preceded by the occurrence of $pk$. This correlation, together with
 the absence of $pk$ from some initial causal account---such as the one
 presently achievable in a fully automated fashion based on enablement
-alone, (Figure~\ref{fig:dumb-story}---suggests to try a counterfactual
-experiment on $pk$. More generally, if
+alone, (Figure~\ref{fig:dumb-story})---suggests to try a
+counterfactual experiment on $pk$. More generally, if
 \begin{inparaenum}[(i)]
 \item a context $\mathcal C$ in which an event $e$ occurs is
   frequently more specific than is required by the left-hand side of
