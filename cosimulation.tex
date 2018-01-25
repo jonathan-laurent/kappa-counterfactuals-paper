@@ -161,7 +161,7 @@ counterfactual resimulation is summarized by the
 following theorem, where $\tau \cap I = \emptyset$ is a
 shortcut for the proposition ``no event of trace $\tau$ occurs in
 the time interval $I$''.
-\begin{theorem}[Property of the divergent activity]\label{thm:div-activity}
+\begin{proposition}[Property of the divergent activity]\label{prop:div-activity}
   For $\tau$ a trace
   and $\iota$ an intervention, let $I = (t, t+\delta)$ be a time interval
   such that $\tau \cap I = \emptyset$ and $m_0 =
@@ -170,12 +170,12 @@ the time interval $I$''.
       \TSTATE{t}{\ATRAJ{}} = m\ }
     \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
   \]
-\end{theorem}
+\end{proposition}
 \noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the
 divergent activity $\alpha'$ determines the probability that an event
 happens in the counterfactual trace prior to the next event in the
 factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of
-Theorem~\ref{thm:div-activity} is given in
+Proposition~\ref{prop:div-activity} is given in
 Appendix~\ref{ap:div-activity}.
 
 Returning to our running example, sampling counterfactual traces
