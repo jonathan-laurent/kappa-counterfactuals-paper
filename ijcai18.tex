@@ -8,12 +8,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newif\ifreview
-%\reviewtrue
-\reviewfalse
+\reviewtrue
+%\reviewfalse
 
 \newif\ifshort
 \shorttrue
 %\shortfalse
+
+\newif\ifincludeappendices
+%\includeappendicestrue
+\includeappendicesfalse
 
 \newcommand{\noreview}[1]{\ifreview \else #1 \fi}
 \newcommand{\longversion}[1]{\ifshort \else #1 \fi}
@@ -106,6 +110,9 @@
 \ifreview
 \else
 \input{acknowledgments}
+\fi
+
+\ifincludeappendices
 \input{appendices}
 \fi
 
