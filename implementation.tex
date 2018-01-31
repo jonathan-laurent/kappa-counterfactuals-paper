@@ -1,0 +1,33 @@
+% -*- TeX-master: "ijcai18.tex" -*-
+
+\subsection{Implementation}\label{subsec:implementation}
+
+There are two challenges in writing an efficient implementation of
+counterfactual resimulation. The first one is to find a suitable
+representation for the sets of divergent embeddings $\DEMBS{r}{m}$ and
+update it at each iteration for a minimal cost. To do this, we reuse
+most of the infrastructure behind the Kappa simulator, which solves
+the same problem for the sets of embeddings $\EMBS{r}{m}$. The second
+challenge is to avoid most iterations of
+Algorithm~\ref{alg:cosimulation} being wasted in {futile
+  cycles}. Indeed, when a rule has a high activity but most of its
+instances are to be blocked in the near future, then the test of
+line~\ref{cosim:blocked} may fail repeatedly, leading to inefficiencies
+that can be arbitrarly high. We solve this problem for a class of
+interventions we call \emph{regular}. An intervention $\iota$ is said
+to be regular if the predicate $\BLOCKED{\iota}{((r, \xi), t)}$ can be
+expressed as
+\[ \bigvee_i f_i(r, \xi^{(i)}) \,\wedge\, (t \in I)  \]
+
+\begin{proposition}
+  Sampling a counterfactual trace for a \emph{regular} intervention
+  can be done in time $\mathcal{O}(n \cdot r \log|m|)$, where $n$ is
+  the sum of the number of events in the reference trace and in the
+  resulting counterfactual trace, $r$ is the number of rules in the
+  model and $|m|$ the size of the reaction mixture.
+\end{proposition}
+
+A benchmark of our implementation on a scaled-up version of our
+example model is available in Appendix~\ref{ap:benchmark}. In particular,
+we show that the average slowdown per simulated event compared to the Kappa
+simulator does not exceed 30\% for a variety of interventions.

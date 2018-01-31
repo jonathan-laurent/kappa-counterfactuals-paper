@@ -15,19 +15,20 @@ assess is: ``If $pk$ had not happened, $p$ would not have happened."
 Our account in the previous section suggests that $pk$ played a role,
 but it is also clear that given the stochastic nature of rule firing
 $p$ could well have happened even in the absence of $pk$; it just is
-unlikely. Counterfactual statements are not either true or false, but
-have degrees of likelihood. To assess that likelihood is our task.
+unlikely. In a stochastic setting, counterfactual statements are not
+either true or false, but have degrees of likelihood. To assess that
+likelihood is our task.
 
 Given an original (factual) trace $\tau$, a naive approach might be to
 sample counterfactual traces, each of which starts with the state of
 the system attained in $\tau$ just before event $pk$ happened, but in
 which we skip over $pk$ and then run an unconstrained simulation from
 that point onward. In this approach traces would quickly diverge from
-the original, distorting the causal role that $pk$ played
-specifically in it. The question here is not what causal role
-$pk$ can play in principle, but what role it actually
-did play in $\tau$. In this sense, counterfactual statements
-are undetachable from the context in which they are formulated.
+the original, distorting the causal role that $pk$ played specifically
+in it. The question here is not what causal role $pk$ can play in
+principle, but what role it actually did play in $\tau$. In this
+sense, counterfactual statements are undetachable from the context in
+which they are formulated.
 
 Pearl's standard account of counterfactual statements
 \cite{pearl2009causality} is based on performing \textit{``surgical
@@ -38,13 +39,12 @@ $x_i = f_i(x_1, \dots, x_{i-1}, u_i)$, where $f_i$ is a deterministic
 function and $u_i$ is a random variable. Ideally, each $f_i$ defines
 an independent and autonomous physical mechanism. This is partially
 enforced by the requirement that the $u_i$ must be mutually
-independent. Given some observation $e$,
-the probability of the counterfactual statement ``had $x_j$ been equal
-to $a$, $\psi$ would have been be true'' is evaluated following a
-three-steps process:
+independent. Given some observation $e$, the probability of the
+counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
+have been be true'' is evaluated following a three-steps process:
 \begin{inparaenum}[]
-\item \ItAbduction{} compute the distribution $p_e$ of values
-  for $\vec u$ given observation $e$, then
+\item \ItAbduction{} compute the distribution $p_e$ of values for
+  $\vec u$ given observation $e$, then
 \item \ItAction{} intervene in the model by replacing the defining
   equation for $x_j$ by ``$x_j = a$'' and finally
 \item \ItPrediction{} compute the probability that $\psi$ is true in
@@ -184,6 +184,8 @@ in establishing the correctness of counterfactual resimulation.
   %as defined in
   %section~\ref{subsec:counterfactuals-semantics}.
 \end{theorem}
+
+\input{implementation.tex}
 
 Returning to our running example, sampling counterfactual traces
 repeatedly for \RefTrace{} would reveal that ``event $p$ would not

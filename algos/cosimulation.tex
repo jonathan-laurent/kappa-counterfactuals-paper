@@ -36,7 +36,7 @@
       \STATE $t \gets t_{\text{f}}$
   \ENDIF
 
-  \IF {$ \neg \, \BLOCKED{\iota}{(e, t)} $ and $ \TRIGGERABLE{m}{e} $ }
+  \IF {$ \neg \, \BLOCKED{\iota}{(e, t)} $ and $ \TRIGGERABLE{m}{e} $ } \label{cosim:blocked}
       \STATE update $m$ to $\UPDATE{m}{e}$ and log event $(e, t)$
   \ENDIF
 \ENDWHILE

@@ -7,6 +7,7 @@ module Main where
 import Diagrams.Prelude hiding (Linear)
 import Diagrams.Backend.SVG
 import Diagrams.Backend.SVG.CmdLine
+import Data.Colour.Names (darkgrey, grey, lightgrey)
 
 import System.IO.Unsafe
 
@@ -45,7 +46,7 @@ site :: Bool -> Diagram B
 site phos =
   circle 0.35 # fc color # lwG strokeWidth
   where
-    color = if phos then lightgrey else white
+    color = if phos then grey else white
 
 right = unitX
 left = - unitX
