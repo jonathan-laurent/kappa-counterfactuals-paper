@@ -11,8 +11,8 @@
 \begin{proof}
 
   Given that $\TSTATE{t}{\ATRAJ{}} = m$, no counterfactual event
-  happens in time interval $I$ if and only if no potential event that
-  is triggerable from mixture $m$ is scheduled in $I$. Therefore,
+  happens in time interval $I$ if and only if no event template that
+  is realizable in mixture $m$ is scheduled in $I$. Therefore,
   \vskip 0.0cm
   \begin{equation}\label{eqn:scheduled-decomposition}
     \begin{aligned}
@@ -26,24 +26,25 @@
         T=\tau }.
     \end{aligned}
   \end{equation}
-  \vskip 0.2cm Let $e$ a potential event such that $m \vdash e$. The
-  probability that $e$ has not been scheduled in $I$ given that
-  $T=\tau$ depends on whether or not $e$ is triggerable from mixture
-  $m_0 = \TSTATE{t}{\tau}$. Indeed, we assumed that $\tau$ contains no
-  event in time interval $I$. Therefore, if $m_0 \vdash e$, then $e$
-  cannot be scheduled in $I$, without which it would have been
-  observed in $\tau$.  Thus,
+  \vskip 0.2cm Let $e$ an event template such that $m \vdash e$. The
+  probability that $e$ has not been scheduled for tentative
+  realization in $I$ given that $T=\tau$ depends on whether or not $e$
+  is realizable in mixture $m_0 = \TSTATE{t}{\tau}$. Indeed, we
+  assumed that $\tau$ contains no event in time interval
+  $I$. Therefore, if $m_0 \vdash e$, then $e$ cannot be scheduled in
+  $I$, without which it would have been realized in $\tau$.  Thus,
   \begin{equation}\label{eqn:pscheduled1}
     m_0 \vdash e \ \ \Longrightarrow\ \ \CProb{e \notin \Sigma \cap I}{T=\tau } = 1.
   \end{equation}
   Besides, if $m_0 \not\vdash e$, then the observation $\{ T=\tau \}$
   gives no information on whether or not $e$ has been scheduled in
-  $I$. Because potential events are scheduled according Poisson
-  processes, we have:
+  $I$. Because event templates are scheduled for tentative realization
+  according to Poisson processes, we have:
   \begin{equation}\label{eqn:pscheduled2}
     m_0 \not\vdash e \ \ \Longrightarrow\ \ \CProb{e \notin \Sigma \cap I}{
       T=\tau } = e^{-\lambda_e \delta}
-  \end{equation} where $\lambda_e$ is the rate of the rule associated with potential event $e$.
+  \end{equation} where $\lambda_e$ is the rate of the rule 
+  associated with event template $e$.
   Combining (\ref{eqn:pscheduled1}) and (\ref{eqn:pscheduled2}) with
   equation (\ref{eqn:scheduled-decomposition}),
   \begin{equation*}
