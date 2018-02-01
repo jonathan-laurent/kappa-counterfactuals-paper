@@ -50,25 +50,27 @@ The benchmark proceeds as follows:
   $20$ possible interventions that can be formed by choosing a rule
   $r$ and then choosing an intervention in the list above, taking for
   $e_0$ the first application of $r$ in $\tau$.
-\item For every such intervention $\iota$, we generate $n = 10$ counterfactual
-  traces.
+\item For every such intervention $\iota$, we generate $n' = 10$
+  counterfactual traces.
 \item For every generated counterfactual trace $\tau'$, we write $T'$
   the \textsc{cpu} time that is used by our implementation to generate
   $\tau'$ and $N_F$ the number of non-productive (futile) iterations
   it went through in doing so. An iteration of counterfactual
   resimulation is said to be non-productive if it does not produce an
-  event nor consume a factual event. Finally, we define the \textit{slowdown}
-  $S$ of counterfactual resimulation relative to simulation as
-  \[ S \,\eqdef\, \frac{|\tau|}{|\tau \cup \tau'|} \cdot \frac{T'}{T}. \]
-  This can be seen as the ratio between $T'$ and $T$, where $T$ is
-  normalized by the number $|\tau|$ of events in $\tau$ and $T'$ is
-  normalized by the number of distinct events in the counterfactual experiment
-  $(\tau, \iota, \tau')$, which we write $|\tau \cup \tau'|$.
+  event nor consume a factual event. Finally, we define the
+  \textit{slowdown} $S$ of counterfactual resimulation relative to
+  simulation as
+  \[ S \,\eqdef\, \frac{|\tau|}{|\tau \cup \tau'|} \cdot
+    \frac{T'}{T}. \] This can be seen as the ratio between $T'$ and
+  $T$, where $T$ is normalized by the number $|\tau|$ of events in
+  $\tau$ and $T'$ is normalized by the number of distinct events in
+  the counterfactual experiment $(\tau, \iota, \tau')$, which we write
+  $|\tau \cup \tau'|$.
 
   The average value (and sometimes the standard deviation) of these
   quantities is shown Table~\ref{tab:bench}. Note that each line of
   the table corresponds to one intervention and to a sample set of
-  $n^2 = 100$ counterfactual experiments. For every intervention, we
+  $n \times n' = 100$ counterfactual experiments. For every intervention, we
   also give a measure of how much counterfactual traces differ from
   their cognate factual trace on average: given a counterfactual
   experiment $(\tau, \iota, \tau')$, we write
@@ -79,7 +81,7 @@ The benchmark proceeds as follows:
 
 \subsection{Results}
 
-The observed slowdown never exceeds 40\% on average. Besides, no
+The observed slowdown never exceeds 50\% on average. Besides, no
 intervention was observed to ever produce a futile cycle. This should
 not be surprising though, as all the interventions we considered are
 regular, with the only exception of the ``\textit{template
@@ -117,7 +119,7 @@ interventions induced major divergences.
     \input{generated/bench.tex}
   \end{center}
   \caption{A benchmark of counterfactual resimulation. On average,
-    $T = 5.01$s with a standard deviation of $0.11s$. Besides,
+    $T = 6.01$s with a standard deviation of $1.09s$. Besides,
     $|\tau| = 1.9\mathrm{e}5$ with a standard deviation of
-    $1.6\mathrm{e}3$.}\label{tab:bench}
+    $1.2\mathrm{e}3$.}\label{tab:bench}
 \end{table}
