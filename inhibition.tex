@@ -26,50 +26,35 @@ red. These arrows can be read as follows: ``$pk$ prevents $u$, which
 prevents $p$''. In this section, we give a precise semantics to such
 diagrams and discuss how they can be generated systematically.
 
-As discussed in section~\ref{subsec:dumb-story}, a causal narrative
-like the one in Figure~\ref{fig:dumb-story} usually results from a
-trace after causal compression.  Its events are organized in a
-directed acyclic graphs, edges being enablement arrows. Enablement is
-straightforward to define in the context of a trace (see
-section~\ref{subsec:inhibition}). Prevention is trickier because it
-relates events that happened to events that did not. For this reason,
-previous work~\cite{DanosEtAl-CONCUR07,DBLP:conf/fsttcs/DanosFFHH12}
-fails to properly account for them.  Our insight is to use
-counterfactual traces to define prevention as connecting events from a
-factual trace to events in a cognate counterfactual trace or vice
+As discussed in section~\ref{subsec:dumb-story}, a causal narrative like
+in Figure~\ref{fig:dumb-story} results from a trace after causal
+compression.  Its events are organized in a directed acyclic graphs whose edges
+are enablement arrows. While enablement is straightforward to define, prevention
+is trickier because it relates events that happened to events that did not. Our
+insight is to use counterfactual traces to define prevention as connecting
+events from a factual trace to events in a cognate counterfactual trace or vice
 versa.
 
 %\fi
 
 \ifshort \vspace{-0.4cm} \else \vspace{-0.3cm} \fi
 
-\paragraph{Remark} The letter $e$ was used to denote potential events
-in previous sections. In this section, it denotes
-\emph{events}. An event $e$ occuring at time $t$ is said to be
-executable in trace $\tau$ if the associated potential event is
-executable in mixture $\TSTATE{t}{\tau}$.
-
+\paragraph{Notation and diction:} We will use the symbol $e$, which in previous
+sections referred to an event template, to directly denote an event. Moreover, when we say that an event \emph{tests} or \emph{modifies} a site we really mean the tests and actions involved when matching and rewriting, respectively, the underlying rule in the mixture $\TSTATE{t}{\tau}$. For example, event $p$ in \RefTrace{} tests three sites and modifies one.
 
 \subsection{Prevention in counterfactual experiments}
 \label{subsec:cex}\label{subsec:inhibition}
 
-A \textit{counterfactual experiment} is a triple
-$(\tau, \iota, \tau')$ for which there exists a schedule $\sigma$ such
-that $\tau = T(\sigma)$ and $\tau' = \ATRAJ{}(\sigma)$. Such triples
-are produced by counterfactual resimulation.
+A \textit{counterfactual experiment} is a triple $(\tau, \iota, \tau')$ for
+which there exists a schedule $\sigma$ such that $\tau = T(\sigma)$ and $\tau' =
+\ATRAJ{}(\sigma)$. Such triples are produced by counterfactual resimulation.
 
-To formalize enablement and prevention we need to define some terms
-used in Kappa to talk about events. Without loss of generality, we
-shall assume that a site on an agent carry either a binding state or
-a tagging state but not both. The
-\textit{value} of a tagged site in a mixture is its current tag and
-the value of a binding site is either $\textsc{free}$ or
-$\textsc{bound-to}(s)$, where $s$ identifies another site in the
-mixture.  An event is said to \emph{modify} a site if it changes its
-value.  An event is said to \emph{test} a site $s$ for value $v$ if
-the left-hand side of the associated rule requires $s$ to have value
-$v$ for the event to be executable. For example, event $p$ in
-\RefTrace{} tests three sites and modifies one.
+To formalize enablement and prevention we need to define some terms used in
+Kappa to talk about events. Without loss of generality, we shall assume that a
+site on an agent carries either binding state or tagging state but not both. The
+\textit{value} of a tagged site in a mixture is its current tag and the value of
+a binding site is either $\textsc{free}$ or $\textsc{bound-to}(s)$, where $s$
+identifies another site in the mixture. 
 
 \input{figures/cex}
 
@@ -117,16 +102,14 @@ mediating events always exist, as stated by the following theorem.
   $\hat e \in \tau$ that is blocked by $\iota$ and there is a directed
   path from $\hat e$ to $e$ with an even number of prevention arrows.
 \end{theorem}
-\noindent This theorem states that counterfactual dependencies can
-always be explained in terms of enablement and prevention relations
-between individual events. A proof is in
-Appendix~\ref{ap:completeness}. This result establishes a bridge
-between two different visions of causality: the vision based on event
-structures \cite{winskel1986event} (where \textit{causality} is
-defined in opposition to \textit{concurrency} and enablement plays a
-crucial role) that is dominant in the concurrency community and the
-vision based on counterfactuals which is dominant in the causal
-inference community \cite{pearl2009causality}.
+\noindent This theorem states that counterfactual dependencies can always be
+explained in terms of enablement and prevention relations between individual
+events. A proof is in Appendix~\ref{ap:completeness}. This result establishes a
+bridge between two different visions of causality: the vision dominant in the
+concurrency community, in which causality is defined predominantly in terms of
+enablement, in opposition to concurrency  \cite{winskel1986event}, and the
+vision based on counterfactuals, which is dominant in the causal inference
+community \cite{pearl2009causality}.
 
 \subsection{Compression of counterfactual experiments}
 

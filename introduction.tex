@@ -3,31 +3,28 @@
 \section{Introduction}\label{sec:intro}
 
 Rule-based modeling languages for molecular biology, such as Kappa
-\cite{DanosEtAl-CONCUR07} and BioNetGen \cite{bngl}, or organic
-chemistry, such as M{\o}d \cite{moll}, can be used to write
-mechanistic models of complex reaction systems. These approaches
-consider entities that have a structure, and make a distinction
-between the transformation of a structure fragment (a pattern)
-specified by a rule and the reaction resulting from the application
-of the rule to a combination of entities contextualizing the
-fragment. The structure of bio-molecular entities is conveniently
-represented as a graph and a rule is a graph-rewrite directive with a
-rate constant that determines its propensity to apply. The stochastic
-simulation of a rule collection generates a time series of rule
-applications---henceforth events---that might reach a state of
-interest in processes like the assembly of a molecular machine, the
-activation of a transcription factor, or the synthesis of a specific
-compound.
+\cite{DanosEtAl-CONCUR07} and BioNetGen \cite{bngl}, or organic chemistry, such
+as M{\o}d \cite{moll}, can be used to write mechanistic models of complex
+reaction systems. These approaches consider entities that have a structure, and
+make a distinction between the transformation of a structure fragment (a
+pattern) specified by a rule and the reaction resulting from the application of
+the rule to a combination of entities contextualizing the fragment. The
+structure of bio-molecular entities is represented as a graph and a rule is a
+graph-rewrite directive with a rate constant that determines its propensity to
+apply. The stochastic simulation of a rule collection generates a time series of
+rule applications---henceforth events---that might reach a state of interest in
+processes like the assembly of a molecular machine, the activation of a
+transcription factor, or the synthesis of a specific compound.
 
 While rule-based models provide compactness, transparency, and the ability of
 handling combinatorial complexity, the perhaps most significant advantage lies
 in their suitability for causal analysis. This is because such analysis proceeds
 at the level of rules, not reactions, thereby avoiding contamination with
-context that defines a reaction yet is accidental, because irrelevant, to the
-application of the underlying rule. Due to the concurrent nature of events it is
-typically far from obvious how a sequence attained a particular
-outcome. Biologists often refer to a causal account or explanation as a
-``pathway", but have no formal framing for it.
+context that defines a reaction yet is irrelevant to the application of the
+underlying rule. Due to the concurrent nature of events it is typically far from
+obvious how a sequence attained a particular outcome. Biologists often refer to
+a causal account or explanation as a ``pathway", but have no formal framing for
+it.
 
 The approach to causal analysis provided in
 \cite{DBLP:conf/fsttcs/DanosFFHH12,DanosEtAl-CONCUR07} takes advantage
@@ -39,24 +36,21 @@ of rule structure to
 \item \label{step:highlight} highlight causal influences between
   events, exposing the extent of concurrency.
 \end{inparaenum}
-Such analysis is usually performed on a large sample of traces to the
-outcome, thus recovering the salient pathways as those that are
-statistically favored by the dynamics. This approach, however, suffers
-from two drawbacks. First, the focus on necessity in step
-(\ref{step:compress}) neglects events that are kinetically critical
-(in that they dramatically increase the probability of observing the
-outcome), yet are not logically necessary for achieving it. Second,
-step (\ref{step:highlight}) is limited to a narrow notion of causal
-influence that we may call \emph{enablement}. Put simply, an event $a$
-is said to enable event $b$, if $a$ modifies an aspect of the state of
-the world in such a way as to directly permit $b$ to happen. This
-positively tinted version of influence is blind to the ubiquitous role
-of inhibitory interactions in molecular biology.  Indeed, an event $a$
-may cause an event $b$ without (transitively) enabling it, but instead
-by preventing another event $c$ that would have prevented
-$b$. Clearly, uncovering such an explanatory narrative is challenging
-because it involves an event, $c$ in this case, that did \emph{not}
-occur in a simulation trace.
+Such analysis is performed on a sample of traces to the outcome, thus recovering
+the salient pathways as those that are statistically favored by the dynamics.
+This approach, however, suffers from two drawbacks. First, the focus on
+necessity in step (\ref{step:compress}) neglects events that are kinetically
+critical (in that they dramatically increase the probability of observing the
+outcome), yet are not logically necessary for achieving it. Second, step
+(\ref{step:highlight}) is limited to a narrow notion of causal influence that we
+may call \emph{enablement}. Put simply, an event $a$ (directly) enables event
+$b$, if $a$ modifies the state of the world so as to satisfy the requirements
+for $b$ to occur. This positively tinted version of influence is blind to the
+ubiquitous role of inhibitory interactions in molecular biology.  Indeed, an
+event $a$ may cause an event $b$ without (transitively) enabling it, but instead
+by preventing another event $c$ that would have prevented $b$. Clearly,
+uncovering such an explanatory narrative is challenging because it involves an
+event, $c$ in this case, that did \emph{not} occur in a simulation trace.
 
 We here propose an approach that complements the existing causal analysis of
 event series generated from rule-based models by using counterfactual reasoning

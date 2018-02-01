@@ -2,30 +2,23 @@
 
 \section{Motivating example}\label{sec:example}
 
-In this section, we provide some background on the Kappa language and
+We provide some background on the Kappa language and
 introduce a toy example motivating the need for counterfactual
 reasoning in analyzing the causal structure of simulation traces.
 
 \subsection{Some background on Kappa}\label{sec:background}
 
-Proteins are complex molecular machines that interact with one another
-to establish a kind of operating system that determines what a cell
-should do based on a variety of internal and external chemical and
-physical inputs. These interactions consist in, roughly, tagging and
-un-tagging each other with molecular flags and binding and un-binding
-each other to form transient associations. In this way, proteins come
-to have ``state" that can control the interactions they engage
-in. Each kind of protein is usually present in several to many copies.
- 
-In Kappa, a protein is modeled as an abstract \emph{agent} with a name
-that designates its \emph{type} and a signature of distinguishable
-\emph{sites} at which it can be tagged or bound by other agents. A
-site can bind at most one agent at a time and must be in a definite
-state.
+Proteins are complex molecular machines that reversibly tag one another with
+molecular flags and reversibly bind each other to form transient associations.
+In this way, proteins come to have ``state" that can control the interactions
+they engage in. In Kappa, a protein is modeled as an abstract \emph{agent} with
+a name that designates its \emph{type} and a signature of distinguishable
+\emph{sites} at which it can be tagged or bound by other agents. A site can bind
+at most one agent at a time and must be in a definite state.
 % , each type of agent being described in the model's
 % \emph{signature}.
 
-In our illustrative toy example, we consider two types of agents for
+In our illustrative example, we consider two types of agents for
 which we use biological nomenclature. One type, $S$, is a substrate
 that receives a tag known as a phosphate group in a phosphorylation
 interaction. The other, $K$, is a kinase that phosphorylates
@@ -56,35 +49,23 @@ unambiguous.) By virtue of the $\lambda_r$, the rules of a model,
 together with an initial number of agents, constitute a dynamical
 system, which we defined shortly.
 
-In our toy model, agents are subject to the rules depicted in
-Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates
-can bind each other provided their binding sites are free
-(unbound). Note that $\RLHS{b}$ of rule $b$ is a pattern: It omits
-mentioning the sites that carry phosphorylation state, which are
-therefore not considered when matching the
-mixture to $\RLHS{b}$. Rules $u$ and $u^{*}$ define unbinding events that depend on
-the phosphorylation state of the kinase $K$. The distinction is
-motivated by kinetics: Rule $u$ fires at a faster rate than $u^{*}$.
-Rule $p$ specifies that a substrate can be phosphorylated when it is
-bound to a kinase. For the sake of simplicity, we model the
-phosphorylation of a kinase as a spontaneous process (rule $pk$).
-
 \input{figures/model}
 
-In defining dynamics, we take a slightly circuitous route, which will
-prove useful in section~\ref{sec:counterfactual}. A \emph{potential
-  event}, is a pair $(r, \xi)$ where $r$ is a rule and $\xi$ a mapping
+In preparation for section~\ref{sec:counterfactual}, we define dynamics by
+introducing the auxiliary concept of \emph{event template}, which is a pair $(r,
+\xi)$ where $r$ is a rule and $\xi$ a function
 from agents in $\RLHS{r}$ to global identifiers. We say that
-$(r, \xi)$ is \emph{executable} in mixture $m$ if the global
+$(r, \xi)$ is \emph{realizable} in mixture $m$ if the global
 identifiers assigned by $\xi$ exist in $m$ and the agents bearing them
 match $\RLHS{r}$. In this case, we write $\TRIGGERABLE{m}{(r, \xi)}$
-(read ``$m$ admits $(r, \xi)$") and $\xi$ is called an
+(read ``$m$ admits $(r, \xi)$") and call $\xi$ an
 \emph{embedding} of $\RLHS{r}$ into $m$:
 % (or a match of $m$ to $\RLHS{r}$)
 \tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}.}
 Whenever $m \vdash (r, \xi)$, we write $m'=\UPDATE{m}{(r, \xi)}$ for
-the mixture $m'$ obtained by executing $(r, \xi)$, i.e.\@ by rewriting
-the agents with identifiers in the codomain of $\xi$ into $\RRHS{r}$.
+the mixture $m'$ obtained by realizing $(r, \xi)$, i.e.\@ by rewriting
+the agents with identifiers in the codomain of $\xi$ into $\RRHS{r}$. The
+realization of an event template at a particular time creates an (actual) \emph{event}, formally defined as a pair $(e, t)$ with $e$ an event template and $t$ its time of realization. 
 
 The \emph{activity} $\alpha_r(m)$ of a rule $r$ in a given mixture $m$,
 is defined by the product of the rule propensity and the number of
@@ -103,18 +84,22 @@ following steps:
   exponential distribution with parameter $\alpha(m)$ and increment
   the simulated system time by $\delta$,
 \item draw a rule $r$ with probability $\alpha_r(m)/\alpha(m)$ and
-\item pick uniformly an embedding $\xi$ of $r$ in $m$ and execute the
-  potential event $(r, \xi)$.
+\item pick uniformly an embedding $\xi$ of $r$ in $m$ and realize the
+ event template $(r, \xi)$.
 \end{inparaenum}
-This algorithm has a sophisticated implementation tuned for rule-based
+This algorithm is efficiently implementated for rule-based
 models in Kappa as described in
 \cite{DanosEtAl-APLAS07,BoutillierEK17}\longversion{; it is available at
-kappalanguage.org}. The algorithm outputs a sequence of (realized)
-\emph{events}, called a \emph{trace}, where an event is formally
-defined as a pair $(e, t)$ with $e$ a potential event and $t$ its time
-of occurrence.
+kappalanguage.org}. The algorithm outputs a sequence of
+events, called a \emph{trace}.
 
 \longversion{\input{algos/gillespie}}
+
+In our toy model, agents are subject to the rules depicted in Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates can bind, provided their requisite binding sites are free (unbound). Note that $\RLHS{b}$ of rule $b$ is a pattern: It omits mentioning the sites that carry phosphorylation state, which are therefore not considered when matching the mixture to $\RLHS{b}$. Rules $u$ and $u^{*}$ define unbinding events that depend
+on the phosphorylation state of the kinase $K$. The distinction is motivated by
+kinetics: Rule $u$ fires at a faster rate than $u^{*}$. Rule $p$ specifies that
+a substrate can be phosphorylated when it is bound to a kinase. For the sake of
+simplicity, we model the phosphorylation of a kinase as a spontaneous process (rule $pk$).
 
 \subsection{Where existing analysis falls short}
 \label{subsec:dumb-story}
@@ -122,22 +107,19 @@ of occurrence.
 % What about asking the question for the specific trace to make it
 % clearer we are talking about actual causality ?
 
-Consider the toy model of Figure~\ref{fig:model} and assume, for the
+Consider our toy model and assume, for the
 sake of illustration, an initial mixture $I$ with only a single kinase
 and a single substrate whose sites are unbound and
-unphosphorylated. We then ask: Starting from $I$, \emph{how} is $p$
-typically achieved? We are not merely looking for an account of
-reachability but for a causal explanation, i.e.\@ a collection of
-necessary events connected by causal influences.
+unphosphorylated. We then ask: Starting from $I$, \emph{how} is $p$ typically achieved? We are not merely looking for an account of
+reachability but for a causal explanation, i.e.\@ a collection of events connected by causal influences.
 
-For example, a stochastic simulation might produce the following trace
-(whose events are labelled by the rules that induced them):
+For example, a simulation might produce the following trace
+(events are labelled by the rules that induced them):
 \begin{align}
-  \label{example-trace} b,\ \ u,\ \ pk,\ \ b,\ \ p,\ \
-  u^{*},\ \ \cdots
+  \label{example-trace} 
+  b,\ \ u,\ \ pk,\ \ b,\ \ p,\ \ u^{*},\ \ \cdots
 \end{align} 
-Current
-techniques \cite{DBLP:conf/fsttcs/DanosFFHH12,DanosEtAl-CONCUR07}
+Current techniques \cite{DBLP:conf/fsttcs/DanosFFHH12,DanosEtAl-CONCUR07}
 generate a causal account by first computing a \emph{sub-trace} of
 (\ref{example-trace}) that is
 \begin{inparaenum}[(i)]
@@ -146,19 +128,7 @@ generate a causal account by first computing a \emph{sub-trace} of
 \item \emph{minimal} in the sense that none of its valid sub-traces
   features $p$.
 \end{inparaenum}
-Relations of enablement among the events in the minimal sub-trace are
-then determined to yield a directed acyclic graph. Minimization is an NP-hard problem, although trivial in our toy
-example. Figure~\ref{fig:dumb-story} depicts the resulting explanation graph for
-the occurrence of $p$. Note that, in the original trace, the first
-occurence of $b$ sets the necessary conditions for $p$, but these are
-subsequently undone by $u$ only for the second occurrence of $b$ to
-re-introduce them. This illustrates why minimization compresses a
-trace into events that are necessary for the outcome---which includes
-eliminating futile cycles. Thus, the explanation graph simply consists
-in moving from the initial condition $I$, symbolized by the
-\emph{init} event, to the last $b$ before the $u$. The arrows are
-enablement relations as defined informally in the Introduction (see
-also section~\ref{sec:inhibition}).
+The relations of enablement among events in the minimal sub-trace yield a directed acyclic graph. Although trivial in our toy example, minimization is an NP-hard problem. Carrying out this approach on (\ref{example-trace}), one notes that the first occurence of $b$ sets the necessary conditions for $p$, but these are subsequently undone by $u$ only for the second occurrence of $b$ to re-introduce them. This illustrates why minimization compresses a trace into events that are \emph{necessary} for the outcome---which requires eliminating futile cycles. In our case, the causal account for $p$ starts with the initial condition, symbolized by the \emph{init} event, and skips to the last $b$ before the $u$. Figure~\ref{fig:dumb-story} depicts the resulting explanation graph, whose arrows denote enablement as defined informally in section~\ref{sec:intro} and formally in section~\ref{sec:inhibition}.
 
 \input{figures/dumb-story}
 
@@ -168,14 +138,13 @@ $pk$ in the original trace. Given the rules of the model, one notes
 that $p$ is slow and the average time that $K$ remains bound to $S$
 depends on the phosphorylation state of $K$. The kinase $K$ is
 phosphorylated in event $pk$, causing the complex between $K$ and $S$
-to be sticky and giving the slow phosphorylation $p$ a chance to
+to be sticky, giving the slow phosphorylation $p$ a chance to
 occur. It seems reasonable to assert that $p$ would probably not have
 happened had $pk$ not happened, since the opportunity for $p$ would
 have been curtailed by a fast unbinding event. Thus, $pk$ should be
 part of the explanation, although it neither enables $b$ nor $p$
 directly (both rules are independent of $K$'s phosphorylation
-state). Reasoning of this kind is \emph{counterfactual} and can be
-deployed to define causality
+state). Reasoning of this kind is \emph{counterfactual}
 \cite{lewis1974causation,pearl2009causality}.
 
 In section~\ref{sec:counterfactual}, we give a rigorous semantics to
