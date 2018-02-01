@@ -1,9 +1,8 @@
 It is convenient to prove the following result instead, which is
-slightly more general. In the proof, we write $\TIME{e}$ the time of
-occurence of event $e$.
+slightly more general.
 \begin{theorem*} Let $(\tau, \iota, \tau')$ be a counterfactual
   experiment. If $e$ is an event that belongs only to $\tau$
-  or $\tau'$, then there exists an event $\hat e$ in
+  \textbf{or $\tau'$}, then there exists an event $\hat e$ in
   $\tau$ that is blocked by $\iota$ and there is a directed path 
   from $\hat e$ to $e$.
 \end{theorem*}
@@ -15,33 +14,33 @@ occurence of event $e$.
   Proposition~\ref{prop:valid-cex}, $e$ is not executable in
   $\tau'$. Therefore, there exists a site $s$ such that event $e$
   tests $s$ to a different value than it has in $\TSTATE{t}{\tau'}$.
-  Let $t = \TIME{e}$.  Let's define $e_0$ the last event in $\tau$
-  modifying $s$ that occurs strictly before time $t$, and $e_0'$ the
-  last event in $\tau'$ modifying $s$ that occurs strictly before time
-  $t$. These events modify $s$ to different values so they cannot be
-  the same. Therefore, we have $\TIME{e_0} \neq \TIME{e_0'}$ with
-  probability one.
+  Let $t$ the time of occurence of $e$.  Besides, let's define $e_0$
+  the last event in $\tau$ modifying $s$ that occurs strictly before
+  time $t$, and $e_0'$ the last event in $\tau'$ modifying $s$ that
+  occurs strictly before time $t$. These events modify $s$ to
+  different values so they cannot be the same. Therefore, writing
+  $t_0$ and $t_0'$ their respective time of occurence, we have
+  $t_0 \neq t_0'$ with probability one.
 
   \begin{itemize}
-  \item If $\TIME{e_0} < \TIME{e_0'}$, then we have
-    $e_0 \notin \tau'$ and so we can apply the induction hypothesis on
-    $e_0$. As a consequence, there exists a path from an event
-    $\hat e$ in $\tau$ which is blocked by $\iota$ to $e_0$. Besides,
-    $e_0$ enables $e$. Therefore, there is a path between $\hat e$
-    and $e$.
-  \item If $\TIME{e_0'} < \TIME{e_0}$, then we have
-    $e'_0 \notin \tau$ and so we can apply the induction
-    hypothesis on $e'_0$. As a consequence, there exists a path from
-    an event $\hat e$ in $\tau$ which is blocked by $\iota$ to
-    $e'_0$. Besides, $e_0'$ prevents $e$. Therefore, there is a path
-    between $e$ and $\hat e$.
+  \item If $t_0 < t_0'$, then we have $e_0 \notin \tau'$
+    and so we can apply the induction hypothesis on $e_0$. As a
+    consequence, there exists a path from an event $\hat e$ in $\tau$
+    which is blocked by $\iota$ to $e_0$. Besides, $e_0$ enables
+    $e$. Therefore, there is a path between $\hat e$ and $e$.
+  \item If $t_0' < t_0$, then we have $e'_0 \notin \tau$
+    and so we can apply the induction hypothesis on $e'_0$. As a
+    consequence, there exists a path from an event $\hat e$ in $\tau$
+    which is blocked by $\iota$ to $e'_0$. Besides, $e_0'$ prevents
+    $e$. Therefore, there is a path between $e$ and $\hat e$.
   \end{itemize}
   The same proof holds for when $e \in \tau'$ and $e \notin \tau$,
   using item~($\ref{valid-cex:co-occur2}$) of
   Proposition~\ref{prop:valid-cex} instead of
   item~($\ref{valid-cex:co-occur}$).
 \end{proof}
-This result implies Theorem~\ref{thm:completeness}. In particular,
-\emph{any} directed path from $\tau$ to $\tau$ necessarily contains an
-even number of prevention arrows as these arrows always go from
-$\tau$ to $\tau'$ or the other way around.
+This result implies Theorem~\ref{thm:completeness}. Indeed, we only
+need to prove that the constructed path from $\hat e$ to $e$ contains
+an even number of prevention arrows, which is true for \textit{any}
+such path as prevention arrows always go from $\tau$ to $\tau'$ or the
+other way around but cannot ``stay'' within a single trace.
