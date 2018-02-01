@@ -2,32 +2,40 @@
 
 \subsection{Implementation}\label{subsec:implementation}
 
-There are two challenges in writing an efficient implementation of
-counterfactual resimulation. The first one is to find a suitable
-representation for the sets of divergent embeddings $\DEMBS{r}{m}$ and
-update it at each iteration at minimal cost. To do this, we reused
-most of the infrastructure behind the Kappa simulator, which solves
-the same problem for the sets of embeddings $\EMBS{r}{m}$. The second
-challenge is to avoid most iterations of
-Algorithm~\ref{alg:cosimulation} being wasted in {futile
-  cycles}. Indeed, when a rule has a high activity but most of its
-instances are to be blocked in the near future, then the test of
-line~\ref{cosim:blocked} may fail repeatedly, leading to
-inefficiencies that can be arbitrarily high. We solved this problem
-for a class of interventions we call \emph{regular}. An intervention
-$\iota$ is said to be regular if the predicate
+There are two challenges in efficiently implementing counterfactual
+resimulation. The first is a suitable representation for the sets of
+divergent embeddings $\DEMBS{r}{m}$ to minimize the cost of their
+update at each iteration. Since the Kappa simulator solves exactly
+that problem for the sets of embeddings $\EMBS{r}{m}$
+\cite{DanosEtAl-APLAS07}, we leverage most of that infrastructure. The
+second consists in avoiding excessively many iterations of
+Algorithm~\ref{alg:cosimulation} in which time is incremented but
+nothing happens. Suppose, for example, that in our toy model $pk$ has
+a very high rate constant and we wish to block \emph{all} events in
+which the sole kinase becomes phosphorylated from a specific time
+onward. If we were to proceed by blocking each event at the time it
+results from the realization of its template, we would have to reject
+an enormous amount of attempted events until a different rule
+fires. We exploit the fact that the Kappa simulator stores all
+possible embeddings of $L_r$ into a given mixture in a highly
+efficient way at the price of an over-approximation that is corrected
+at event time. Using this architecture we can remove all embeddings of
+rule $pk$ from the store, thus guaranteeing that no $pk$ event will be
+attempted only to be rejected. However, this restricts us to
+interventions that comply with the same type of approximation used in
+the Kappa simulator: componentwise embeddings of $L_{r}$. We refer to
+compliant interventions as \emph{regular}.  Specifically, an
+intervention $\iota$ is regular if the predicate
 $\BLOCKED{\iota}{((r, \xi), t)}$ can be expressed as a finite
 disjunction of formulae of the form
-``$(r = r') \wedge F(\xi{\restriction_{c}}) \wedge (t \in I)$''
-or ``$G(r, \xi) \wedge (t = t')$'',
-where $r'$ is a rule, $t'$ is a time,
-$I$ is a time interval, $\xi{\restriction_{c}}$ is the
-restriction of $\xi$ to a single connected component $c$ of $L_{r'}$
-and $F, G$ are arbitrary predicates. For regular interventions,
-our implementation is guaranteed to either produce or
-consume an event at each iteration.
+$(r = r') \wedge F(\xi{\restriction_{c}}) \wedge (t \in I)$ or
+$G(r, \xi) \wedge (t = t')$, where $r'$ is a rule, $t'$ a time, $I$ a
+time interval, $\xi{\restriction_{c}}$ the restriction of $\xi$ to a
+single connected component $c$ of $L_{r'}$, and $F, G$ arbitrary
+predicates. For regular interventions, our implementation is
+guaranteed to either produce or consume an event at each iteration.
 
-\begin{proposition}\label{prop:impl}
+\begin{proposition}
   Sampling a counterfactual trace for a \emph{regular} intervention
   can be done in time $\mathcal{O}(n \cdot r \log|m|)$, where $n$ is
   the sum of the number of events in the reference trace and in the
@@ -35,12 +43,7 @@ consume an event at each iteration.
   model and $|m|$ the size of the reaction mixture.
 \end{proposition}
 
-A benchmark of our implementation on a scaled-up version of our
-example model is available in Appendix~\ref{ap:benchmark}. In
-particular, we show that the average overhead per generated event
-compared to the Kappa simulator does not exceed 40\% for a variety of
-interventions. This result along with Proposition~\ref{prop:impl}
-shows that counterfactual resimulation for regular interventions is
-tractable whenever simulation itself is.
-
-\medskip
+We provide a benchmark of our implementation on a scaled-up version of
+our toy model in Appendix~\ref{ap:benchmark}. The average slowdown per
+event compared to the Kappa simulator does not exceed 50\% for a
+variety of interventions.
