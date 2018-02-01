@@ -9,25 +9,22 @@ update at each iteration. Since the Kappa simulator solves exactly
 that problem for the sets of embeddings $\EMBS{r}{m}$
 \cite{DanosEtAl-APLAS07}, we leverage most of that infrastructure. The
 second consists in avoiding excessively many iterations of
-Algorithm~\ref{alg:cosimulation} in which time is incremented but
-nothing happens. Suppose, for example, that in our toy model $pk$ has
-a very high rate constant and we wish to block \emph{all} events in
-which the sole kinase becomes phosphorylated from a specific time
-onward. If we were to proceed by blocking each event at the time it
-results from the realization of its template, we would have to reject
-an enormous amount of attempted events until a different rule
-fires. We exploit the fact that the Kappa simulator stores all
-possible embeddings of $L_r$ into a given mixture in a highly
-efficient way at the price of an over-approximation that is corrected
-at event time. Using this architecture we can remove all embeddings of
-rule $pk$ from the store, thus guaranteeing that no $pk$ event will be
-attempted only to be rejected. However, this restricts us to
-interventions that comply with the same type of approximation used in
-the Kappa simulator: componentwise embeddings of $L_{r}$. We refer to
-compliant interventions as \emph{regular}.  Specifically, an
-intervention $\iota$ is regular if the predicate
-$\BLOCKED{\iota}{((r, \xi), t)}$ can be expressed as a finite
-disjunction of formulae of the form
+Algorithm~\ref{alg:cosimulation} in which time is advanced in tiny
+increments and the proposed event is rejected.
+%(line~\ref{cosim:blocked}). 
+Suppose, for example, that in our toy model
+$pk$ has a very high rate constant and we wish to block, from a
+specific time onward, \emph{all} events in which the sole kinase
+becomes phosphorylated. Upon blocking one occurrence of the event, the
+same event would want to happen again, and we would keep rejecting it
+a huge number of times until a different rule fires. More generally,
+event templates whose realization is bound to be blocked should be
+removed efficiently before their realization is attempted and not be
+counted in the system's divergent activity. We solve this problem
+for a class of interventions we call \emph{regular}.
+Specifically, an intervention $\iota$ is regular if
+the predicate $\BLOCKED{\iota}{((r, \xi), t)}$ can be expressed as a
+finite disjunction of formulae of the form
 $(r = r') \wedge F(\xi{\restriction_{c}}) \wedge (t \in I)$ or
 $G(r, \xi) \wedge (t = t')$, where $r'$ is a rule, $t'$ a time, $I$ a
 time interval, $\xi{\restriction_{c}}$ the restriction of $\xi$ to a
@@ -44,6 +41,8 @@ guaranteed to either produce or consume an event at each iteration.
 \end{proposition}
 
 We provide a benchmark of our implementation on a scaled-up version of
-our toy model in Appendix~\ref{ap:benchmark}. The average slowdown per
+our toy model in Appendix~C. The average slowdown per
 event compared to the Kappa simulator does not exceed 50\% for a
 variety of interventions.
+
+\medskip
