@@ -5,25 +5,29 @@
 There are two challenges in writing an efficient implementation of
 counterfactual resimulation. The first one is to find a suitable
 representation for the sets of divergent embeddings $\DEMBS{r}{m}$ and
-update it at each iteration for a minimal cost. To do this, we reused
+update it at each iteration at minimal cost. To do this, we reused
 most of the infrastructure behind the Kappa simulator, which solves
 the same problem for the sets of embeddings $\EMBS{r}{m}$. The second
 challenge is to avoid most iterations of
 Algorithm~\ref{alg:cosimulation} being wasted in {futile
   cycles}. Indeed, when a rule has a high activity but most of its
 instances are to be blocked in the near future, then the test of
-line~\ref{cosim:blocked} may fail repeatedly, leading to inefficiencies
-that can be arbitrarily high. We solved this problem for a class of
-interventions we call \emph{regular}. An intervention $\iota$ is said
-to be regular if the predicate $\BLOCKED{\iota}{((r, \xi), t)}$ can be
-expressed as a disjunction of formulas of the form
-%\[ (r = r') \,\wedge\, F(\xi{\restriction_{c}}) \,\wedge\, (t \in I)  \]
-$(r = r') \wedge F(\xi{\restriction_{c}}) \wedge (t \in I)$
-where $r'$ is a rule, $I$ is a time interval, $\xi{\restriction_{c}}$
-is the restriction of $\xi$ to a connected component $C$ of $L_{r'}$ and
-$F$ is an arbitrary predicate.
+line~\ref{cosim:blocked} may fail repeatedly, leading to
+inefficiencies that can be arbitrarily high. We solved this problem
+for a class of interventions we call \emph{regular}. An intervention
+$\iota$ is said to be regular if the predicate
+$\BLOCKED{\iota}{((r, \xi), t)}$ can be expressed as a finite
+disjunction of formulae of the form
+``$(r = r') \wedge F(\xi{\restriction_{c}}) \wedge (t \in I)$''
+or ``$G(r, \xi) \wedge (t = t')$'',
+where $r'$ is a rule, $t'$ is a time,
+$I$ is a time interval, $\xi{\restriction_{c}}$ is the
+restriction of $\xi$ to a single connected component $c$ of $L_{r'}$
+and $F, G$ are arbitrary predicates. For regular interventions,
+our implementation is guaranteed to either produce or
+consume an event at each iteration.
 
-\begin{proposition}
+\begin{proposition}\label{prop:impl}
   Sampling a counterfactual trace for a \emph{regular} intervention
   can be done in time $\mathcal{O}(n \cdot r \log|m|)$, where $n$ is
   the sum of the number of events in the reference trace and in the
@@ -32,8 +36,11 @@ $F$ is an arbitrary predicate.
 \end{proposition}
 
 A benchmark of our implementation on a scaled-up version of our
-example model is available in Appendix~\ref{ap:benchmark}. In particular,
-we show that the average slowdown per simulated event compared to the Kappa
-simulator does not exceed 30\% for a variety of interventions.
+example model is available in Appendix~\ref{ap:benchmark}. In
+particular, we show that the average overhead per generated event
+compared to the Kappa simulator does not exceed 40\% for a variety of
+interventions. This result along with Proposition~\ref{prop:impl}
+shows that counterfactual resimulation for regular interventions is
+tractable whenever simulation itself is.
 
 \medskip
