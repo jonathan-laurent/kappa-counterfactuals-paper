@@ -2,107 +2,75 @@
 
 \newcommand{\subs}[2]{#1_{\textsf{#2}}}
 
-We assessed the performances of our implementation of counterfactual
-resimulation on our example model (Figure~\ref{fig:model}), using an
-initial mixture that features $10^4$ substrates and the same number of
-kinases.  Although such a simple setting is not of particular
-biological significance, it is adequate for an initial performance
-benchmark.
+We assessed the performance of our implementation of counterfactual
+resimulation using the toy model of Figure~\ref{fig:model}, but with an initial
+mixture consisting of a large number of kinase and substrate instances. Although
+such a simple model is not of biological significance, it is adequate for an
+initial assessment of performance.
 
-\subsection{Experience description}
+\subsection{Experimental protocol}
 
 %In this benchmark, whose results are summarized in Table~\ref{tab:bench}, 
-We consider four different kinds of
-interventions, which are all defined relative to an event
+We consider four kinds of intervention defined in terms of an event
 $e_0=((r_0, \xi_0), t_0)$:
 \begin{enumerate}[leftmargin=0.4cm]
-\item \textit{Punctual knock-down:} block $e_0$ only. In other words,
-  $\BLOCKED{\iota}{e} \eqdef (e = e_0)$.
-\item \textit{Template knock-down:} starting at time $t_0$, block
-  every realization of the event template associated with $e_0$.
-Formally,
-  $\BLOCKED{\iota}{((r, \xi), t)} \eqdef ((r, \xi) = (r_0, \xi_0)
-  \,\wedge\, t \geq t_0)$.
-\item \textit{Rule knock-down for modified agents:} starting at time
-  $t_0$, block any event instantiating rule $r_0$ that tests an agent
-  modified by $e_0$. In other words,
-  $\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, \xi(L_r)
-  \cap M_0 \neq \emptyset \,\wedge\, t \geq t_0)$, where $M_0$ is the
-  set of agents modified by $e_0$.
-\item \textit{Rule knock-down:} starting at time $t_0$, disable rule
-  $r_0$. In other words,
-  $\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, t \geq
-  t_0)$.
+\item \textit{Singular block:} This blocks only the specific event $e_0$. Formally: 
+\[\BLOCKED{\iota}{e} \eqdef (e = e_0).\]
+\item \textit{Template block:} This blocks every realization of the event template $(r_0, \xi_0)$ from time $t_0$ onward. In formal terms:
+\[\BLOCKED{\iota}{((r, \xi), t)} \eqdef ((r, \xi) = (r_0, \xi_0)
+\,\wedge\, t \geq t_0).\]
+\item \textit{Agent-dependent rule block:} This blocks, from
+$t_0$ onward, every event resulting from rule $r_0$ that tests an agent
+modified by $e_0$. For example, we might wish to prevent kinase $K_{627}$ from binding any substrate. In formal terms: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r \!=\! r_0 \,\wedge\, \xi(L_r)\cap M_0 \!\neq\! \emptyset \,\wedge\, t \!\geq\! t_0)\] where $M_0$ is the set of agents modified by $e_0$.
+\item \textit{Rule block:} This outright disables rule
+$r_0$ from $t_0$ onward. Formally: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, t \geq t_0).\]
 \end{enumerate}
-All four kinds of interventions may be useful for causal analysis in
-different settings, although we are still investigating best practices
-(see our conclusion).
+All four kinds of intervention might be useful for causal analysis in
+different settings.
 
-The benchmark proceeds as follows:
+Our experimental setup consists of the model in Figure~\ref{fig:model} comprising $10^4$ substrates and $10^4$ kinases. Every agent starts out in an unbound and unphosphorylated state. The simulation is stopped as soon as the system contains more phosphorylated than unphosphorylated substrates. We then proceed as follows.
 \begin{inparaenum}[(i)]
-\item We first generate $n=10$ reference traces using the Kappa
-  simulator, from an initial mixture that is composed of $10^4$
-  substrates and the same number of kinases. Every agent starts in a
-  free and unphosphorylated state. We stop the simulation when a
-  majority of substrates become phosphorylated.
-\item For every reference trace $\tau$, we write $T$ the \textsc{cpu} time
-  needed by the Kappa simulator to generate $\tau$ and consider the
-  $20$ possible interventions that can be formed by choosing a rule
-  $r$ and then choosing an intervention in the list above, taking for
-  $e_0$ the first application of $r$ in $\tau$.
-\item For every such intervention $\iota$, we generate $n' = 10$
-  counterfactual traces.
-\item For every generated counterfactual trace $\tau'$, we write $T'$
-  the \textsc{cpu} time that is used by our implementation to generate
-  $\tau'$ and $N_F$ the number of non-productive (futile) iterations
-  it went through in doing so. An iteration of counterfactual
-  resimulation is said to be non-productive if it does not produce an
-  event nor consume a factual event. Finally, we define the
-  \textit{slowdown} $S$ of counterfactual resimulation relative to
-  simulation as
-  \[ S \,\eqdef\, \frac{|\tau|}{|\tau \cup \tau'|} \cdot
-    \frac{T'}{T}. \] This can be seen as the ratio between $T'$ and
-  $T$, where $T$ is normalized by the number $|\tau|$ of events in
-  $\tau$ and $T'$ is normalized by the number of distinct events in
-  the counterfactual experiment $(\tau, \iota, \tau')$, which we write
-  $|\tau \cup \tau'|$.
-
-  The average value (and sometimes the standard deviation) of these
-  quantities is shown Table~\ref{tab:bench}. Note that each line of
-  the table corresponds to one intervention and to a sample set of
-  $n \times n' = 100$ counterfactual experiments. For every intervention, we
-  also give a measure of how much counterfactual traces differ from
-  their cognate factual trace on average: given a counterfactual
-  experiment $(\tau, \iota, \tau')$, we write
-  $|\tau \!\setminus\! \tau'|$ the number of events that are proper to
-  $\tau$ and $|\tau' \!\setminus\! \tau|$ the number of events that
-  are proper to $\tau'$ (also called counterfactual events).
+\item We first generate $n_{\tau}=10$ reference traces and record the \textsc{cpu} time $T$ it took the Kappa simulator to generate each of them. For each trace, we also identify the first application of each $r\in\{b,u,u^{\ast},p,pk\}$ and declare it to be the event $e_0$ underlying the intervention.
+\item We test the $20$ possible
+interventions, based on $e_0$, that can be formed by combining each of the five rules $r$ with each of the four intervention types.
+\item For each such intervention $\iota$, we generate $n_{\tau',\iota} = 10$
+  counterfactual traces $\tau'$.
+\item For every counterfactual trace $\tau'$, we record 
+ the \textsc{cpu} time $T'$ used by our implementation to generate it. We
+also record the number $N_{\emptyset}$ of iterations that neither produced a
+counterfactual event nor consumed a factual event (non-productive cycles).
+Finally, we define the \textit{slowdown} $S$ of counterfactual resimulation
+relative to simulation as the ratio of $T'$, normalized by the number of distinct events $|\tau \cup \tau'|$ in the counterfactual experiment $(\tau, \iota, \tau')$, to $T$, normalized by the number $|\tau|$ of events in
+$\tau$:
+\[ 
+  S \,\eqdef\, \frac{|\tau|}{|\tau \cup \tau'|} \cdot\frac{T'}{T}. 
+\] 
+The average value and standard deviation of these quantities is shown
+Table~\ref{tab:bench}. Note that each row of the table corresponds to one
+intervention $\iota$ and to a sample set of $n_{\tau} \times n_{\tau',\iota} =
+100$ counterfactual experiments. For every intervention, we also report a
+measure of how much counterfactual traces differ from their cognate factual
+trace on average: given a counterfactual experiment $(\tau, \iota, \tau')$, we
+write $|\tau \!\setminus\! \tau'|$ for the number of events that are proper to
+$\tau$ and $|\tau' \!\setminus\! \tau|$ the number of events that are proper to
+$\tau'$ (also called counterfactual events). 
 \end{inparaenum}
 
 \subsection{Results}
 
-The observed slowdown never exceeds 50\% on average. Besides, no
-intervention was observed to ever produce a futile cycle. This should
-not be surprising though, as all the interventions we considered are
-regular, with the only exception of the ``\textit{template
-  knock-down}'' for rule $b$ (sixth row in
-Table~\ref{tab:bench}). Although this intervention can produce futile
-cycles in theory, it is highly unlikely to do so.  Indeed, it is very
-unlikely for a kinase to bind the same substrate twice in a large
-mixture. More generally, an intervention $\iota$ that fails to be
-regular because $\BLOCKED{\iota}{((r, \xi), t)}$ features a
-conjunction of terms constraining $\xi$ on different connected
-components of $L_r$ tends to not induce many futile cycles for a
-similar reason and therefore can often be handled efficiently anyway.
+The observed slowdown $S$ never exceeds 50\% on average. No intervention
+produced a non-productive cycle. This is not too surprising, as all the
+interventions we considered are regular, with the only exception of the
+``\textit{template block}'' for rule $b$. Although this intervention can produce
+non-productive cycles in theory, it is highly unlikely for a kinase to bind the same substrate twice in a large mixture. More
+generally, an intervention $\iota$ that is irregular, because
+$\BLOCKED{\iota}{((r, \xi), t)}$ features a conjunction of terms constraining
+$\xi$ on different connected components of $L_r$, does not tend to induce many
+non-productive cycles for a similar reason and, therefore, can often be handled
+efficiently anyway.
 
-Unsurprisingly, we can also see that the ``stronger'' the
-intervention, the more counterfactual traces tend to diverge from
-their reference trace. Besides, in a large mixture, interventions that
-only affect a small number of agents do not cause major divergences at
-the population level. Indeed, only the five ``rule-knocking''
-interventions induced major divergences.
-
-
+As expected, we observe that the ``stronger'' the intervention, the bigger the divergence of counterfactual traces from their factual reference trace. Moreover, interventions that only affect a small number of
+agents in a large mixture do not cause major divergences at the population level. In fact, only the five rule-blocking interventions had a major impact.
 
 % Besides, the interventions
 % for which counterfactual resimulation involves futile cycles are those
@@ -118,8 +86,8 @@ interventions induced major divergences.
   \begin{center}
     \input{generated/bench.tex}
   \end{center}
-  \caption{A benchmark of counterfactual resimulation. On average,
-    $T = 6.01$s with a standard deviation of $1.09s$. Besides,
-    $|\tau| = 1.9\mathrm{e}5$ with a standard deviation of
-    $1.2\mathrm{e}3$.}\label{tab:bench}
+  \caption{
+A benchmark of counterfactual resimulation. On average,
+    $T = 6.01\pm 1.09$ s.  In addition,
+    $|\tau| = 1.9\mathrm{e}5 \pm 1.2\mathrm{e}3$.}\label{tab:bench}
 \end{table}
