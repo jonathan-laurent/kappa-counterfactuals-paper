@@ -39,27 +39,36 @@ versa.
 
 \ifshort \vspace{-0.4cm} \else \vspace{-0.3cm} \fi
 
-\paragraph{Notation and diction:} We will use the symbol $e$, which in previous
-sections referred to an event template, to directly denote an event. Moreover, when we say that an event \emph{tests} or \emph{modifies} a site we really mean the tests and actions involved when matching and rewriting, respectively, the underlying rule in the mixture $\TSTATE{t}{\tau}$. For example, event $p$ in \RefTrace{} tests three sites and modifies one.
+\paragraph{Notation and diction:} We will use the symbol $e$, which in
+previous sections referred to an event template, to directly denote an
+event. Moreover, when we say that an event \emph{tests} or
+\emph{modifies} a site we really mean the tests and actions involved
+when matching and rewriting, respectively, the underlying rule in the
+mixture $\TSTATE{t}{\tau}$. For example, event $p$ in \RefTrace{}
+tests three sites and modifies one. Finally, an event $e$ occuring at
+time $t$ is said to be \emph{executable} in trace $\tau$ if the
+associated template is realizable in mixture $\TSTATE{\tau}{t}$.
 
 \subsection{Prevention in counterfactual experiments}
 \label{subsec:cex}\label{subsec:inhibition}
 
-A \textit{counterfactual experiment} is a triple $(\tau, \iota, \tau')$ for
-which there exists a schedule $\sigma$ such that $\tau = T(\sigma)$ and $\tau' =
-\ATRAJ{}(\sigma)$. Such triples are produced by counterfactual resimulation.
+A \textit{counterfactual experiment} is a triple
+$(\tau, \iota, \tau')$ for which there exists a schedule $\sigma$ such
+that $\tau = T(\sigma)$ and $\tau' = \ATRAJ{}(\sigma)$. Such triples
+are produced by counterfactual resimulation.
 
-To formalize enablement and prevention we need to define some terms used in
-Kappa to talk about events. Without loss of generality, we shall assume that a
-site on an agent carries either binding state or tagging state but not both. The
-\textit{value} of a tagged site in a mixture is its current tag and the value of
-a binding site is either $\textsc{free}$ or $\textsc{bound-to}(s)$, where $s$
-identifies another site in the mixture. 
+To formalize enablement and prevention we need to define some terms
+used in Kappa to talk about events. Without loss of generality, we
+shall assume that a site on an agent carries either binding state or
+tagging state but not both. The \textit{value} of a tagged site in a
+mixture is its current tag and the value of a binding site is either
+$\textsc{free}$ or $\textsc{bound-to}(s)$, where $s$ identifies
+another site in the mixture.
 
 \input{figures/cex}
 
 \begin{definition}[Enablement]
-  Let $\tau$ be a trace and $e, e'$ two events in $\tau$.  We say that
+  Let $\tau$ be a trace and $e, e' \in \tau$ two events.  We say that
   $e$ enables $e'$ if $e$ is the last event before $e'$ that modifies
   some site to the value it is tested for by $e'$.
 \end{definition}
