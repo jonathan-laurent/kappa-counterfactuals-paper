@@ -47,7 +47,7 @@ state of the system. (Technically, a rule also requires a function from
 agents in $\RLHS{r}$ to agents in $\RRHS{r}$ to make the rewrite
 unambiguous.) By virtue of the $\lambda_r$, the rules of a model,
 together with an initial number of agents, constitute a dynamical
-system, which we defined shortly.
+system, which we define shortly.
 
 \input{figures/model}
 
@@ -95,7 +95,7 @@ events, called a \emph{trace}.
 
 \longversion{\input{algos/gillespie}}
 
-In our toy model, agents are subject to the rules depicted in Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates can bind, provided their requisite binding sites are free (unbound). Note that $\RLHS{b}$ of rule $b$ is a pattern: It omits mentioning the sites that carry phosphorylation state, which are therefore not considered when matching the mixture to $\RLHS{b}$. Rules $u$ and $u^{*}$ define unbinding events that depend
+In our toy model, agents are subject to the rules depicted in Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates can bind, provided their requisite binding sites are free (unbound). Note that $\RLHS{b}$ is a pattern: It omits mentioning the sites that carry phosphorylation state, which are therefore not considered when matching the mixture to $\RLHS{b}$. Rules $u$ and $u^{*}$ define unbinding events that depend
 on the phosphorylation state of the kinase $K$. The distinction is motivated by
 kinetics: Rule $u$ fires at a faster rate than $u^{*}$. Rule $p$ specifies that
 a substrate can be phosphorylated when it is bound to a kinase. For the sake of

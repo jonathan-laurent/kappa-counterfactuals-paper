@@ -21,7 +21,7 @@ $e_0=((r_0, \xi_0), t_0)$:
 \,\wedge\, t \geq t_0).\]
 \item \textit{Agent-dependent rule block:} This blocks, from
 $t_0$ onward, every event resulting from rule $r_0$ that tests an agent
-modified by $e_0$. For example, we might wish to prevent kinase $K_{627}$ from binding any substrate. In formal terms: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r \!=\! r_0 \,\wedge\, \xi(L_r)\cap M_0 \!\neq\! \emptyset \,\wedge\, t \!\geq\! t_0)\] where $M_0$ is the set of agents modified by $e_0$.
+modified by $e_0$. For example, we might wish to prevent substrate $S_{627}$ from being phosphorylated by any substrate. In formal terms: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r \!=\! r_0 \,\wedge\, \xi(L_r)\cap M_0 \!\neq\! \emptyset \,\wedge\, t \!\geq\! t_0)\] where $M_0$ is the set of agents modified by $e_0$.
 \item \textit{Rule block:} This outright disables rule
 $r_0$ from $t_0$ onward. Formally: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, t \geq t_0).\]
 \end{enumerate}

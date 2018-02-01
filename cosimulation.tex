@@ -29,14 +29,14 @@ role $pk$ can play in principle, but what role it actually did play in $\tau$.
 Counterfactual statements are undetachable from the context in which they are
 formulated.
 
-Pearl's standard account 
-\cite{pearl2009causality} is based on performing \textit{``surgical
-  interventions''} on a structural equation model (SEM). A SEM
-features a finite sequence $(x_1, \dots, x_n)$ of variables, each
-associated to a \emph{functional equation} of the form
+Pearl's standard account \cite{pearl2009causality} of counterfactuals
+is based on performing \textit{``surgical interventions''} on a
+structural equation model (SEM). A SEM features a finite sequence
+$(x_1, \dots, x_n)$ of variables, each associated to a
+\emph{functional equation} of the form
 $x_i = f_i(x_1, \dots, x_{i-1}, u_i)$, where $f_i$ is a deterministic
-function and $u_i$ a random variable. Ideally, each $f_i$ defines
-an independent and autonomous physical mechanism. This is partially
+function and $u_i$ a random variable. Ideally, each $f_i$ defines an
+independent and autonomous physical mechanism. This is partially
 enforced by the requirement that the $u_i$ must be mutually
 independent. Given some observation $e$, the probability of the
 counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
@@ -50,51 +50,58 @@ have been be true'' is evaluated following a three-steps process:
   this new model when $\vec{u}$ is distributed according to $p_e$.
 \end{inparaenum}
 
-Because of their combinatorial nature, rule-based models do not have a natural encoding in terms of structural equations. It is, therefore, not clear how Pearl's construction would apply.
+Because of their combinatorial nature, rule-based models do not have a
+natural encoding in terms of structural equations. It is, therefore,
+not clear how Pearl's construction would apply.
 
 \subsection{A semantics for counterfactuals}
 \label{subsec:counterfactuals-semantics}
 
 An intervention $\iota$ prevents the occurrence of selected events and
 is defined by a predicate $\BLOCKED{\iota}{\cdot}$ ranging over
-events. \longversion{(Our framework can accomodate a much broader range of
-interventions, but we make this restriction for ease of exposition.)}
-Given a predicate $\psi$ over traces, we write the statement
-\textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
-  would have been true''} as $\CFST{}$.
+events. \longversion{(Our framework can accomodate a much broader
+  range of interventions, but we make this restriction for ease of
+  exposition.)}  Given a predicate $\psi$ over traces, we write the
+statement \textit{``Had intervention $\iota$ happened in trace $\tau$,
+  $\psi$ would have been true''} as $\CFST{}$.
 
 To assign a probability to this statement, it is useful to
 reconceptualize the CTMC induced by a model so as to isolate the
-source of randomness from everything else. This can be done as follows:
+source of randomness from everything else. This can be done as
+follows:
 \begin{inparaenum}[(i)]
 \item Consider all possible event templates $(r, \xi)$, where $\xi$
-maps into a large enough set of global identifiers. For each event template,
-imagine a Poisson process in which a bell rings at time intervals drawn independently from an
-exponential distribution with parameter $\lambda_r$. These Poisson processes are
-all gathered in a random variable $\Sigma$ that we call \emph{schedule}. It
-features the sequence of ringing times for every bell and plays the same role as
-the variable $\vec{u}$ in a SEM.
+  maps into a large enough set of global identifiers. For each event
+  template, imagine a Poisson process in which a bell rings at time
+  intervals drawn independently from an exponential distribution with
+  parameter $\lambda_r$. These Poisson processes are all gathered in a
+  random variable $\Sigma$ that we call \emph{schedule}. It features
+  the sequence of ringing times for every bell and plays the same role
+  as the variable $\vec{u}$ in a SEM.
 \item A simulation trace can be viewed as the following deterministic
-function $T(\Sigma)$ of the random variable $\Sigma$: starting with the initial mixture and moving through time,
-whenever a bell rings, its associated event template $e$ is realized by
-transforming the current mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if
-the current mixture $m$ is given as in Figure~\ref{fig:mixture} and the bell
-linked to \textit{``apply rule $b$ on substrate $3$ and kinase $4$''}
-rings, a bond is created between these two agents. In contrast, the bell
-linked to \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}'
-would have no effect. We write $T(\sigma)$ for the trace generated from schedule $\sigma$.
+  function $T(\Sigma)$ of the random variable $\Sigma$: starting with
+  the initial mixture and moving through time, whenever a bell rings,
+  its associated event template $e$ is realized by transforming the
+  current mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the
+  current mixture $m$ is given as in Figure~\ref{fig:mixture} and the
+  bell linked to \textit{``apply rule $b$ on substrate $3$ and kinase
+    $4$''} rings, a bond is created between these two agents. In
+  contrast, the bell linked to \textit{``apply rule $b$ on substrate
+    $1$ and kinase $2$'}' would have no effect. We write $T(\sigma)$
+  for the trace generated from schedule $\sigma$.
 \end{inparaenum}
 
-We extend this viewpoint to include interventions. For an intervention $\iota$,
-we define the altered trace $\ATRAJ{}$ much in the same way as $T$, but also
-requiring $\BLOCKED{\iota}{(e, t)}$ to be false for $e$ to be realized when its
-bell rings at $t$.  Given an observed trace $\tau$, an intervention $\iota$ and
-a predicate $\psi$, the probability of $\CFST{}$ can now be computed according
-to Pearl's three-steps strategy: \ItAbduction{} condition the distribution of
-$\Sigma$ by the observation that $T=\tau$, then \ItAction{} alter the behavior
-of the simulation with intervention $\iota$ and \ItPrediction{} compute the
-probability of $\psi$ in the resulting setting. This results in the following
-definition.
+We extend this viewpoint to include interventions. For an intervention
+$\iota$, we define the altered trace $\ATRAJ{}$ much in the same way
+as $T$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false for
+$e$ to be realized when its bell rings at $t$.  Given an observed
+trace $\tau$, an intervention $\iota$ and a predicate $\psi$, the
+probability of $\CFST{}$ can now be computed according to Pearl's
+three-steps strategy: \ItAbduction{} condition the distribution of
+$\Sigma$ by the observation that $T=\tau$, then \ItAction{} alter the
+behavior of the simulation with intervention $\iota$ and
+\ItPrediction{} compute the probability of $\psi$ in the resulting
+setting. This results in the following definition.
 
 \begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
   For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
@@ -108,25 +115,25 @@ definition.
 \label{subsec:cosim-algo}
 
 Following Definition~\ref{def:counterfactuals}, we estimate the
-probability of the counterfactual statement
-$\CFST{}$ by sampling instances of the random
-variable $\CTRAJ{}$. Such instances are called \emph{counterfactual
-  traces}. Intuitively, they give an account of what else trace $\tau$
-could have been, had intervention $\iota$ happened.  We introduce
-Algorithm~\ref{alg:cosimulation}, a variation of the Doob-Gillespie
-algorithm, to sample a counterfactual trace efficiently given a
-reference trace $\tau$ and an intervention $\iota$. We call it
-\emph{counterfactual resimulation}, since it works by going
-through every event of $\tau$, resimulating only those parts of $\tau$
-that are affected by $\iota$. In particular, when $\iota$ is
+probability of the counterfactual statement $\CFST{}$ by sampling
+instances of the random variable $\CTRAJ{}$. Such instances are called
+\emph{counterfactual traces}. Intuitively, they give an account of
+what else trace $\tau$ could have been, had intervention $\iota$
+happened.  We introduce Algorithm~\ref{alg:cosimulation}, a variation
+of the Doob-Gillespie algorithm, to sample a counterfactual trace
+efficiently given a reference trace $\tau$ and an intervention
+$\iota$. We call it \emph{counterfactual resimulation}, since it works
+by going through every event of $\tau$, resimulating only those parts
+of $\tau$ that are affected by $\iota$. In particular, when $\iota$ is
 the trivial intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it
 returns $\tau$.
 
 This algorithm relies on a modified notion of activity we call
 \emph{divergent activity}. We define the set of \emph{divergent
-  embeddings} of the left-hand side of a rule $r$ into mixture $m$
-and relative to $m_0$ as
-%\tryinline{\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.}
+  embeddings} of the left-hand side of a rule $r$ into mixture $m$ and
+relative to $m_0$ as
+% \tryinline{\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus
+% \EMBS{r}{m_0}.}
 $\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.$
 Equivalently, a divergent embedding is an embedding whose codomain
 features a \emph{divergent site}, that is, a site whose state differs
@@ -142,15 +149,15 @@ to the mixture at time $t$ in $\tau$\longversion{, which is obtained
 \input{algos/cosimulation}
 
 The role and relevance of the concept of divergent activity in
-counterfactual resimulation is summarized by the
-following proposition, where $\tau \cap I = \emptyset$ is a
-shortcut for ``no event of trace $\tau$ occurs in
-the time interval $I$''.
-\begin{proposition}[Property of the divergent activity]\label{prop:div-activity}
-  For $\tau$ a trace
-  and $\iota$ an intervention, let $I = (t, t+\delta)$ be a time interval
-  such that $\tau \cap I = \emptyset$ and $m_0 =
-  \TSTATE{t}{\tau}$. Then, we have
+counterfactual resimulation is summarized by the following
+proposition, where $\tau \cap I = \emptyset$ is a shortcut for ``no
+event of trace $\tau$ occurs in the time interval $I$''.
+\begin{proposition}[Property of the divergent
+  activity]\label{prop:div-activity}
+  For $\tau$ a trace and $\iota$ an intervention, let
+  $I = (t, t+\delta)$ be a time interval such that
+  $\tau \cap I = \emptyset$ and $m_0 = \TSTATE{t}{\tau}$. Then, we
+  have
   \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
       \TSTATE{t}{\ATRAJ{}} = m\ }
     \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
