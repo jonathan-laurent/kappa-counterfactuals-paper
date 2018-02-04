@@ -67,15 +67,15 @@ the mixture $m'$ obtained by realizing $(r, \xi)$, i.e.\@ by rewriting
 the agents with identifiers in the codomain of $\xi$ into $\RRHS{r}$. The
 realization of an event template at a particular time creates an (actual) \emph{event}, formally defined as a pair $(e, t)$ with $e$ an event template and $t$ its time of realization. 
 
-The \emph{activity} $\alpha_r(m)$ of a rule $r$ in a given mixture $m$,
-is defined by the product of the rule propensity and the number of
+The \emph{activity} $\alpha_r(m)$ of a rule $r$ in a given mixture $m$
+is defined by the product of the rule's firing rate and the number of
 embeddings of $\RLHS{r}$ into $m$:
 $\alpha_r(m)=\lambda_r|\EMBS{r}{m}|$. For example, in
 Figure~\ref{fig:mixture}, rule $b$ has activity $2\lambda_b$ and rule
 $u$ has activity $0$. The \emph{total activity} of a mixture is given
 by $\alpha(m)=\sum_r\alpha_r(m)=\sum_r\lambda_r|\EMBS{r}{m}|$.
 
-The continuous-time Markov chain associated with a model can be
+The continuous-time Markov chain induced by a model can be
 simulated with the \emph{Doob-Gillespie (DG) algorithm}
 \cite{gillespie1977exact}, which loops over the
 following steps:

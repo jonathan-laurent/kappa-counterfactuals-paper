@@ -21,7 +21,7 @@ $e_0=((r_0, \xi_0), t_0)$:
 \,\wedge\, t \geq t_0).\]
 \item \textit{Agent-dependent rule block:} This blocks, from
 $t_0$ onward, every event resulting from rule $r_0$ that tests an agent
-modified by $e_0$. For example, we might wish to prevent substrate $S_{627}$ from being phosphorylated by any substrate. In formal terms: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r \!=\! r_0 \,\wedge\, \xi(L_r)\cap M_0 \!\neq\! \emptyset \,\wedge\, t \!\geq\! t_0)\] where $M_0$ is the set of agents modified by $e_0$.
+modified by $e_0$. For example, we might wish to prevent substrate $S_{627}$ from being phosphorylated by any kinase. In formal terms: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r \!=\! r_0 \,\wedge\, \xi(L_r)\cap M_0 \!\neq\! \emptyset \,\wedge\, t \!\geq\! t_0)\] where $M_0$ is the set of agents modified by $e_0$.
 \item \textit{Rule block:} This outright disables rule
 $r_0$ from $t_0$ onward. Formally: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, t \geq t_0).\]
 \end{enumerate}
@@ -88,6 +88,6 @@ agents in a large mixture do not cause major divergences at the population level
   \end{center}
   \caption{
 A benchmark of counterfactual resimulation. On average,
-    $T = 6.01\pm 1.09$ s.  In addition,
-    $|\tau| = 1.9\mathrm{e}5 \pm 1.2\mathrm{e}3$.}\label{tab:bench}
+    $T = 4.01\pm .12$ s.  In addition,
+    $|\tau| = 1.6\mathrm{e}5 \pm 1.5\mathrm{e}3$.}\label{tab:bench}
 \end{table}
