@@ -2,25 +2,26 @@
 
 \section{Motivating example}\label{sec:example}
 
-We provide some background on the Kappa language and
-introduce a toy example motivating the need for counterfactual
-reasoning in analyzing the causal structure of simulation traces.
+We provide some background on the Kappa language and introduce a toy
+example motivating the need for counterfactual reasoning in analyzing
+the causal structure of simulation traces.
 
 \subsection{Some background on Kappa}\label{sec:background}
 
-Proteins are complex molecular machines that reversibly tag one another with
-molecular flags and reversibly bind each other to form transient associations.
-In this way, proteins come to have ``state" that can control the interactions
-they engage in. In Kappa, a protein is modeled as an abstract \emph{agent} with
-a name that designates its \emph{type} and a signature of distinguishable
-\emph{sites} at which it can be tagged or bound by other agents. A site can bind
-at most one agent at a time and must be in a definite state.
+Proteins are complex molecular machines that reversibly tag one
+another with molecular flags and reversibly bind each other to form
+transient associations.  In this way, proteins come to have ``state"
+that can control the interactions they engage in. In Kappa, a protein
+is modeled as an abstract \emph{agent} with a name that designates its
+\emph{type} and a signature of distinguishable \emph{sites} at which
+it can be tagged or bound by other agents. A site can bind at most one
+agent at a time and must be in a definite state.
 % , each type of agent being described in the model's
 % \emph{signature}.
 
-In our illustrative example, we consider two types of agents for
-which we use biological nomenclature. One type, $S$, is a substrate
-that receives a tag known as a phosphate group in a phosphorylation
+In our illustrative example, we consider two types of agents for which
+we use biological nomenclature. One type, $S$, is a substrate that
+receives a tag known as a phosphate group in a phosphorylation
 interaction. The other, $K$, is a kinase that phosphorylates
 $S$. Agents of both types feature a binding site at which they can
 bind one another and a site that can be in one of two possible states:
@@ -32,40 +33,43 @@ A \emph{mixture} is a multiset of agents whose state at each site is
 fully specified. A mixture represents the state of a system and can be
 thought of as a (potentially large) graph consisting of many connected
 components. In a mixture, agents of the same type are distinguished by
-a unique global identifier (Figure~\ref{fig:mixture}).
+a unique global identifier. %(Figure~\ref{fig:mixture}).
 
 \input{figures/mixture}
 
-Interactions between agents are
-modeled by local rewriting \emph{rules}.  A rule $r$ is defined by a
-triple $(\RLHS{r}, \RRHS{r}, \lambda_r)$, where $\RLHS{r}$ is the
-left-hand side specifying a pattern (the pre-condition), $\RRHS{r}$
-the right-hand side (or post-condition), and $\lambda_r$ a firing rate.
-The basic idea is that the ``location" at which the
-mixture matches $\RLHS{r}$ is rewritten in place by $\RRHS{r}$, changing the
-state of the system. (Technically, a rule also requires a function from
-agents in $\RLHS{r}$ to agents in $\RRHS{r}$ to make the rewrite
+Interactions between agents are modeled by local rewriting
+\emph{rules}.  A rule $r$ is defined by a triple
+$(\RLHS{r}, \RRHS{r}, \lambda_r)$, where $\RLHS{r}$ is the left-hand
+side specifying a pattern (the pre-condition), $\RRHS{r}$ the
+right-hand side (or post-condition), and $\lambda_r$ a firing rate.
+The basic idea is that the ``location" at which the mixture matches
+$\RLHS{r}$ is rewritten in place by $\RRHS{r}$, changing the state of
+the system. (Technically, a rule also requires a function from agents
+in $\RLHS{r}$ to agents in $\RRHS{r}$ to make the rewrite
 unambiguous.) By virtue of the $\lambda_r$, the rules of a model,
 together with an initial number of agents, constitute a dynamical
 system, which we define shortly.
 
 \input{figures/model}
 
-In preparation for section~\ref{sec:counterfactual}, we define dynamics by
-introducing the auxiliary concept of \emph{event template}, which is a pair $(r,
-\xi)$ where $r$ is a rule and $\xi$ a function
-from agents in $\RLHS{r}$ to global identifiers. We say that
-$(r, \xi)$ is \emph{realizable} in mixture $m$ if the global
+In preparation for section~\ref{sec:counterfactual}, we define
+dynamics by introducing the auxiliary concept of \emph{event
+  template}, which is a pair $(r, \xi)$ where $r$ is a rule and $\xi$
+a function from agents in $\RLHS{r}$ to global identifiers. We say
+that $(r, \xi)$ is \emph{realizable} in mixture $m$ if the global
 identifiers assigned by $\xi$ exist in $m$ and the agents bearing them
 match $\RLHS{r}$. In this case, we write $\TRIGGERABLE{m}{(r, \xi)}$
-(read ``$m$ admits $(r, \xi)$") and call $\xi$ an
-\emph{embedding} of $\RLHS{r}$ into $m$:
+(read ``$m$ admits $(r, \xi)$") and call $\xi$ an \emph{embedding} of
+$\RLHS{r}$ into $m$:
 % (or a match of $m$ to $\RLHS{r}$)
-\tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r, \xi)}\}.}
-Whenever $m \vdash (r, \xi)$, we write $m'=\UPDATE{m}{(r, \xi)}$ for
-the mixture $m'$ obtained by realizing $(r, \xi)$, i.e.\@ by rewriting
-the agents with identifiers in the codomain of $\xi$ into $\RRHS{r}$. The
-realization of an event template at a particular time creates an (actual) \emph{event}, formally defined as a pair $(e, t)$ with $e$ an event template and $t$ its time of realization. 
+\tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r,
+    \xi)}\}.}  Whenever $m \vdash (r, \xi)$, we write
+$m'=\UPDATE{m}{(r, \xi)}$ for the mixture $m'$ obtained by realizing
+$(r, \xi)$, i.e.\@ by rewriting the agents with identifiers in the
+codomain of $\xi$ into $\RRHS{r}$. The realization of an event
+template at a particular time creates an (actual) \emph{event},
+formally defined as a pair $(e, t)$ with $e$ an event template and $t$
+its time of realization.
 
 The \emph{activity} $\alpha_r(m)$ of a rule $r$ in a given mixture $m$
 is defined by the product of the rule's firing rate and the number of
@@ -75,31 +79,37 @@ Figure~\ref{fig:mixture}, rule $b$ has activity $2\lambda_b$ and rule
 $u$ has activity $0$. The \emph{total activity} of a mixture is given
 by $\alpha(m)=\sum_r\alpha_r(m)=\sum_r\lambda_r|\EMBS{r}{m}|$.
 
-The continuous-time Markov chain induced by a model can be
-simulated with the \emph{Doob-Gillespie (DG) algorithm}
-\cite{gillespie1977exact}, which loops over the
-following steps:
+The continuous-time Markov chain induced by a model can be simulated
+with the \emph{Doob-Gillespie (DG) algorithm}
+\cite{gillespie1977exact}, which loops over the following steps:
 \begin{inparaenum}[(1)]
 \item draw a time interval $\delta$ to the next event from an
   exponential distribution with parameter $\alpha(m)$ and increment
   the simulated system time by $\delta$,
 \item draw a rule $r$ with probability $\alpha_r(m)/\alpha(m)$ and
 \item pick uniformly an embedding $\xi$ of $r$ in $m$ and realize the
- event template $(r, \xi)$.
+  event template $(r, \xi)$.
 \end{inparaenum}
-This algorithm is efficiently implementated for rule-based
-models in Kappa as described in
-\cite{DanosEtAl-APLAS07,BoutillierEK17}\longversion{; it is available at
-kappalanguage.org}. The algorithm outputs a sequence of
-events, called a \emph{trace}.
+This algorithm is efficiently implementated for rule-based models in
+Kappa as described in
+\cite{DanosEtAl-APLAS07,BoutillierEK17}\longversion{; it is available
+  at kappalanguage.org}. The algorithm outputs a sequence of events,
+called a \emph{trace}.
 
 \longversion{\input{algos/gillespie}}
 
-In our toy model, agents are subject to the rules depicted in Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates can bind, provided their requisite binding sites are free (unbound). Note that $\RLHS{b}$ is a pattern: It omits mentioning the sites that carry phosphorylation state, which are therefore not considered when matching the mixture to $\RLHS{b}$. Rules $u$ and $u^{*}$ define unbinding events that depend
-on the phosphorylation state of the kinase $K$. The distinction is motivated by
-kinetics: Rule $u$ fires at a faster rate than $u^{*}$. Rule $p$ specifies that
-a substrate can be phosphorylated when it is bound to a kinase. For the sake of
-simplicity, we model the phosphorylation of a kinase as a spontaneous process (rule $pk$).
+In our toy model, agents are subject to the rules depicted in
+Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates
+can bind, provided their requisite binding sites are free
+(unbound). Note that $\RLHS{b}$ is a pattern: It omits mentioning the
+sites that carry phosphorylation state, which are therefore not
+considered when matching the mixture to $\RLHS{b}$. Rules $u$ and
+$u^{*}$ define unbinding events that depend on the phosphorylation
+state of the kinase $K$. The distinction is motivated by kinetics:
+Rule $u$ fires at a much faster rate than $u^{*}$. Rule $p$ specifies
+that a substrate can be phosphorylated when it is bound to a
+kinase. For the sake of simplicity, we model the phosphorylation of a
+kinase as a spontaneous process (rule $pk$).
 
 \subsection{Where existing analysis falls short}
 \label{subsec:dumb-story}
