@@ -46,21 +46,33 @@ The basic idea is that the ``location" at which the mixture matches
 $\RLHS{r}$ is rewritten in place by $\RRHS{r}$, changing the state of
 the system. (Technically, a rule also requires a function from agents
 in $\RLHS{r}$ to agents in $\RRHS{r}$ to make the rewrite
-unambiguous.) By virtue of the $\lambda_r$, the rules of a model,
-together with an initial number of agents, constitute a dynamical
-system, which we define shortly.
+unambiguous.)
 
 \input{figures/model}
 
-In preparation for section~\ref{sec:counterfactual}, we define
-dynamics by introducing the auxiliary concept of \emph{event
-  template}, which is a pair $(r, \xi)$ where $r$ is a rule and $\xi$
-a function from agents in $\RLHS{r}$ to global identifiers. We say
-that $(r, \xi)$ is \emph{realizable} in mixture $m$ if the global
-identifiers assigned by $\xi$ exist in $m$ and the agents bearing them
-match $\RLHS{r}$. In this case, we write $\TRIGGERABLE{m}{(r, \xi)}$
-(read ``$m$ admits $(r, \xi)$") and call $\xi$ an \emph{embedding} of
-$\RLHS{r}$ into $m$:
+In our toy model, agents are subject to the rules depicted in
+Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates
+can bind, provided their requisite binding sites are free
+(unbound). Note that $\RLHS{b}$ is a pattern: It omits mentioning the
+sites that carry phosphorylation state, which are therefore not
+considered when matching the mixture to $\RLHS{b}$. Rules $u$ and
+$u^{*}$ define unbinding events that depend on the phosphorylation
+state of the kinase $K$. The distinction is motivated by kinetics:
+Rule $u$ fires at a much faster rate than $u^{*}$. Rule $p$ specifies
+that a substrate can be phosphorylated when it is bound to a
+kinase. For the sake of simplicity, we model the phosphorylation of a
+kinase as a spontaneous process (rule $pk$).
+
+By virtue of the $\lambda_r$, the rules of a model, together with an
+initial mixture, constitute a dynamical system.  In preparation for
+section~\ref{sec:counterfactual}, we define dynamics by introducing the
+auxiliary concept of \emph{event template}, which is a pair $(r, \xi)$
+where $r$ is a rule and $\xi$ a function from agents in $\RLHS{r}$ to
+global identifiers. We say that $(r, \xi)$ is \emph{realizable} in
+mixture $m$ if the global identifiers assigned by $\xi$ exist in $m$
+and the agents bearing them match $\RLHS{r}$. In this case, we write
+$\TRIGGERABLE{m}{(r, \xi)}$ (read ``$m$ admits $(r, \xi)$") and call
+$\xi$ an \emph{embedding} of $\RLHS{r}$ into $m$:
 % (or a match of $m$ to $\RLHS{r}$)
 \tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r,
     \xi)}\}.}  Whenever $m \vdash (r, \xi)$, we write
@@ -97,19 +109,6 @@ Kappa as described in
 called a \emph{trace}.
 
 \longversion{\input{algos/gillespie}}
-
-In our toy model, agents are subject to the rules depicted in
-Figure~\ref{fig:model}. Rule $b$ states that kinases and substrates
-can bind, provided their requisite binding sites are free
-(unbound). Note that $\RLHS{b}$ is a pattern: It omits mentioning the
-sites that carry phosphorylation state, which are therefore not
-considered when matching the mixture to $\RLHS{b}$. Rules $u$ and
-$u^{*}$ define unbinding events that depend on the phosphorylation
-state of the kinase $K$. The distinction is motivated by kinetics:
-Rule $u$ fires at a much faster rate than $u^{*}$. Rule $p$ specifies
-that a substrate can be phosphorylated when it is bound to a
-kinase. For the sake of simplicity, we model the phosphorylation of a
-kinase as a spontaneous process (rule $pk$).
 
 \subsection{Where existing analysis falls short}
 \label{subsec:dumb-story}
