@@ -50,73 +50,93 @@ have been true'' is evaluated following a three-steps process:
   this new model when $\vec{u}$ is distributed according to $p_e$.
 \end{inparaenum}
 
-Because of their combinatorial nature, rule-based models do not have a
-natural encoding in terms of structural equations. It is, therefore,
-not clear how Pearl's construction would apply.
+Because of their dynamic and combinatorial nature, rule-based models do
+not have structural equations that are readily available at the
+outset. However, Pearl's construction generalizes to our setting,
+provided that we separate the randomness of simulation from its
+deterministic causal mechanisms.
 
 \subsection{A Semantics for Counterfactuals}
 \label{subsec:counterfactuals-semantics}
 
-An intervention $\iota$ prevents the occurrence of selected events and
-is defined by a predicate $\BLOCKED{\iota}{\cdot}$ ranging over
-events. \longversion{(Our framework can accomodate a much broader
-  range of interventions, but we make this restriction for ease of
-  exposition.)}  Given a predicate $\psi$ over traces, we write the
-statement \textit{``Had intervention $\iota$ happened in trace $\tau$,
-  $\psi$ would have been true''} as $\CFST{}$.
+An intervention $\iota$ is defined by a predicate
+$\BLOCKED{\iota}{\cdot}$ ranging over events. The purpose of the
+predicate is to act as a filter preventing the occurrence of selected
+events. Given a predicate $\psi$ over traces, we write the statement
+\textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
+  would have been true''} as $\CFST{}$, borrowing a notation from
+\cite{halpern2016actual}.
 
-To assign a probability to this statement, it is useful to
-reconceptualize the CTMC induced by a model so as to isolate the
-source of randomness from everything else. This can be done as
-follows:
+To assign a probability to this statement, we must
+reconceptualize the CTMC induced by a model so as to
+separate the stochastic and deterministic aspects of a trace.
+This can be done as follows:
 \begin{inparaenum}[(i)]
 \item Consider all possible event templates $(r, \xi)$, where $\xi$
   maps into a large enough set of global identifiers. For each event
   template, imagine a Poisson process in which a bell rings at time
   intervals drawn independently from an exponential distribution with
   parameter $\lambda_r$. These Poisson processes are all gathered in a
-  random variable $\Sigma$ that we call \emph{schedule}. It features
-  the sequence of ringing times for every bell and plays the same role
-  as the variable $\vec{u}$ in a SEM.
-\item A simulation trace can be viewed as the following deterministic
-  function $T(\Sigma)$ of the random variable $\Sigma$: starting with
-  the initial mixture and moving through time, whenever a bell rings,
-  its associated event template $e$ is realized by transforming the
-  current mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the
-  current mixture $m$ is given as in Figure~\ref{fig:mixture} and the
-  bell linked to \textit{``apply rule $b$ on substrate $3$ and kinase
-    $4$''} rings, a bond is created between these two agents. In
-  contrast, the bell linked to \textit{``apply rule $b$ on substrate
-    $1$ and kinase $2$'}' would have no effect. We write $T(\sigma)$
-  for the trace generated from schedule $\sigma$.
+  random variable $\Sigma$ that we call \emph{schedule}, and which
+  features the sequence of ringing times of every bell.
+\item
+  To a realization $\sigma$ of $\Sigma$, we associate a unique
+  trace $T(\sigma)$ that is generated as follows: starting with the
+  initial mixture and moving through time, whenever a bell rings, its
+  associated event template $e$ is realized by transforming the
+  current mixture $m$ if $\TRIGGERABLE{m}{e}$. For
+  example, if the current mixture $m$ is given as in
+  Figure~\ref{fig:mixture} and the bell linked to \textit{``apply rule
+    $b$ on substrate $3$ and kinase $4$''} rings, a bond is created
+  between these two agents. In contrast, the bell linked to
+  \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}' would
+  have no effect.
 \end{inparaenum}
 
-We extend this viewpoint to include interventions. For an intervention
-$\iota$, we define the altered trace $\ATRAJ{}$ much in the same way
-as $T$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false for
-$e$ to be realized when its bell rings at $t$.  Given an observed
-trace $\tau$, an intervention $\iota$ and a predicate $\psi$, the
-probability of $\CFST{}$ can now be computed according to Pearl's
-three-steps strategy: \ItAbduction{} condition the distribution of
-$\Sigma$ by the observation that $T=\tau$, then \ItAction{} alter the
-behavior of the simulation with intervention $\iota$ and
-\ItPrediction{} compute the probability of $\psi$ in the resulting
-setting. This results in the following definition.
+Intuitively, $\Sigma$ determines when the opportunity for a reaction
+happens and between which molecules. It captures the randomness of
+simulation and plays the same role as the random vector $\vec u$ in a
+SEM. In contrast, $\sigma \mapsto T(\sigma)$ is a deterministic
+function that controls what a reaction does when it occurs.  It
+corresponds to the $f_i$ in a SEM and is likewise the target of
+interventions.
 
-\begin{definition}[Semantics of counterfactual statements]\label{def:counterfactuals}
+%By construction, the random trace $T(\Sigma)$ is distributed
+%  according to the CTMC semantics of Kappa discussed in
+%  section~\ref{sec:background}.
+
+For an intervention $\iota$ and a random realization $\sigma$, we
+define the altered trace $\ATRAJ{}(\sigma)$ much in the same way as
+$T(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false
+for $e$ to be realized when its bell rings at $t$.  Given an observed
+trace $\tau$, an intervention $\iota$ and a predicate $\psi$, the
+probability of $\CFST{}$ can now be defined according to Pearl's
+three-steps strategy: \ItAbduction{} condition the distribution of
+$\Sigma$ by the observation that $T(\Sigma)\!=\!\tau$, then
+\ItAction{} alter the behavior of $T$  with intervention
+$\iota$ and \ItPrediction{} consider the probability of $\psi$ in the
+resulting setting. This results in the following definition.
+
+\begin{definition}[Semantics of counterfactual statements]
+\label{def:counterfactuals}
   For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}) \ |\ T = \tau}. \]
+  \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}(\Sigma)) \ |\ T(\Sigma) = \tau}. \]
 \end{definition}
+In the rest of this paper, we use the shorthand notations $T$ and
+$T_\iota$ for the random traces $T(\Sigma)$ and $T_\iota(\Sigma)$
+respectively.
 
 \subsection{The Counterfactual Resimulation Algorithm}
 \label{subsec:cosim-algo}
 
 Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement $\CFST{}$ by sampling
-instances of the random variable $\CTRAJ{}$. Such instances are called
+instances of the random variable $\CTRAJ{}$ 
+(i.e. $T_\iota(\Sigma) \,|\, \{ T(\Sigma) = \tau \}$). 
+Such instances are called
 \emph{counterfactual traces}. Intuitively, they give an account of
 what else trace $\tau$ could have been, had intervention $\iota$
 happened.  We introduce Algorithm~\ref{alg:cosimulation}, a variation
