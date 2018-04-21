@@ -6,7 +6,7 @@ We provide some background on Kappa and introduce a toy
 example motivating the need for counterfactual reasoning in analyzing
 the causal structure of simulation traces.
 
-\subsection{Some background on Kappa}\label{sec:background}
+\subsection{Some Background on Kappa}\label{sec:background}
 
 Proteins are complex molecular machines that reversibly tag one
 another with molecular flags and reversibly bind each other to form
@@ -65,14 +65,15 @@ kinase as a spontaneous process (rule $pk$).
 
 By virtue of the $\lambda_r$, the rules of a model, together with an
 initial mixture, constitute a dynamical system.  In preparation for
-section~\ref{sec:counterfactual}, we define dynamics by introducing the
-auxiliary concept of \emph{event template}, which is a pair $(r, \xi)$
-where $r$ is a rule and $\xi$ a function from agents in $\RLHS{r}$ to
-global identifiers. We say that $(r, \xi)$ is \emph{realizable} in
-mixture $m$ if the global identifiers assigned by $\xi$ exist in $m$
-and the agents bearing them match $\RLHS{r}$. In this case, we write
-$\TRIGGERABLE{m}{(r, \xi)}$ (read ``$m$ admits $(r, \xi)$") and call
-$\xi$ an \emph{embedding} of $\RLHS{r}$ into $m$:
+section~\ref{sec:counterfactual}, we define dynamics by introducing
+the auxiliary concept of \emph{event template}, which is a pair
+$(r, \xi)$ where $r$ is a rule and $\xi$ a function from agents in
+$\RLHS{r}$ to global identifiers. We say that $(r, \xi)$ is
+\emph{realizable} in mixture $m$ if the global identifiers assigned by
+$\xi$ exist in $m$ and the agents bearing them match $\RLHS{r}$. In
+this case, we write $\TRIGGERABLE{m}{(r, \xi)}$ (read ``$m$ admits
+$(r, \xi)$") and call $\xi$ an \emph{embedding} of $\RLHS{r}$ into
+$m$:
 % (or a match of $m$ to $\RLHS{r}$)
 \tryinline{\EMBS{r}{m} \eqdef \{ \xi \,:\, \TRIGGERABLE{m}{(r,
     \xi)}\}.}  Whenever $m \vdash (r, \xi)$, we write
@@ -110,26 +111,28 @@ called a \emph{trace}.
 
 \longversion{\input{algos/gillespie}}
 
-\subsection{Where existing analysis falls short}
+\subsection{Where Existing Analysis Falls Short}
 \label{subsec:dumb-story}
 
 % What about asking the question for the specific trace to make it
 % clearer we are talking about actual causality ?
 
-Consider our toy model and assume, for the
-sake of illustration, an initial mixture $I$ with only a single kinase
-and a single substrate whose sites are unbound and
-unphosphorylated. We then ask: Starting from $I$, \emph{how} is $p$ typically achieved? We are not merely looking for an account of
-reachability but for a causal explanation, i.e.\@ a collection of events connected by causal influences.
+Consider our toy model and assume, for the sake of illustration, an
+initial mixture $I$ with only a single kinase and a single substrate
+whose sites are unbound and unphosphorylated. We then ask: Starting
+from $I$, \emph{how} is $p$ typically achieved? We are not merely
+looking for an account of reachability but for a causal explanation,
+i.e.\@ a collection of events connected by causal influences.
 
-For example, a simulation might produce the following trace
-(events are labelled by the rules that induced them):
+For example, a simulation might produce the following trace (events
+are labelled by the rules that induced them):
 \begin{align}
   \label{example-trace} 
   b,\ \ u,\ \ pk,\ \ b,\ \ p,\ \ u^{*},\ \ \cdots
 \end{align} 
-Current techniques \cite{DBLP:conf/fsttcs/DanosFFHH12,DanosEtAl-CONCUR07}
-generate a causal account by first computing a \emph{sub-trace} of
+Current techniques
+\cite{DBLP:conf/fsttcs/DanosFFHH12,DanosEtAl-CONCUR07} generate a
+causal account by first computing a \emph{sub-trace} of
 (\ref{example-trace}) that is
 \begin{inparaenum}[(i)]
 \item \emph{valid} in the sense that each of its events can be
@@ -137,7 +140,20 @@ generate a causal account by first computing a \emph{sub-trace} of
 \item \emph{minimal} in the sense that none of its valid sub-traces
   features $p$.
 \end{inparaenum}
-The relations of enablement among events in the minimal sub-trace yield a directed acyclic graph. Although trivial in our toy example, minimization is an NP-hard problem. Carrying out this approach on (\ref{example-trace}), one notes that the first occurence of $b$ sets the necessary conditions for $p$, but these are subsequently undone by $u$ only for the second occurrence of $b$ to re-introduce them. This illustrates why minimization compresses a trace into events that are \emph{necessary} for the outcome---which requires eliminating futile cycles. In our case, the causal account for $p$ starts with the initial condition, symbolized by the \emph{init} event, and skips to the last $b$ before the $u$. Figure~\ref{fig:dumb-story} depicts the resulting explanation graph, whose arrows denote enablement as defined informally in section~\ref{sec:intro} and formally in section~\ref{sec:inhibition}.
+The relations of enablement among events in the minimal sub-trace
+yield a directed acyclic graph. Although trivial in our toy example,
+minimization is an NP-hard problem. Carrying out this approach on
+(\ref{example-trace}), one notes that the first occurence of $b$ sets
+the necessary conditions for $p$, but these are subsequently undone by
+$u$ only for the second occurrence of $b$ to re-introduce them. This
+illustrates why minimization compresses a trace into events that are
+\emph{necessary} for the outcome---which requires eliminating futile
+cycles. In our case, the causal account for $p$ starts with the
+initial condition, symbolized by the \emph{init} event, and skips to
+the last $b$ before the $u$. Figure~\ref{fig:dumb-story} depicts the
+resulting explanation graph, whose arrows denote enablement as defined
+informally in section~\ref{sec:intro} and formally in
+section~\ref{sec:inhibition}.
 
 \input{figures/dumb-story}
 
