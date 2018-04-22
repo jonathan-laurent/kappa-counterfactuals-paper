@@ -14,7 +14,8 @@ initial assessment of performance.
 We consider four kinds of intervention defined in terms of an event
 $e_0=((r_0, \xi_0), t_0)$:
 \begin{enumerate}[leftmargin=0.4cm]
-\item \textit{Singular block:} This blocks only the specific event $e_0$. Formally: 
+\item \textit{Singular block:} This blocks only the specific event $e_0$.
+Formally:
 \[\BLOCKED{\iota}{e} \eqdef (e = e_0).\]
 \item \textit{Template block:} This blocks every realization of the event template $(r_0, \xi_0)$ from time $t_0$ onward. In formal terms:
 \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef ((r, \xi) = (r_0, \xi_0)
@@ -23,7 +24,9 @@ $e_0=((r_0, \xi_0), t_0)$:
 $t_0$ onward, every event resulting from rule $r_0$ that tests an agent
 modified by $e_0$. For example, we might wish to prevent substrate $S_{627}$ from being phosphorylated by any kinase. In formal terms: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r \!=\! r_0 \,\wedge\, \xi(L_r)\cap M_0 \!\neq\! \emptyset \,\wedge\, t \!\geq\! t_0)\] where $M_0$ is the set of agents modified by $e_0$.
 \item \textit{Rule block:} This outright disables rule
-$r_0$ from $t_0$ onward. Formally: \[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, t \geq t_0).\]
+$r_0$ from $t_0$ onward.
+Formally:
+\[\BLOCKED{\iota}{((r, \xi), t)} \eqdef (r = r_0 \,\wedge\, t \geq t_0).\]
 \end{enumerate}
 All four kinds of intervention might be useful for causal analysis in
 different settings.
