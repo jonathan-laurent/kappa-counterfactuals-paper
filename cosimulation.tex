@@ -50,11 +50,21 @@ have been true'' is evaluated following a three-steps process:
   this new model when $\vec{u}$ is distributed according to $p_e$.
 \end{inparaenum}
 
-Because of their dynamic and combinatorial nature, rule-based models do
-not have structural equations that are readily available at the
-outset. However, Pearl's construction generalizes to our setting,
+Because of their dynamic and combinatorial nature, rule-based models
+are not readily expressible in terms of structural equations.
+However, Pearl's construction generalizes to our setting, provided
+that we separate the deterministic causal mechanisms of a model from
+its stochastic aspects. This means reinterpreting a temporal trace as
+a deterministic function of a separately specifiable series of
+mutually independent stochastic choices, allowing us to reuse the
+randomness inherent to a specific actual trace in the construction of
+counterfactual versions induced by intervention.
+
+\iffalse Because of their dynamic and combinatorial nature, rule-based
+models do not have structural equations that are readily available at
+the outset. However, Pearl's construction generalizes to our setting,
 provided that we separate the randomness of simulation from its
-deterministic causal mechanisms.
+deterministic causal mechanisms.  \fi
 
 \subsection{A Semantics for Counterfactuals}
 \label{subsec:counterfactuals-semantics}
@@ -123,7 +133,8 @@ resulting setting. This results in the following definition.
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}(\Sigma)) \ |\ T(\Sigma) = \tau}. \]
+  \[ \PCFST{} \eqdef 
+    \ \ProbParen{\psi[\ATRAJ{}(\Sigma)] \ | \ T(\Sigma) = \tau}. \]
 \end{definition}
 In the rest of this paper, we use the shorthand notations $T$ and
 $T_\iota$ for the random traces $T(\Sigma)$ and $T_\iota(\Sigma)$
