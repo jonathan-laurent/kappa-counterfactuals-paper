@@ -65,7 +65,7 @@ counterfactual versions induced by intervention.
 models do not have structural equations that are readily available at
 the outset. However, Pearl's construction generalizes to our setting,
 provided that we separate the randomness of simulation from its
-deterministic causal mechanisms.  \fi
+deterministic causal mechanisms. \fi
 
 \subsection{A Semantics for Counterfactuals}
 \label{subsec:counterfactuals-semantics}
@@ -90,7 +90,7 @@ deterministic aspects of a trace.  This can be done as follows:
   random variable $\Sigma$ that we call \emph{schedule}, and which
   features the sequence of ringing times of every bell.
 \item To a realization $\sigma$ of $\Sigma$, we associate a unique
-  trace $T(\sigma)$ that is generated as follows: starting with the
+  trace $\DetTrace(\sigma)$ that is generated as follows: starting with the
   initial mixture and moving through time, whenever a bell rings, its
   associated event template $e$ is realized by transforming the
   current mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the
@@ -104,7 +104,7 @@ deterministic aspects of a trace.  This can be done as follows:
 Intuitively, $\Sigma$ determines when the opportunity for a reaction
 happens and between which molecules. It captures the randomness of
 simulation and plays the same role as the random vector $\vec u$ in a
-SEM. In contrast, $\sigma \mapsto T(\sigma)$ is a deterministic
+SEM. In contrast, $\sigma \mapsto \DetTrace(\sigma)$ is a deterministic
 function that controls what a reaction does when it occurs.  It
 corresponds to the $f_i$ in a SEM and is likewise the target of
 interventions.
@@ -114,14 +114,14 @@ interventions.
 % section~\ref{sec:background}.
 
 For an intervention $\iota$ and a random realization $\sigma$, we
-define the altered trace $\ATRAJ{}(\sigma)$ much in the same way as
-$T(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false
+define the altered trace $\DetTrace_\iota(\sigma)$ much in the same way as
+$\DetTrace(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false
 for $e$ to be realized when its bell rings at time $t$.  Given an
 observed trace $\tau$, an intervention $\iota$ and a predicate $\psi$,
 the probability of $\CFST{}$ can now be defined according to Pearl's
 three-steps strategy: \ItAbduction{} condition the distribution of
-$\Sigma$ by the observation that $T(\Sigma)\!=\!\tau$, then
-\ItAction{} alter the behavior of $T$ with intervention $\iota$ and
+$\Sigma$ by the observation that $\DetTrace(\Sigma)\!=\!\tau$, then
+\ItAction{} alter the behavior of $\DetTrace$ with intervention $\iota$ and
 \ItPrediction{} consider the probability of $\psi$ in the resulting
 setting. This results in the following definition.
 
@@ -131,12 +131,9 @@ setting. This results in the following definition.
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef \ \ProbParen{\psi[\ATRAJ{}(\Sigma)] \,\, | \,\,
-      T(\Sigma) = \tau}. \]
+  \[ \PCFST{} \eqdef \ \ProbParen{\psi[\ATRAJ{}] \,\, | \,\,
+      T = \tau}. \]
 \end{definition}
-In the rest of this paper, we use the shorthand notations $T$ and
-$T_\iota$ for the random traces $T(\Sigma)$ and $T_\iota(\Sigma)$
-respectively.
 
 \subsection{The Counterfactual Resimulation Algorithm}
 \label{subsec:cosim-algo}
@@ -144,7 +141,7 @@ respectively.
 Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement $\CFST{}$ by sampling
 instances of the random variable $\CTRAJ{}$ (i.e.
-$T_\iota(\Sigma) \,|\, \{ T(\Sigma) \!=\! \tau \}$).  Such instances
+$\DetTrace_\iota(\Sigma) \,|\, \{ \DetTrace(\Sigma) \!=\! \tau \}$).  Such instances
 are called \emph{counterfactual traces}. Intuitively, they give an
 account of what else trace $\tau$ could have been, had intervention
 $\iota$ happened.  We introduce Algorithm~\ref{alg:cosimulation}, a
@@ -206,14 +203,14 @@ It is the main step in establishing:
   % section~\ref{subsec:counterfactuals-semantics}.
 \end{theorem}
 
-\subsection{An Example}
+
+\subsection{An Example}\label{subsec:counterfactuals-example}
 
 % \newcommand{\RTrace}{\DetTrace(\Sigma)}
 % \newcommand{\ATrace}{\DetTrace_\iota(\Sigma)}
 
-\newcommand{\RTrace}{T} \newcommand{\ATrace}{T_\iota}
-
-% Four bells: one for each rule
+\newcommand{\RTrace}{T} 
+\newcommand{\ATrace}{T_\iota}
 
 Let us illustrate these definitions by manually sampling a
 counterfactual trace for the example trace $\tau$ given in
