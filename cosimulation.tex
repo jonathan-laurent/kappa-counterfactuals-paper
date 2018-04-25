@@ -67,18 +67,10 @@ the outset. However, Pearl's construction generalizes to our setting,
 provided that we separate the randomness of simulation from its
 deterministic causal mechanisms. \fi
 
-\subsection{A Semantics for Counterfactuals}
-\label{subsec:counterfactuals-semantics}
+\subsection{A Refinement of Kappa's CTMC Semantics}
+\label{subsec:semantics-refinement}
 
-An intervention $\iota$ is defined by a predicate
-$\BLOCKED{\iota}{\cdot}$ ranging over events. The purpose of the
-predicate is to act as a filter preventing the occurrence of selected
-events. Given a predicate $\psi$ over traces, we write the statement
-\textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
-  would have been true''} as $\CFST{}$, borrowing a notation from
-\cite{halpern2016actual}.
-
-To assign a probability to this statement, we must reconceptualize the
+We must reconceptualize the
 CTMC induced by a model so as to separate the stochastic and
 deterministic aspects of a trace.  This can be done as follows:
 \begin{inparaenum}[(i)]
@@ -109,6 +101,18 @@ function that controls what a reaction does when it occurs.  It
 corresponds to the $f_i$ in a SEM and is likewise the target of
 interventions.
 
+
+\subsection{A Semantics for Counterfactuals}
+\label{subsec:counterfactuals-semantics}
+
+An intervention $\iota$ is defined by a predicate
+$\BLOCKED{\iota}{\cdot}$ ranging over events. The purpose of the
+predicate is to act as a filter preventing the occurrence of selected
+events. Given a predicate $\psi$ over traces, we write the statement
+\textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
+  would have been true''} as $\CFST{}$, borrowing a notation from
+\cite{halpern2016actual}.
+
 % By construction, the random trace $T(\Sigma)$ is distributed
 % according to the CTMC semantics of Kappa discussed in
 % section~\ref{sec:background}.
@@ -135,73 +139,13 @@ setting. This results in the following definition.
       T = \tau}. \]
 \end{definition}
 
-\subsection{The Counterfactual Resimulation Algorithm}
-\label{subsec:cosim-algo}
-
 Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement $\CFST{}$ by sampling
 instances of the random variable $\CTRAJ{}$ (i.e.
 $\DetTrace_\iota(\Sigma) \,|\, \{ \DetTrace(\Sigma) \!=\! \tau \}$).  Such instances
 are called \emph{counterfactual traces}. Intuitively, they give an
 account of what else trace $\tau$ could have been, had intervention
-$\iota$ happened.  We introduce Algorithm~\ref{alg:cosimulation}, a
-variation of the Doob-Gillespie algorithm, to sample a counterfactual
-trace efficiently given a reference trace $\tau$ and an intervention
-$\iota$. We call it \emph{counterfactual resimulation}, since it works
-by going through every event of $\tau$, resimulating only those parts
-of $\tau$ that are affected by $\iota$. In particular, when $\iota$ is
-the trivial intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it
-returns $\tau$.
-
-This algorithm relies on a modified notion of activity we call
-\emph{divergent activity}. We define the set of \emph{divergent
-  embeddings} of the left-hand side of a rule $r$ into mixture $m$ and
-relative to $m_0$ as
-% \tryinline{\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus
-% \EMBS{r}{m_0}.}
-$\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.$
-Equivalently, a divergent embedding is an embedding whose codomain
-features a \emph{divergent site}, that is, a site whose state differs
-across $m$ and $m_0$. The {divergent activity} of a rule $r$ in
-mixture $m$ relative to $m_0$ is then the product
-$\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of
-the system, $\alpha'(m, m_0)$, is the sum of all divergent
-activities. Finally, we use the notation $\TSTATE{t}{\tau}$ to refer
-to the mixture at time $t$ in $\tau$\longversion{, which is obtained
-  from the initial mixture after updating it for each event in turn up
-  to time $t$ in $\tau$}.
-
-\input{algos/cosimulation}
-
-The role and relevance of the concept of divergent activity in
-counterfactual resimulation is summarized by the following
-proposition, where $\tau \cap I = \emptyset$ is a shortcut for ``no
-event of trace $\tau$ occurs in the time interval $I$''.
-\begin{proposition}[Property of the divergent
-  activity]\label{prop:div-activity}
-  For $\tau$ a trace and $\iota$ an intervention, let
-  $I = (t, t+\delta)$ be a time interval such that
-  $\tau \cap I = \emptyset$ and $m_0 = \TSTATE{t}{\tau}$. Then, we
-  have
-  \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
-      \TSTATE{t}{\ATRAJ{}} = m\ }
-    \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
-  \]
-\end{proposition}
-\noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the
-divergent activity $\alpha'$ determines the probability that an event
-happens in the counterfactual trace prior to the next event in the
-factual trace $\tau$ (test of line \ref{cosim:cev}).  A proof of
-Proposition~\ref{prop:div-activity} is given in
-Appendix~A. %\ref{ap:div-activity}.
-It is the main step in establishing:
-
-\begin{theorem}%[Correctness of counterfactual resimulation]
-  The counterfactual resimulation algorithm correctly samples
-  instances of $\,\CTRAJ{}$.
-  % as defined in
-  % section~\ref{subsec:counterfactuals-semantics}.
-\end{theorem}
+$\iota$ happened.
 
 
 \subsection{An Example}\label{subsec:counterfactuals-example}
@@ -264,6 +208,70 @@ This gives us the following counterfactual trace:
 \end{align} 
 where events that are striked out are events of $\tau$ that do not
 appear in $\ATrace$ and events in bold are proper to $\ATrace$.
+
+
+\subsection{The Counterfactual Resimulation Algorithm}
+\label{subsec:cosim-algo}
+
+We introduce Algorithm~\ref{alg:cosimulation}, a
+variation of the Doob-Gillespie algorithm, to sample a counterfactual
+trace efficiently given a reference trace $\tau$ and an intervention
+$\iota$. We call it \emph{counterfactual resimulation}, since it works
+by going through every event of $\tau$, resimulating only those parts
+of $\tau$ that are affected by $\iota$. In particular, when $\iota$ is
+the trivial intervention ($\BLOCKED{\iota}{\cdot} = \text{false}$), it
+returns $\tau$.
+
+This algorithm relies on a modified notion of activity we call
+\emph{divergent activity}. We define the set of \emph{divergent
+  embeddings} of the left-hand side of a rule $r$ into mixture $m$ and
+relative to $m_0$ as
+% \tryinline{\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus
+% \EMBS{r}{m_0}.}
+$\DEMBS{r}{m, m_0} \eqdef \EMBS{r}{m} \setminus \EMBS{r}{m_0}.$
+Equivalently, a divergent embedding is an embedding whose codomain
+features a \emph{divergent site}, that is, a site whose state differs
+across $m$ and $m_0$. The {divergent activity} of a rule $r$ in
+mixture $m$ relative to $m_0$ is then the product
+$\lambda_r|\DEMBS{r}{m, m_0}|$. The \emph{total divergent activity} of
+the system, $\alpha'(m, m_0)$, is the sum of all divergent
+activities. Finally, we use the notation $\TSTATE{t}{\tau}$ to refer
+to the mixture at time $t$ in $\tau$\longversion{, which is obtained
+  from the initial mixture after updating it for each event in turn up
+  to time $t$ in $\tau$}.
+
+\input{algos/cosimulation}
+
+The role and relevance of the concept of divergent activity in
+counterfactual resimulation is summarized by the following
+proposition, where $\tau \cap I = \emptyset$ is a shortcut for ``no
+event of trace $\tau$ occurs in the time interval $I$''.
+\begin{proposition}[Property of the divergent
+  activity]\label{prop:div-activity}
+  For $\tau$ a trace and $\iota$ an intervention, let
+  $I = (t, t+\delta)$ be a time interval such that
+  $\tau \cap I = \emptyset$ and $m_0 = \TSTATE{t}{\tau}$. Then, we
+  have
+  \[\CProb{ \ATRAJ{} \cap I = \emptyset }{ T=\tau,\
+      \TSTATE{t}{\ATRAJ{}} = m\ }
+    \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
+  \]
+\end{proposition}
+\noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the
+divergent activity $\alpha'$ determines the probability that an event
+happens in the counterfactual trace prior to the next event in the
+factual trace $\tau$ (test of line \ref{cosim:cev}). A proof of
+Proposition~\ref{prop:div-activity} is given in
+Appendix~A. %\ref{ap:div-activity}.
+It is the main step in establishing:
+
+\begin{theorem}%[Correctness of counterfactual resimulation]
+  The counterfactual resimulation algorithm correctly samples
+  instances of $\,\CTRAJ{}$.
+  % as defined in
+  % section~\ref{subsec:counterfactuals-semantics}.
+\end{theorem}
+
 
  
 \input{implementation.tex}
