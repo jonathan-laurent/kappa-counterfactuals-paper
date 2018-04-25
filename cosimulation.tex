@@ -10,24 +10,25 @@
 \section{Evaluating Counterfactual
   Statements}\label{sec:counterfactual}
 
-In our example, the counterfactual statement to be
-assessed is: ``Had $pk$ not happened, $p$ would not have happened."
-Our account in the previous section suggests that $pk$ played a role,
-but it is also clear that given the stochastic nature of rule firing
-$p$ could well have happened even in the absence of $pk$; it just is
-unlikely. In a stochastic setting, counterfactual statements are not
-either true or false, but have degrees of likelihood. To assess that
-likelihood is our task.
+In our example, the counterfactual statement to be assessed is: ``Had
+$pk$ not happened, $p$ would not have happened."  Our account in the
+previous section suggests that $pk$ played a role, but it is also
+clear that given the stochastic nature of rule firing $p$ could well
+have happened even in the absence of $pk$; it just is unlikely. In a
+stochastic setting, counterfactual statements are not either true or
+false, but have degrees of likelihood. To assess that likelihood is
+our task.
 
-Given an original (factual) trace $\tau$, a naive approach might be to sample
-counterfactual traces, each of which starts with the state of the system
-attained in $\tau$ just before event $pk$ happened, but in which we skip over
-$pk$ and then run an unconstrained simulation from that point onward. In this
-approach traces would quickly diverge from the original, distorting the causal
-role that $pk$ played specifically in it. The question here is not what causal
-role $pk$ can play in principle, but what role it actually did play in $\tau$.
-Counterfactual statements are undetachable from the context in which they are
-formulated.
+Given an original (factual) trace $\tau$, a naive approach might be to
+sample counterfactual traces, each of which starts with the state of
+the system attained in $\tau$ just before event $pk$ happened, but in
+which we skip over $pk$ and then run an unconstrained simulation from
+that point onward. In this approach traces would quickly diverge from
+the original, distorting the causal role that $pk$ played specifically
+in it. The question here is not what causal role $pk$ can play in
+principle, but what role it actually did play in $\tau$.
+Counterfactual statements are undetachable from the context in which
+they are formulated.
 
 Pearl's standard account of counterfactuals \cite{pearl2009causality}
 is based on performing \textit{``surgical interventions''} on a
@@ -77,10 +78,9 @@ events. Given a predicate $\psi$ over traces, we write the statement
   would have been true''} as $\CFST{}$, borrowing a notation from
 \cite{halpern2016actual}.
 
-To assign a probability to this statement, we must
-reconceptualize the CTMC induced by a model so as to
-separate the stochastic and deterministic aspects of a trace.
-This can be done as follows:
+To assign a probability to this statement, we must reconceptualize the
+CTMC induced by a model so as to separate the stochastic and
+deterministic aspects of a trace.  This can be done as follows:
 \begin{inparaenum}[(i)]
 \item Consider all possible event templates $(r, \xi)$, where $\xi$
   maps into a large enough set of global identifiers. For each event
@@ -89,18 +89,16 @@ This can be done as follows:
   parameter $\lambda_r$. These Poisson processes are all gathered in a
   random variable $\Sigma$ that we call \emph{schedule}, and which
   features the sequence of ringing times of every bell.
-\item
-  To a realization $\sigma$ of $\Sigma$, we associate a unique
+\item To a realization $\sigma$ of $\Sigma$, we associate a unique
   trace $T(\sigma)$ that is generated as follows: starting with the
   initial mixture and moving through time, whenever a bell rings, its
   associated event template $e$ is realized by transforming the
-  current mixture $m$ if $\TRIGGERABLE{m}{e}$. For
-  example, if the current mixture $m$ is given as in
-  Figure~\ref{fig:mixture} and the bell linked to \textit{``apply rule
-    $b$ on substrate $3$ and kinase $4$''} rings, a bond is created
-  between these two agents. In contrast, the bell linked to
-  \textit{``apply rule $b$ on substrate $1$ and kinase $2$'}' would
-  have no effect.
+  current mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the
+  current mixture $m$ is given as in Figure~\ref{fig:mixture} and the
+  bell linked to \textit{``apply rule $b$ on substrate $3$ and kinase
+    $4$''} rings, a bond is created between these two agents. In
+  contrast, the bell linked to \textit{``apply rule $b$ on substrate
+    $1$ and kinase $2$'}' would have no effect.
 \end{inparaenum}
 
 Intuitively, $\Sigma$ determines when the opportunity for a reaction
@@ -111,30 +109,30 @@ function that controls what a reaction does when it occurs.  It
 corresponds to the $f_i$ in a SEM and is likewise the target of
 interventions.
 
-%By construction, the random trace $T(\Sigma)$ is distributed
-%  according to the CTMC semantics of Kappa discussed in
-%  section~\ref{sec:background}.
+% By construction, the random trace $T(\Sigma)$ is distributed
+% according to the CTMC semantics of Kappa discussed in
+% section~\ref{sec:background}.
 
 For an intervention $\iota$ and a random realization $\sigma$, we
 define the altered trace $\ATRAJ{}(\sigma)$ much in the same way as
 $T(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false
-for $e$ to be realized when its bell rings at $t$.  Given an observed
-trace $\tau$, an intervention $\iota$ and a predicate $\psi$, the
-probability of $\CFST{}$ can now be defined according to Pearl's
+for $e$ to be realized when its bell rings at time $t$.  Given an
+observed trace $\tau$, an intervention $\iota$ and a predicate $\psi$,
+the probability of $\CFST{}$ can now be defined according to Pearl's
 three-steps strategy: \ItAbduction{} condition the distribution of
 $\Sigma$ by the observation that $T(\Sigma)\!=\!\tau$, then
-\ItAction{} alter the behavior of $T$  with intervention
-$\iota$ and \ItPrediction{} consider the probability of $\psi$ in the
-resulting setting. This results in the following definition.
+\ItAction{} alter the behavior of $T$ with intervention $\iota$ and
+\ItPrediction{} consider the probability of $\psi$ in the resulting
+setting. This results in the following definition.
 
 \begin{definition}[Semantics of counterfactual statements]
-\label{def:counterfactuals}
+  \label{def:counterfactuals}
   For $\tau$ an observed trace, $\iota$ an intervention and $\psi$ a
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef 
-    \ \ProbParen{\psi[\ATRAJ{}(\Sigma)] \ | \ T(\Sigma) = \tau}. \]
+  \[ \PCFST{} \eqdef \ \ProbParen{\psi[\ATRAJ{}(\Sigma)] \,\, | \,\,
+      T(\Sigma) = \tau}. \]
 \end{definition}
 In the rest of this paper, we use the shorthand notations $T$ and
 $T_\iota$ for the random traces $T(\Sigma)$ and $T_\iota(\Sigma)$
@@ -145,14 +143,13 @@ respectively.
 
 Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement $\CFST{}$ by sampling
-instances of the random variable $\CTRAJ{}$ 
-(i.e. $T_\iota(\Sigma) \,|\, \{ T(\Sigma) = \tau \}$). 
-Such instances are called
-\emph{counterfactual traces}. Intuitively, they give an account of
-what else trace $\tau$ could have been, had intervention $\iota$
-happened.  We introduce Algorithm~\ref{alg:cosimulation}, a variation
-of the Doob-Gillespie algorithm, to sample a counterfactual trace
-efficiently given a reference trace $\tau$ and an intervention
+instances of the random variable $\CTRAJ{}$ (i.e.
+$T_\iota(\Sigma) \,|\, \{ T(\Sigma) \!=\! \tau \}$).  Such instances
+are called \emph{counterfactual traces}. Intuitively, they give an
+account of what else trace $\tau$ could have been, had intervention
+$\iota$ happened.  We introduce Algorithm~\ref{alg:cosimulation}, a
+variation of the Doob-Gillespie algorithm, to sample a counterfactual
+trace efficiently given a reference trace $\tau$ and an intervention
 $\iota$. We call it \emph{counterfactual resimulation}, since it works
 by going through every event of $\tau$, resimulating only those parts
 of $\tau$ that are affected by $\iota$. In particular, when $\iota$ is
@@ -203,16 +200,80 @@ Appendix~A. %\ref{ap:div-activity}.
 It is the main step in establishing:
 
 \begin{theorem}%[Correctness of counterfactual resimulation]
-  The counterfactual resimulation algorithm correctly
-  samples instances of $\,\CTRAJ{}$.
-  %as defined in
-  %section~\ref{subsec:counterfactuals-semantics}.
+  The counterfactual resimulation algorithm correctly samples
+  instances of $\,\CTRAJ{}$.
+  % as defined in
+  % section~\ref{subsec:counterfactuals-semantics}.
 \end{theorem}
 
+\subsection{An Example}
+
+% \newcommand{\RTrace}{\DetTrace(\Sigma)}
+% \newcommand{\ATrace}{\DetTrace_\iota(\Sigma)}
+
+\newcommand{\RTrace}{T} \newcommand{\ATrace}{T_\iota}
+
+% Four bells: one for each rule
+
+Let us illustrate these definitions by manually sampling a
+counterfactual trace for the example trace $\tau$ given in
+(\ref{example-trace})\, and the intervention $\iota$ that consists in
+blocking every application of rule $pk$:
+% \[\BLOCKED{\iota}{((r, \xi), t)} \ = \ (r = pk).\]
+$\BLOCKED{\iota}{((r, \xi), t)} \!=\! (r \!=\! pk)$.  (Alternative
+interventions are proposed in Appendix~C.)  That is, we want to draw
+an instance of $\ATrace$, conditioned on the observation
+$\RTrace \!=\! \tau$.
+
+Let us assume that $\RTrace \!=\! \tau$. Then, the first event of
+$\ATrace$ has to coincide with the first event of $\tau$ (namely $b$).
+Indeed, suppose that $(e, t)$ belongs to $\ATrace$, with $t$ prior to
+the time of the first event of $\tau$. Thus, $e$ is scheduled in
+$\Sigma$ at time $t$ and realizable in the initial mixture, which is
+shared between $\ATrace$ and $\RTrace$. As a consequence, $(e, t)$
+also belongs to $\RTrace$ and therefore to $\tau$, which is a
+contradiction. Continuing this line of reasoning, $\ATrace$ and $\tau$
+must coincide until an event of $\tau$ is blocked by $\iota$.
+
+After $pk$ is blocked in $\ATrace$, the current mixtures in $T$ and
+$T_\iota$ start diverging (the kinase is phosphorylated in the former
+and unphosphorylated in the latter). We call these mixtures
+\emph{factual mixture} and \emph{counterfactual mixture} respectively.
+The next event to happen in $\tau$ is the second binding event $b$. We
+argue that it also has to be the next event in $T_\iota$. Indeed, the
+only way an event $(e, t)$ can happen in $\ATrace$ before $b$ while
+not happening in $\RTrace$ is if $e$ is realizable in the
+counterfactual mixture and not in the factual one. This is only true
+if $e$ is an instance of rule $pk$, and such an event template -- if
+scheduled -- would be blocked by $\iota$ anyway.
+
+After $b$ happens in both $\ATrace$ and $\tau$, the event template
+associated with rule $u$ (fast unbinding) becomes realizable in the
+counterfactual mixture, but not in the factual one. Therefore, the
+observation $T\!=\!\tau$ provides no useful information about whether
+or not $u$ is scheduled in $\Sigma$ before $p$ happens in $\tau$. In
+fact, the probability that this is not the case is exactly equal to
+$\exp(-\lambda_u\delta)$, where $\delta$ is the length of the time
+interval between $b$ and $p$ in $\tau$. Given the rates in our model,
+$\delta$ is typically of the order of
+$(\lambda_{u^*}+\lambda_p)^{-1}$. Therefore, $\lambda_u\delta \gg 1$ and
+it is very likely that a fast unbinding event happens in $\ATrace$
+before $p$ happens in $\tau$, preventing $p$ to happen in $\ATrace$.
+This gives us the following counterfactual trace:
+\begin{align}
+  \label{counterfactual-trace} 
+  b,\ \ u,\ \ \strikeout{pk}, \ \ b, \ \ \pmb{u}, \ \ \strikeout{p}, 
+  \ \ \strikeout{u^*}, \ \ \cdots
+\end{align} 
+where events that are striked out are events of $\tau$ that do not
+appear in $\ATrace$ and events in bold are proper to $\ATrace$.
+
+ 
 \input{implementation.tex}
 
-Returning to our running example, sampling counterfactual traces repeatedly for
-\RefTrace{} would reveal that, with very high probability, ``event $p$ would not
-have happened, had $pk$ not happened''. However, we can go further by using
-counterfactual traces to \textit{explain} this observation using enablement and
-prevention arrows.
+Returning to our running example, sampling counterfactual traces
+repeatedly for \RefTrace{} would reveal that, with very high
+probability, ``event $p$ would not have happened, had $pk$ not
+happened''. However, we can go further by using counterfactual traces
+to \textit{explain} this observation using enablement and prevention
+arrows.

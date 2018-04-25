@@ -35,12 +35,22 @@
 \usepackage[utf8]{inputenc}
 \usepackage[small]{caption}
 
+% To strike out text
+\usepackage{cancel}
+\usepackage[normalem]{ulem}
+\newcommand{\msout}[1]{\text{\sout{\ensuremath{#1}}}}
+%\renewcommand\CancelColor{\color{red}}
+\newcommand{\strikeout}[1]{{\color{gray} \cancel{#1}}}
+
 \usepackage[noend]{algorithmic}
 \usepackage{algorithm}
 \algsetup{linenodelimiter=.\ }
 \algsetup{indent=1.5em}
 %\algsetup{linenosize=\footnotesize}
 \algsetup{linenosize=\scriptsize}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
 
 
 \usepackage{graphicx}
@@ -61,6 +71,8 @@
 \newtheorem*{proposition*}{Proposition}
 \newtheorem{definition}{Definition}
 \newtheorem*{definition*}{Definition}
+\newtheorem{example}{Example}
+\newtheorem*{example*}{Example}
 
 \title{
   \setstretch{1.15}
