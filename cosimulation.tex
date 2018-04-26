@@ -53,10 +53,9 @@ have been true'' is evaluated following a three-steps process:
 
 Because of their dynamic nature, rule-based models are not readily
 expressible in terms of structural equations. However, Pearl's
-construction generalizes to our setting, assuming that we can provide
-a \emph{structural} refinement of Kappa's probabilistic semantics,
-where deterministic causal mechanisms are separated from
-stochastic aspects.
+construction generalizes to our setting, assuming a \emph{structural}
+refinement of Kappa's probabilistic semantics where deterministic
+causal mechanisms are separated from stochastic aspects.
 
 \iffalse provided that we separate the deterministic causal mechanisms
 of a model from its stochastic aspects. This means reinterpreting a
@@ -72,20 +71,20 @@ provided that we separate the randomness of simulation from its
 deterministic causal mechanisms. \fi
 
 %\subsection{A Refinement of Kappa's CTMC Semantics}
-\subsection{A Structural Account of Kappa}
+%\subsection{A Structural Account of Kappa}
+\subsection{A Refined Semantics for Kappa}
 \label{subsec:semantics-refinement}
 
 Answering counterfactual questions about a dynamical system requires
-more than knowing the probability distribution of its traces. It
-requires a structural portrayal of this system in terms of stable and
-deterministic causal mechanisms that can be altered individually (the
+more than a probability distribution over its traces. It requires a
+structural portrayal of this system in terms of stable and
+deterministic causal mechanisms that can be altered separately (the
 $f_i$ in SEMs). Besides, for Pearl's three-steps construction to
 apply, randomness must be isolated in a collection of processes that
-are blind to the system's observable state and history. We
-propose such a decomposition for Kappa models. It is motivated by a
-standard construction in physics, which justifies the use of the
-Doob-Gillespie algorithm for simulating reaction
-systems. \cite{gillespie1977exact}.
+are blind to the system's observable state and history. We propose
+such a decomposition for Kappa models. It is motivated by a standard
+construction in physics, which justifies the use of the Doob-Gillespie
+algorithm for simulating reaction systems. \cite{gillespie1977exact}.
 
 % The CTMC semantics of Kappa that is provided in
 % section~\ref{sec:background}
@@ -113,7 +112,7 @@ The CTMC induced by a model can be reconceptualized as follows:
   linked to \textit{``apply rule $b$ on substrate $1$ and kinase
     $2$'}' would have no effect.
 \item Finally, the dynamic behavior of our model is captured by the random
-  trace $T \eqdef \DetTrace(\Sigma)$, which can be also sampled
+  trace $T \eqdef \DetTrace(\Sigma)$, which can also be sampled
   efficiently using the Doob-Gillepsie algorithm introduced in
   section~\ref{sec:background}.
 \end{inparaenum}
@@ -145,14 +144,15 @@ For an intervention $\iota$ and a schedule $\sigma$, we define the
 altered trace $\DetTrace_\iota(\sigma)$ much in the same way as
 $\DetTrace(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to
 be false for $e$ to be realized when its bell rings at time $t$.
-Given an observed trace $\tau$, an intervention $\iota$ and a
-predicate $\psi$, the probability of $\CFST{}$ can now be defined
-according to Pearl's three-steps strategy: \ItAbduction{} condition
-the distribution of $\Sigma$ by the observation that
-$T \!\eqdef\! \DetTrace(\Sigma)\!=\!\tau$, then \ItAction{} alter the
-behavior of $\DetTrace$ with intervention $\iota$ and \ItPrediction{}
-consider the probability of $\psi$ in the resulting setting. This
-results in the following definition.
+Then, we define $T_\iota \eqdef \DetTrace_\iota(\Sigma)$.  Given an
+observed trace $\tau$, an intervention $\iota$ and a predicate $\psi$,
+the probability of $\CFST{}$ can now be defined according to Pearl's
+three-steps strategy: \ItAbduction{} condition the distribution of
+$\Sigma$ by the observation that $\DetTrace(\Sigma)\!=\!\tau$, then
+\ItAction{} alter the behavior of $\DetTrace$ with intervention
+$\iota$ and \ItPrediction{} consider the probability that $\psi$ holds
+on $\DetTrace_\iota(\Sigma)$. This results in the following
+definition.
 
 \begin{definition}[Semantics of counterfactual statements]
   \label{def:counterfactuals}
@@ -160,15 +160,16 @@ results in the following definition.
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef \ \ProbParen{\psi[\ATRAJ{}] \,\, | \,\, T =
+  \[ \PCFST{} \eqdef \ \ProbParen{\psi(\ATRAJ{}) \,\, | \,\, T =
       \tau}. \]
 \end{definition}
 
 Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement $\CFST{}$ by sampling
-instances of the random variable $\CTRAJ{}$ (i.e.
-$\DetTrace_\iota(\Sigma) \,|\, \{ \DetTrace(\Sigma) \!=\! \tau \}$).
-Such instances are called \emph{counterfactual traces}. Intuitively,
+instances of the random variable $\CTRAJ{}$. 
+%(i.e.
+%$\DetTrace_\iota(\Sigma) \,|\, \{ \DetTrace(\Sigma) \!=\! \tau \}$).
+These are called \emph{counterfactual traces}. Intuitively,
 they give an account of what else trace $\tau$ could have been, had
 intervention $\iota$ happened.
 
@@ -178,18 +179,17 @@ intervention $\iota$ happened.
 % \newcommand{\RTrace}{\DetTrace(\Sigma)}
 % \newcommand{\ATrace}{\DetTrace_\iota(\Sigma)}
 
-\newcommand{\RTrace}{T} \newcommand{\ATrace}{T_\iota}
-
-Let us illustrate these definitions by manually sampling a
-counterfactual trace for the example trace $\tau$ given in
-(\ref{example-trace})\, and the intervention $\iota$ that consists in
-blocking every application of rule $pk$:
+\newcommand{\RTrace}{T} \newcommand{\ATrace}{T_\iota} Let us
+illustrate our definitions by manually sampling a counterfactual trace
+for the example trace $\tau$ given in (\ref{example-trace})\, and the
+intervention $\iota$ that consists in blocking every application of
+rule $pk$:
 % \[\BLOCKED{\iota}{((r, \xi), t)} \ = \ (r = pk).\]
 $\BLOCKED{\iota}{((r, \xi), t)} \!=\! (r \!=\! pk)$.
-%(Alternative interventions are proposed in Appendix~\ref{ap:benchmark}.)
-That is, we want to draw
-an instance of $\ATrace$, conditioned on the observation
-$\RTrace \!=\! \tau$.
+% (Alternative interventions are proposed in
+% Appendix~\ref{ap:benchmark}.)
+For this, we must draw an instance of $\ATrace$, conditioned on the
+observation $\RTrace \!=\! \tau$.
 
 Let us assume that $\RTrace \!=\! \tau$. Then, the first event of
 $\ATrace$ has to coincide with the first event of $\tau$ (namely $b$).
@@ -206,12 +206,13 @@ $T_\iota$ start diverging (the kinase is phosphorylated in the former
 and unphosphorylated in the latter). We call these mixtures
 \emph{factual mixture} and \emph{counterfactual mixture} respectively.
 The next event to happen in $\tau$ is the second binding event $b$. We
-argue that it also has to be the next event in $T_\iota$. Indeed, the
-only way an event $(e, t)$ can happen in $\ATrace$ before $b$ while
-not happening in $\RTrace$ is if $e$ is realizable in the
-counterfactual mixture and not in the factual one. This is only true
-if $e$ is an instance of rule $pk$ and applications of this rule -- if
-scheduled -- would be blocked by $\iota$ anyway.
+argue that it also has to be the next event to happen in
+$T_\iota$. Indeed, the only way an event $(e, t)$ can happen in
+$\ATrace$ before $b$ while not happening in $\RTrace$ is if $e$ is
+realizable in the counterfactual mixture and not in the factual
+one. This is only true if $e$ is an instance of rule $pk$ and
+applications of this rule -- if scheduled -- would be blocked by
+$\iota$ anyway.
 
 After $b$ happens in both $\ATrace$ and $\tau$, the event template
 associated with rule $u$ (fast unbinding) becomes realizable in the
@@ -224,8 +225,8 @@ interval between $b$ and $p$ in $\tau$. Given the rates in our model,
 $\delta$ is typically of the order of
 $(\lambda_{u^*}+\lambda_p)^{-1}$. Therefore, $\lambda_u\delta \gg 1$
 and it is very likely that a fast unbinding event happens in $\ATrace$
-before $p$ happens in $\tau$, in turn preventing $p$ to happen in
-$\ATrace$.  This gives us the following counterfactual trace:
+before $p$ happens in $\tau$, preventing $p$ to happen in $\ATrace$.
+This gives us the following counterfactual trace:
 \begin{align}
   \label{counterfactual-trace} 
   b,\ \ u,\ \ \strikeout{pk}, \ \ b, \ \ \pmb{u}, \ \ \strikeout{\,p\,}, 
@@ -271,6 +272,7 @@ The role and relevance of the concept of divergent activity in
 counterfactual resimulation is summarized by the following
 proposition, where $\tau \cap I = \emptyset$ is a shortcut for ``no
 event of trace $\tau$ occurs in the time interval $I$''.
+\smallskip
 \begin{proposition}[Property of the divergent
   activity]\label{prop:div-activity}
   For $\tau$ a trace and $\iota$ an intervention, let
@@ -282,6 +284,7 @@ event of trace $\tau$ occurs in the time interval $I$''.
     \ =\ e^{-\alpha'(m, m_0) \cdot \delta}.
   \]
 \end{proposition}
+\smallskip
 \noindent At every iteration of Algorithm~\ref{alg:cosimulation}, the
 divergent activity $\alpha'$ determines the probability that an event
 happens in the counterfactual trace prior to the next event in the

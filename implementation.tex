@@ -32,6 +32,8 @@ single connected component $c$ of $L_{r'}$, and $F, G$ arbitrary
 predicates. For regular interventions, our implementation is
 guaranteed to either produce or consume an event at each iteration.
 
+
+
 \begin{proposition}
   Sampling a counterfactual trace for a \emph{regular} intervention
   can be done in time $\mathcal{O}(n \cdot r \log|m|)$, where $n$ is
@@ -40,9 +42,18 @@ guaranteed to either produce or consume an event at each iteration.
   model and $|m|$ the size of the reaction mixture.
 \end{proposition}
 
-We provide a benchmark of our implementation on a scaled-up version of
-our toy model in Appendix~\ref{ap:benchmark}. The average slowdown per
-event compared to the Kappa simulator does not exceed 50\% for a
-variety of interventions.
+%More generally, each iteration of Algorithm~\ref{alg:cosimulation}
+%can be brought to a cost of $\mathcal{O}(r\log|m|)$. There is no way
+
+For non-regular interventions, there is an additional time-complexity
+term of $\mathcal{O}(N_\emptyset \cdot r\log|m|)$, where $N_\emptyset$
+denotes the number of non-productive iterations of
+Algorithm~\ref{alg:cosimulation}. In Appendix~\ref{ap:benchmark}, we
+provide a benchmark of our implementation on a scaled-up version of
+our toy model. The average slowdown per event compared to the
+Kappa simulator does not exceed 50\% for a variety of
+interventions. Also, we observe that $N_\emptyset$ is typically small
+for the type of non-regular intervention that we expect to be most
+useful in practice.
 
 \medskip
