@@ -51,55 +51,79 @@ have been true'' is evaluated following a three-steps process:
   this new model when $\vec{u}$ is distributed according to $p_e$.
 \end{inparaenum}
 
-Because of their dynamic and combinatorial nature, rule-based models
-are not readily expressible in terms of structural equations.
-However, Pearl's construction generalizes to our setting, provided
-that we separate the deterministic causal mechanisms of a model from
-its stochastic aspects. This means reinterpreting a temporal trace as
-a deterministic function of a separately specifiable series of
-mutually independent stochastic choices, allowing us to reuse the
-randomness inherent to a specific actual trace in the construction of
-counterfactual versions induced by intervention.
+Because of their dynamic nature, rule-based models are not readily
+expressible in terms of structural equations. However, Pearl's
+construction generalizes to our setting, assuming that we can provide
+a \emph{structural} refinement of Kappa's probabilistic semantics,
+where deterministic causal mechanisms are separated from
+stochastic aspects.
 
-\iffalse Because of their dynamic and combinatorial nature, rule-based
+\iffalse provided that we separate the deterministic causal mechanisms
+of a model from its stochastic aspects. This means reinterpreting a
+temporal trace as a deterministic function of a separately specifiable
+series of mutually independent stochastic choices, allowing us to
+reuse the randomness inherent to a specific actual trace in the
+construction of counterfactual versions induced by intervention.  \fi
+
+\iffalse Because of their dynamic nature, rule-based
 models do not have structural equations that are readily available at
 the outset. However, Pearl's construction generalizes to our setting,
 provided that we separate the randomness of simulation from its
 deterministic causal mechanisms. \fi
 
-\subsection{A Refinement of Kappa's CTMC Semantics}
+%\subsection{A Refinement of Kappa's CTMC Semantics}
+\subsection{A Structural Account of Kappa}
 \label{subsec:semantics-refinement}
 
-We must reconceptualize the
-CTMC induced by a model so as to separate the stochastic and
-deterministic aspects of a trace.  This can be done as follows:
+Answering counterfactual questions about a dynamical system requires
+more than knowing the probability distribution of its traces. It
+requires a structural portrayal of this system in terms of stable and
+deterministic causal mechanisms that can be altered individually (the
+$f_i$ in SEMs). Besides, for Pearl's three-steps construction to
+apply, randomness must be isolated in a collection of processes that
+are blind to the system's observable state and history. We
+propose such a decomposition for Kappa models. It is motivated by a
+standard construction in physics, which justifies the use of the
+Doob-Gillespie algorithm for simulating reaction
+systems. \cite{gillespie1977exact}.
+
+% The CTMC semantics of Kappa that is provided in
+% section~\ref{sec:background}
+
+
+The CTMC induced by a model can be reconceptualized as follows:
 \begin{inparaenum}[(i)]
 \item Consider all possible event templates $(r, \xi)$, where $\xi$
   maps into a large enough set of global identifiers. For each event
   template, imagine a Poisson process in which a bell rings at time
   intervals drawn independently from an exponential distribution with
-  parameter $\lambda_r$. These Poisson processes are all gathered in a
-  random variable $\Sigma$ that we call \emph{schedule}, and which
-  features the sequence of ringing times of every bell.
-\item To a realization $\sigma$ of $\Sigma$, we associate a unique
-  trace $\DetTrace(\sigma)$ that is generated as follows: starting with the
+  parameter $\lambda_r$. These Poison processes are all gathered in a
+  random variable $\Sigma$. A realization of $\Sigma$ is called
+  a \emph{schedule} and it features a sequence of ringing times
+  for every bell.
+\item To every schedule $\sigma$, we associate a unique trace
+  $\DetTrace(\sigma)$ that is generated as follows: starting with the
   initial mixture and moving through time, whenever a bell rings, its
-  associated event template $e$ is realized by transforming the
-  current mixture $m$ if $\TRIGGERABLE{m}{e}$. For example, if the
-  current mixture $m$ is given as in Figure~\ref{fig:mixture} and the
-  bell linked to \textit{``apply rule $b$ on substrate $3$ and kinase
-    $4$''} rings, a bond is created between these two agents. In
-  contrast, the bell linked to \textit{``apply rule $b$ on substrate
-    $1$ and kinase $2$'}' would have no effect.
+  associated event template $e$ is realized (by transforming the
+  current mixture $m$ into $\UPDATE{m}{e}$) if and only if
+  $\TRIGGERABLE{m}{e}$. For example, if the current mixture $m$ is
+  given as in Figure~\ref{fig:mixture} and the bell linked to
+  \textit{``apply rule $b$ on substrate $3$ and kinase $4$''} rings, a
+  bond is created between these two agents. In contrast, the bell
+  linked to \textit{``apply rule $b$ on substrate $1$ and kinase
+    $2$'}' would have no effect.
+\item Finally, the dynamic behavior of our model is captured by the random
+  trace $T \eqdef \DetTrace(\Sigma)$, which can be also sampled
+  efficiently using the Doob-Gillepsie algorithm introduced in
+  section~\ref{sec:background}.
 \end{inparaenum}
 
 Intuitively, $\Sigma$ determines when the opportunity for a reaction
-happens and between which molecules. It captures the randomness of
-simulation and plays the same role as the random vector $\vec u$ in a
-SEM. In contrast, $\sigma \mapsto \DetTrace(\sigma)$ is a deterministic
-function that controls what a reaction does when it occurs.  It
-corresponds to the $f_i$ in a SEM and is likewise the target of
-interventions.
+happens and between which molecules. It plays the same role as the
+random vector $\vec u$ in a SEM. In contrast,
+$\sigma \mapsto \DetTrace(\sigma)$ is a deterministic function that
+controls what a reaction does when it occurs.  It corresponds to the
+$f_i$ in a SEM and is likewise the target of interventions.
 
 
 \subsection{A Semantics for Counterfactuals}
@@ -117,17 +141,18 @@ events. Given a predicate $\psi$ over traces, we write the statement
 % according to the CTMC semantics of Kappa discussed in
 % section~\ref{sec:background}.
 
-For an intervention $\iota$ and a random realization $\sigma$, we
-define the altered trace $\DetTrace_\iota(\sigma)$ much in the same way as
-$\DetTrace(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to be false
-for $e$ to be realized when its bell rings at time $t$.  Given an
-observed trace $\tau$, an intervention $\iota$ and a predicate $\psi$,
-the probability of $\CFST{}$ can now be defined according to Pearl's
-three-steps strategy: \ItAbduction{} condition the distribution of
-$\Sigma$ by the observation that $\DetTrace(\Sigma)\!=\!\tau$, then
-\ItAction{} alter the behavior of $\DetTrace$ with intervention $\iota$ and
-\ItPrediction{} consider the probability of $\psi$ in the resulting
-setting. This results in the following definition.
+For an intervention $\iota$ and a schedule $\sigma$, we define the
+altered trace $\DetTrace_\iota(\sigma)$ much in the same way as
+$\DetTrace(\sigma)$, but also requiring $\BLOCKED{\iota}{(e, t)}$ to
+be false for $e$ to be realized when its bell rings at time $t$.
+Given an observed trace $\tau$, an intervention $\iota$ and a
+predicate $\psi$, the probability of $\CFST{}$ can now be defined
+according to Pearl's three-steps strategy: \ItAbduction{} condition
+the distribution of $\Sigma$ by the observation that
+$T \!\eqdef\! \DetTrace(\Sigma)\!=\!\tau$, then \ItAction{} alter the
+behavior of $\DetTrace$ with intervention $\iota$ and \ItPrediction{}
+consider the probability of $\psi$ in the resulting setting. This
+results in the following definition.
 
 \begin{definition}[Semantics of counterfactual statements]
   \label{def:counterfactuals}
@@ -135,17 +160,17 @@ setting. This results in the following definition.
   predicate on traces, the probability of the counterfactual statement
   \textit{``had intervention $\iota$ happened in trace $\tau$,
     predicate $\psi$ would have been true''} is defined as:
-  \[ \PCFST{} \eqdef \ \ProbParen{\psi[\ATRAJ{}] \,\, | \,\,
-      T = \tau}. \]
+  \[ \PCFST{} \eqdef \ \ProbParen{\psi[\ATRAJ{}] \,\, | \,\, T =
+      \tau}. \]
 \end{definition}
 
 Following Definition~\ref{def:counterfactuals}, we estimate the
 probability of the counterfactual statement $\CFST{}$ by sampling
 instances of the random variable $\CTRAJ{}$ (i.e.
-$\DetTrace_\iota(\Sigma) \,|\, \{ \DetTrace(\Sigma) \!=\! \tau \}$).  Such instances
-are called \emph{counterfactual traces}. Intuitively, they give an
-account of what else trace $\tau$ could have been, had intervention
-$\iota$ happened.
+$\DetTrace_\iota(\Sigma) \,|\, \{ \DetTrace(\Sigma) \!=\! \tau \}$).
+Such instances are called \emph{counterfactual traces}. Intuitively,
+they give an account of what else trace $\tau$ could have been, had
+intervention $\iota$ happened.
 
 
 \subsection{An Example}\label{subsec:counterfactuals-example}
@@ -153,16 +178,16 @@ $\iota$ happened.
 % \newcommand{\RTrace}{\DetTrace(\Sigma)}
 % \newcommand{\ATrace}{\DetTrace_\iota(\Sigma)}
 
-\newcommand{\RTrace}{T} 
-\newcommand{\ATrace}{T_\iota}
+\newcommand{\RTrace}{T} \newcommand{\ATrace}{T_\iota}
 
 Let us illustrate these definitions by manually sampling a
 counterfactual trace for the example trace $\tau$ given in
 (\ref{example-trace})\, and the intervention $\iota$ that consists in
 blocking every application of rule $pk$:
 % \[\BLOCKED{\iota}{((r, \xi), t)} \ = \ (r = pk).\]
-$\BLOCKED{\iota}{((r, \xi), t)} \!=\! (r \!=\! pk)$.  (Alternative
-interventions are proposed in Appendix~C.)  That is, we want to draw
+$\BLOCKED{\iota}{((r, \xi), t)} \!=\! (r \!=\! pk)$.
+%(Alternative interventions are proposed in Appendix~C.)
+That is, we want to draw
 an instance of $\ATrace$, conditioned on the observation
 $\RTrace \!=\! \tau$.
 
@@ -185,7 +210,7 @@ argue that it also has to be the next event in $T_\iota$. Indeed, the
 only way an event $(e, t)$ can happen in $\ATrace$ before $b$ while
 not happening in $\RTrace$ is if $e$ is realizable in the
 counterfactual mixture and not in the factual one. This is only true
-if $e$ is an instance of rule $pk$, and such an event template -- if
+if $e$ is an instance of rule $pk$ and applications of this rule -- if
 scheduled -- would be blocked by $\iota$ anyway.
 
 After $b$ happens in both $\ATrace$ and $\tau$, the event template
@@ -197,13 +222,13 @@ fact, the probability that this is not the case is exactly equal to
 $\exp(-\lambda_u\delta)$, where $\delta$ is the length of the time
 interval between $b$ and $p$ in $\tau$. Given the rates in our model,
 $\delta$ is typically of the order of
-$(\lambda_{u^*}+\lambda_p)^{-1}$. Therefore, $\lambda_u\delta \gg 1$ and
-it is very likely that a fast unbinding event happens in $\ATrace$
-before $p$ happens in $\tau$, preventing $p$ to happen in $\ATrace$.
-This gives us the following counterfactual trace:
+$(\lambda_{u^*}+\lambda_p)^{-1}$. Therefore, $\lambda_u\delta \gg 1$
+and it is very likely that a fast unbinding event happens in $\ATrace$
+before $p$ happens in $\tau$, in turn preventing $p$ to happen in
+$\ATrace$.  This gives us the following counterfactual trace:
 \begin{align}
   \label{counterfactual-trace} 
-  b,\ \ u,\ \ \strikeout{pk}, \ \ b, \ \ \pmb{u}, \ \ \strikeout{p}, 
+  b,\ \ u,\ \ \strikeout{pk}, \ \ b, \ \ \pmb{u}, \ \ \strikeout{\,p\,}, 
   \ \ \strikeout{u^*}, \ \ \cdots
 \end{align} 
 where events that are striked out are events of $\tau$ that do not
