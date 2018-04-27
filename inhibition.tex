@@ -37,9 +37,9 @@ versa.
 
 %\fi
 
-\ifshort \else \medskip \fi
+\ifshort \vspace{-1.2em} \else \medskip \fi
 
-\emph{Notation and diction.} We use
+\paragraph{Notation and diction} We use
 the symbol $e$, which in previous sections referred to an event
 template, to directly denote an event. Moreover, when we say that an
 event \emph{tests} or \emph{modifies} a site, we really mean the tests
@@ -105,7 +105,7 @@ three kinds of nodes:
 As illustrated Figure~\ref{fig:cex}, the influence of $pk$ on $p$ in
 our example is mediated by the counterfactual event $u$. Such
 mediating events always exist, as stated by the following theorem.
-
+%\smallskip
 \begin{theorem}[Completeness of enablement and prevention]
   \label{thm:completeness}
   Let $(\tau, \iota, \tau')$ be a counterfactual experiment and $e$ an
@@ -113,6 +113,7 @@ mediating events always exist, as stated by the following theorem.
   $\hat e \in \tau$ that is blocked by $\iota$ and such that there is a directed
   path from $\hat e$ to $e$ with an even number of prevention arrows.
 \end{theorem}
+%\smallskip
 \noindent This theorem states that counterfactual dependencies can always be
 explained in terms of enablement and prevention relations between individual
 events. A proof is in Appendix~\ref{ap:completeness}.

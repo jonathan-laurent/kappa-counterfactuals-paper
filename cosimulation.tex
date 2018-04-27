@@ -41,7 +41,7 @@ independent and autonomous physical mechanism. This is partially
 enforced by the requirement that the $u_i$ must be mutually
 independent. Given some observation $e$, the probability of the
 counterfactual statement ``had $x_j$ been equal to $a$, $\psi$ would
-have been true'' is evaluated following a three-steps process:
+have been true'' is evaluated following a three-step process:
 \begin{inparaenum}[]
 \item \ItAbduction{} compute the distribution $p_e$ of values for
   $\vec u$ given observation $e$, then
@@ -79,28 +79,28 @@ Answering counterfactual questions about a dynamical system requires
 more than a probability distribution over its traces. It requires a
 structural portrayal of this system in terms of stable and
 deterministic causal mechanisms that can be altered separately (the
-$f_i$ in SEMs). Besides, for Pearl's three-steps construction to
+$f_i$ in SEMs). Besides, for Pearl's three-step construction to
 apply, randomness must be isolated in a collection of processes that
 are blind to the system's observable state and history. We propose
 such a decomposition for Kappa models. It is motivated by a standard
-construction in physics, which justifies the use of the Doob-Gillespie
-algorithm for simulating reaction systems. \cite{gillespie1977exact}.
+construction in physics that justifies the use of the Doob-Gillespie
+algorithm for simulating reaction systems \cite{gillespie1977exact}.
 
 % The CTMC semantics of Kappa that is provided in
 % section~\ref{sec:background}
 
-
-The CTMC induced by a model can be reconceptualized as follows:
+Our refined semantics reconceptualizes the CTMC induced by a model as
+follows:
 \begin{inparaenum}[(i)]
 \item Consider all possible event templates $(r, \xi)$, where $\xi$
   maps into a large enough set of global identifiers. For each event
   template, imagine a Poisson process in which a bell rings at time
   intervals drawn independently from an exponential distribution with
-  parameter $\lambda_r$. These Poison processes are all gathered in a
+  parameter $\lambda_r$. These Poisson processes are all gathered in a
   random variable $\Sigma$. A realization of $\Sigma$ is called
   a \emph{schedule} and it features a sequence of ringing times
   for every bell.
-\item To every schedule $\sigma$, we associate a unique trace
+\item With every schedule $\sigma$, we associate a unique trace
   $\DetTrace(\sigma)$ that is generated as follows: starting with the
   initial mixture and moving through time, whenever a bell rings, its
   associated event template $e$ is realized (by transforming the
@@ -147,7 +147,7 @@ be false for $e$ to be realized when its bell rings at time $t$.
 Then, we define $T_\iota \eqdef \DetTrace_\iota(\Sigma)$.  Given an
 observed trace $\tau$, an intervention $\iota$ and a predicate $\psi$,
 the probability of $\CFST{}$ can now be defined according to Pearl's
-three-steps strategy: \ItAbduction{} condition the distribution of
+three-step strategy: \ItAbduction{} condition the distribution of
 $\Sigma$ by the observation that $\DetTrace(\Sigma)\!=\!\tau$, then
 \ItAction{} alter the behavior of $\DetTrace$ with intervention
 $\iota$ and \ItPrediction{} consider the probability that $\psi$ holds
