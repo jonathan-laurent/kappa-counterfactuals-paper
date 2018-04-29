@@ -33,7 +33,12 @@ different settings.
 
 Our experimental setup consists of the model in Figure~\ref{fig:model} comprising $10^4$ substrates and $10^4$ kinases. Every agent starts out in an unbound and unphosphorylated state. The simulation is stopped as soon as the system contains more phosphorylated than unphosphorylated substrates. We then proceed as follows.
 \begin{inparaenum}[(i)]
-\item We first generate $n_{\tau}=10$ reference traces and record the \textsc{cpu} time $T$ it took the Kappa simulator to generate each of them. For each trace, we also identify the first application of each $r\in\{b,u,u^{\ast},p,pk\}$ and declare it to be the event $e_0$ underlying the intervention.
+\item We first generate $n_{\tau}=10$ reference traces and record the
+  CPU time $T$ it took the Kappa simulator to generate each of them on
+  a personal computer with a 2.7GHz Intel Core i5 processor and 16GB
+  of random-access memory.  For each trace, we also identify the first
+  application of each $r\in\{b,u,u^{\ast},p,pk\}$ and declare it to be
+  the event $e_0$ underlying the intervention.
 \item We test the $20$ possible
 interventions, based on $e_0$, that can be formed by combining each of the five rules $r$ with each of the four intervention types.
 \item For each such intervention $\iota$, we generate $n_{\tau',\iota} = 10$
