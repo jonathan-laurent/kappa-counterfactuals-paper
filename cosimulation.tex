@@ -57,49 +57,36 @@ construction generalizes to our setting, assuming a \emph{structural}
 refinement of Kappa's probabilistic semantics where deterministic
 causal mechanisms are separated from stochastic aspects.
 
-\iffalse provided that we separate the deterministic causal mechanisms
-of a model from its stochastic aspects. This means reinterpreting a
-temporal trace as a deterministic function of a separately specifiable
-series of mutually independent stochastic choices, allowing us to
-reuse the randomness inherent to a specific actual trace in the
-construction of counterfactual versions induced by intervention.  \fi
-
-\iffalse Because of their dynamic nature, rule-based
-models do not have structural equations that are readily available at
-the outset. However, Pearl's construction generalizes to our setting,
-provided that we separate the randomness of simulation from its
-deterministic causal mechanisms. \fi
-
 %\subsection{A Refinement of Kappa's CTMC Semantics}
 %\subsection{A Structural Account of Kappa}
 \subsection{A Refined Semantics for Kappa}
 \label{subsec:semantics-refinement}
 
-Answering counterfactual questions about a dynamical system requires
-more than a probability distribution over its traces. It requires a
-structural portrayal of this system in terms of stable and
-deterministic causal mechanisms that can be altered separately (the
-$f_i$ in SEMs). Besides, for Pearl's three-step construction to
-apply, randomness must be isolated in a collection of processes that
-are blind to the system's observable state and history. We propose
-such a decomposition for Kappa models. It is motivated by a standard
-construction in physics that justifies the use of the Doob-Gillespie
-algorithm for simulating reaction systems \cite{gillespie1977exact}.
+The factual trace to which a counterfactual statement is tied includes
+random contingencies. These contingencies arise from the randomness
+that is associated with the ``scheduling'' of event templates, and
+that repeatedly determines which realizable event template gets
+realized next and when it does. Executing a counterfactual experiment
+requires that we separate this randomness from the deterministic
+action of rules in order to properly condition on the randomness of
+the factual trace. We propose such a decomposition, which is motivated
+by a standard construction in physics that justifies the
+Doob-Gillespie algorithm used in simulating reaction systems
+\cite{gillespie1977exact}.
 
-% The CTMC semantics of Kappa that is provided in
-% section~\ref{sec:background}
+
 
 Our refined semantics reconceptualizes the CTMC induced by a model as
 follows:
 \begin{inparaenum}[(i)]
 \item Consider all possible event templates $(r, \xi)$, where $\xi$
   maps into a large enough set of global identifiers. For each event
-  template, imagine a Poisson process in which a bell rings at time
-  intervals drawn independently from an exponential distribution with
-  parameter $\lambda_r$. These Poisson processes are all gathered in a
-  random variable $\Sigma$. A realization of $\Sigma$ is called
-  a \emph{schedule} and it features a sequence of ringing times
-  for every bell.
+  template, imagine an independent Poisson process in which a bell
+  rings at time intervals drawn independently from an exponential
+  distribution with parameter $\lambda_r$. These Poisson processes are
+  all gathered in a random variable $\Sigma$. A realization of
+  $\Sigma$ is called a \emph{schedule} and it features a sequence of
+  ringing times for every bell.
 \item With every schedule $\sigma$, we associate a unique trace
   $\DetTrace(\sigma)$ that is generated as follows: starting with the
   initial mixture and moving through time, whenever a bell rings, its
@@ -111,18 +98,25 @@ follows:
   bond is created between these two agents. In contrast, the bell
   linked to \textit{``apply rule $b$ on substrate $1$ and kinase
     $2$'}' would have no effect.
-\item Finally, the dynamic behavior of our model is captured by the random
-  trace $T \eqdef \DetTrace(\Sigma)$, which can also be sampled
+\item Finally, the dynamic behavior of our model is captured by the
+  random trace $T \eqdef \DetTrace(\Sigma)$, which can also be sampled
   efficiently using the Doob-Gillepsie algorithm introduced in
-  section~\ref{sec:background}.
+  section~\ref{sec:background}.  Note that the assumption underlying
+  this whole construction is entirely contained in the existence and
+  definition of $\DetTrace$.  Given $\DetTrace$, the statistical
+  properties of $\Sigma$ (including the independence of our
+  metaphorical bells) are consequences of Kappa's original
+  probabilistic semantics.
 \end{inparaenum}
+
 
 Intuitively, $\Sigma$ determines when the opportunity for a reaction
 happens and between which molecules. It plays the same role as the
-random vector $\vec u$ in a SEM. In contrast,
-$\sigma \mapsto \DetTrace(\sigma)$ is a deterministic function that
-controls what a reaction does when it occurs.  It corresponds to the
-$f_i$ in a SEM and is likewise the target of interventions.
+random vector $\vec u$ in a SEM. In contrast, $\DetTrace$ is a
+deterministic function that controls whether a reaction can occur when
+given the opportunity and what it does when it occurs.  It
+corresponds to the $f_i$ in a SEM and is likewise the target of
+interventions.
 
 
 \subsection{A Semantics for Counterfactuals}
@@ -135,10 +129,6 @@ events. Given a predicate $\psi$ over traces, we write the statement
 \textit{``Had intervention $\iota$ happened in trace $\tau$, $\psi$
   would have been true''} as $\CFST{}$, borrowing a notation from
 \cite{halpern2016actual}.
-
-% By construction, the random trace $T(\Sigma)$ is distributed
-% according to the CTMC semantics of Kappa discussed in
-% section~\ref{sec:background}.
 
 For an intervention $\iota$ and a schedule $\sigma$, we define the
 altered trace $\DetTrace_\iota(\sigma)$ much in the same way as
