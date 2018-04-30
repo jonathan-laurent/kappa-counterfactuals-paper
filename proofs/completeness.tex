@@ -18,7 +18,7 @@ slightly more general.
   Proposition~\ref{prop:valid-cex}, $e$ is not executable in
   $\tau'$. Therefore, there exists a site $s$ such that event $e$
   tests $s$ to a different value than it has in $\TSTATE{t}{\tau'}$.
-  Let $t$ the time of occurrence of $e$.  Besides, let's define $e_0$
+  Let $t$ the time of occurrence of $e$.  Moreover, let's define $e_0$
   the last event in $\tau$ modifying $s$ that occurs strictly before
   time $t$, and $e_0'$ the last event in $\tau'$ modifying $s$ that
   occurs strictly before time $t$. These events modify $s$ to
@@ -30,12 +30,12 @@ slightly more general.
   \item If $t_0 < t_0'$, then we have $e_0 \notin \tau'$
     and so we can apply the induction hypothesis on $e_0$. As a
     consequence, there exists a path from an event $\hat e$ in $\tau$
-    which is blocked by $\iota$ to $e_0$. Besides, $e_0$ enables
+    which is blocked by $\iota$ to $e_0$. Moreover, $e_0$ enables
     $e$. Therefore, there is a path from $\hat e$ to $e$.
   \item If $t_0' < t_0$, then we have $e'_0 \notin \tau$
     and so we can apply the induction hypothesis on $e'_0$. As a
     consequence, there exists a path from an event $\hat e$ in $\tau$
-    which is blocked by $\iota$ to $e'_0$. Besides, $e_0'$ prevents
+    which is blocked by $\iota$ to $e'_0$. Moreover, $e_0'$ prevents
     $e$. Therefore, there is a path from $\hat e$ to $e$.
   \end{itemize}
   The same proof holds for when $e \in \tau'$ and $e \notin \tau$,

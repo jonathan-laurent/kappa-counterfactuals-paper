@@ -57,23 +57,30 @@ construction generalizes to our setting, assuming a \emph{structural}
 refinement of Kappa's probabilistic semantics where deterministic
 causal mechanisms are separated from stochastic aspects.
 
-%\subsection{A Refinement of Kappa's CTMC Semantics}
 %\subsection{A Structural Account of Kappa}
 \subsection{A Refined Semantics for Kappa}
 \label{subsec:semantics-refinement}
 
 The factual trace to which a counterfactual statement is tied includes
-random contingencies. These contingencies arise from the randomness
-that is associated with the ``scheduling'' of event templates, and
-that repeatedly determines which realizable event template gets
-realized next and when it does. Executing a counterfactual experiment
-requires that we separate this randomness from the deterministic
-action of rules in order to properly condition on the randomness of
-the factual trace. We propose such a decomposition, which is motivated
-by a standard construction in physics that justifies the
-Doob-Gillespie algorithm used in simulating reaction systems
-\cite{gillespie1977exact}.
-
+random contingencies.  These contingencies reflect the stochasticity
+underlying the specific sequence and timing of events, as described in
+section~\ref{sec:background}.
+%, which arise from the stochasticity of simulation.
+% These contingencies arise from the randomness that is associated
+% with the ``scheduling'' of event templates, and that repeatedly
+% determines which realizable event template gets realized next and
+% when it does.  These contingencies reflect the stochasticity
+% underlying the specific order and timing in which event templates
+% were realized.  These contingencies reflect the stochasticity
+% underlying which event templates got realized and when they did.
+Executing a counterfactual
+experiment requires that we separate this randomness from the
+deterministic action of rules in order to properly condition on 
+the randomness of the factual trace. 
+We propose such a decomposition,
+which is motivated by a standard construction in physics that
+justifies the Doob-Gillespie algorithm used in simulating reaction
+systems \cite{gillespie1977exact}.
 
 
 Our refined semantics reconceptualizes the CTMC induced by a model as
@@ -114,9 +121,8 @@ Intuitively, $\Sigma$ determines when the opportunity for a reaction
 happens and between which molecules. It plays the same role as the
 random vector $\vec u$ in a SEM. In contrast, $\DetTrace$ is a
 deterministic function that controls whether a reaction can occur when
-given the opportunity and what it does when it occurs.  It
-corresponds to the $f_i$ in a SEM and is likewise the target of
-interventions.
+given the opportunity and what it does when it occurs.  It corresponds
+to the $f_i$ in a SEM and is likewise the target of interventions.
 
 
 \subsection{A Semantics for Counterfactuals}
