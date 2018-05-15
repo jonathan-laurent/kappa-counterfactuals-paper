@@ -8,7 +8,7 @@ mixture consisting of a large number of kinase and substrate instances. Although
 such a simple model is not of biological significance, it is adequate for an
 initial assessment of performance.
 
-\subsection{Experimental protocol}
+\subsection{Experimental Protocol}
 
 %In this benchmark, whose results are summarized in Table~\ref{tab:bench}, 
 We consider four kinds of intervention defined in terms of an event
@@ -52,9 +52,12 @@ Our experimental setup consists of the model in Figure~\ref{fig:model} comprisin
   $|\tau \cup \tau'|$ in the counterfactual experiment
   $(\tau, \iota, \tau')$, to $T$, normalized by the number $|\tau|$ of
   events in $\tau$:
-  \[
-    S \,\eqdef\, \frac{|\tau|}{|\tau \cup \tau'|} \cdot\frac{T'}{T}.
-  \]
+  \vspace{-0.15cm}
+  \begin{small}
+    \begin{equation*}
+      S \,\eqdef\, \frac{|\tau|}{|\tau \cup \tau'|} \cdot\frac{T'}{T}.
+    \end{equation*}
+  \end{small}
   The average value and standard deviation of these quantities is
   shown Table~\ref{tab:bench}. Note that each row of the table
   corresponds to one intervention $\iota$ and to a sample set of
